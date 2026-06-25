@@ -159,6 +159,35 @@ final class SupabaseService {
         return try decodeList(data, as: Event.self)
     }
 
+    // MARK: - Matériel
+
+    func listItems() async throws -> [InventoryItem] {
+        let request = restRequest(path: "inventory_items", queryItems: [
+            URLQueryItem(name: "select", value: "*"),
+            URLQueryItem(name: "status", value: "neq.archived"),
+            URLQueryItem(name: "order", value: "inventory_code.asc")
+        ])
+        let data = try await send(request)
+        return try decodeList(data, as: InventoryItem.self)
+    }
+
+    // MARK: - Création évènement
+
+    func createEvent(name: String, startDate: String, endDate: String) async throws -> Event {
+        let body = try JSONEncoder().encode(["name": name, "start_date": startDate, "end_date": endDate])
+        var request = restRequest(
+            path: "events",
+            method: "POST",
+            queryItems: [URLQueryItem(name: "select", value: "*")],
+            body: body
+        )
+        request.setValue("return=representation", forHTTPHeaderField: "Prefer")
+        let data = try await send(request)
+        let events = try decodeList(data, as: Event.self)
+        guard let event = events.first else { throw ServiceError.decoding("createEvent: réponse vide") }
+        return event
+    }
+
     // MARK: - Écriture cœur
 
     /// Enregistre un mouvement. Pour un rejeu sûr (idempotence), on met à jour

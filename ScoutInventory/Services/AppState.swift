@@ -37,6 +37,21 @@ final class AppState: ObservableObject {
         events = (try? await service.listEvents()) ?? []
     }
 
+    func loadItems() async -> [InventoryItem] {
+        (try? await service.listItems()) ?? []
+    }
+
+    func createEvent(name: String, startDate: String, endDate: String) async -> Bool {
+        do {
+            _ = try await service.createEvent(name: name, startDate: startDate, endDate: endDate)
+            await loadEvents()
+            return true
+        } catch {
+            errorMessage = error.localizedDescription
+            return false
+        }
+    }
+
     func resolveTag(_ rawCode: String) async -> TagResolution {
         guard let parsed = TagCode.parse(rawCode) else {
             return .invalid("Code invalide. Format attendu : TAG-000001.")
