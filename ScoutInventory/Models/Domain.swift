@@ -111,6 +111,18 @@ struct InventoryItem: Codable, Identifiable, Hashable {
     }
 }
 
+struct Event: Codable, Identifiable, Hashable {
+    let id: String
+    let name: String
+    let startDate: String
+    let endDate: String
+    enum CodingKeys: String, CodingKey {
+        case id, name
+        case startDate = "start_date"
+        case endDate = "end_date"
+    }
+}
+
 /// Validation du format d'étiquette QR — miroir de `parseTagCode` (TAG-000001).
 enum TagCode {
     static func parse(_ raw: String) -> String? {

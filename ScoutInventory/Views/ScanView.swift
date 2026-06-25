@@ -46,10 +46,42 @@ struct ScanView: View {
             .padding()
             .navigationTitle("Scan QR")
             .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Menu {
+                        Button {
+                            appState.selectedEvent = nil
+                        } label: {
+                            Label("Hors évènement", systemImage: appState.selectedEvent == nil ? "checkmark" : "")
+                        }
+                        ForEach(appState.events) { event in
+                            Button {
+                                appState.selectedEvent = event
+                            } label: {
+                                Label(event.name, systemImage: appState.selectedEvent?.id == event.id ? "checkmark" : "")
+                            }
+                        }
+                    } label: {
+                        HStack(spacing: 4) {
+                            Text(appState.selectedEvent?.name ?? "Hors évènement")
+                                .font(.subheadline)
+                            Image(systemName: "chevron.down")
+                                .font(.caption)
+                        }
+                    }
+                }
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("Déconnexion") { appState.logout() }
                 }
             }
+            .safeAreaInset(edge: .top) {
+                Text(appState.selectedEvent.map { "Évènement : \($0.name)" } ?? "Hors évènement")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    .padding(.vertical, 4)
+                    .background(.bar)
+            }
+            .task { await appState.loadEvents() }
             .navigationDestination(item: $resolvedItem) { item in
                 ItemDetailView(item: item)
             }

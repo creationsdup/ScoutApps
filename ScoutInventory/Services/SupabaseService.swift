@@ -148,11 +148,22 @@ final class SupabaseService {
         return try decodeList(data, as: RoleRow.self).first?.role
     }
 
+    // MARK: - Évènements
+
+    func listEvents() async throws -> [Event] {
+        let request = restRequest(path: "events", queryItems: [
+            URLQueryItem(name: "select", value: "*"),
+            URLQueryItem(name: "order", value: "start_date.desc")
+        ])
+        let data = try await send(request)
+        return try decodeList(data, as: Event.self)
+    }
+
     // MARK: - Écriture cœur
 
     /// Enregistre un mouvement. Pour un rejeu sûr (idempotence), on met à jour
     /// le statut (idempotent) AVANT d'insérer le mouvement (journal append).
-    func createMovement(itemId: String, action: MovementAction) async throws {
+    func createMovement(itemId: String, action: MovementAction, eventId: String? = nil) async throws {
         guard let userId else { throw ServiceError.auth("Utilisateur non authentifié.") }
 
         let nextStatus = MovementStatusMapping.nextStatus(for: action)
@@ -166,11 +177,13 @@ final class SupabaseService {
         )
         _ = try await send(statusRequest)
 
-        let movementBody = try JSONEncoder().encode([
+        var dict: [String: String] = [
             "item_id": itemId,
             "action": action.rawValue,
             "user_id": userId
-        ])
+        ]
+        if let eventId { dict["event_id"] = eventId }
+        let movementBody = try JSONEncoder().encode(dict)
         let movementRequest = restRequest(
             path: "item_movements",
             method: "POST",

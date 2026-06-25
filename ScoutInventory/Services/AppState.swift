@@ -7,6 +7,8 @@ final class AppState: ObservableObject {
     @Published var isAuthenticated = false
     @Published var role: UserRole?
     @Published var errorMessage: String?
+    @Published var events: [Event] = []
+    @Published var selectedEvent: Event?
 
     private let service = SupabaseService()
 
@@ -27,6 +29,12 @@ final class AppState: ObservableObject {
         service.logout()
         isAuthenticated = false
         role = nil
+        events = []
+        selectedEvent = nil
+    }
+
+    func loadEvents() async {
+        events = (try? await service.listEvents()) ?? []
     }
 
     func resolveTag(_ rawCode: String) async -> TagResolution {
@@ -59,7 +67,7 @@ final class AppState: ObservableObject {
             return .failure(AppError("Lecture seule — ton rôle ne permet pas d'agir."))
         }
         do {
-            try await service.createMovement(itemId: item.id, action: action)
+            try await service.createMovement(itemId: item.id, action: action, eventId: selectedEvent?.id)
             return .success(MovementStatusMapping.nextStatus(for: action))
         } catch {
             return .failure(AppError(error.localizedDescription))
