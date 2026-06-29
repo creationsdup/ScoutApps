@@ -43,8 +43,14 @@ update public.inventory_items
    set quantity_available = quantity
  where quantity_available is null;
 
--- 3. Conversion des STATUTS vers la charte ScoutManager ----------------------
---    available/checked_out/cleaning_required/repair_required/missing/archived
+-- 3. STATUT : enum -> text + conversion vers la charte ScoutManager ----------
+--    La colonne `status` est un enum Postgres (item_status) avec des valeurs
+--    anglaises. On la passe en text pour accueillir la charte FR, puis on
+--    convertit les valeurs. (Idempotent : text->text et re-conversion sans effet.)
+alter table public.inventory_items alter column status drop default;
+alter table public.inventory_items
+  alter column status type text using status::text;
+
 update public.inventory_items
    set status = case status
        when 'available'         then 'disponible'
@@ -54,11 +60,21 @@ update public.inventory_items
        when 'missing'           then 'perdu'
        when 'archived'          then 'archive'
        else status
-     end
- where status in ('available','checked_out','cleaning_required','repair_required','missing','archived');
+     end;
 
--- 4. Conversion des ÉTATS (condition) ----------------------------------------
+alter table public.inventory_items alter column status set default 'disponible';
+
+alter table public.inventory_items drop constraint if exists inventory_items_status_chk;
+alter table public.inventory_items
+  add constraint inventory_items_status_chk
+  check (status in ('disponible','reserve','sorti','a_verifier','a_reparer','indisponible','perdu','archive')) not valid;
+
+-- 4. ÉTAT (condition) : enum -> text + conversion ----------------------------
 --    excellent/good/fair/damaged/broken  →  neuf/bon/moyen/mauvais
+alter table public.inventory_items alter column condition drop default;
+alter table public.inventory_items
+  alter column condition type text using condition::text;
+
 update public.inventory_items
    set condition = case condition
        when 'excellent' then 'neuf'
@@ -67,8 +83,12 @@ update public.inventory_items
        when 'damaged'   then 'mauvais'
        when 'broken'    then 'mauvais'
        else condition
-     end
- where condition in ('excellent','good','fair','damaged','broken');
+     end;
+
+alter table public.inventory_items drop constraint if exists inventory_items_condition_chk;
+alter table public.inventory_items
+  add constraint inventory_items_condition_chk
+  check (condition in ('neuf','bon','moyen','mauvais')) not valid;
 
 -- 5. Contraintes de validation (NOT VALID : n'invalide pas l'existant) --------
 alter table public.inventory_items drop constraint if exists inventory_items_tracking_type_chk;
