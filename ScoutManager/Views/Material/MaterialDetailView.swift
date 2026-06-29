@@ -6,6 +6,7 @@ struct MaterialDetailView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var showEdit = false
     @State private var confirmArchive = false
+    @State private var archiveError: String?
 
     private var imageURL: URL? {
         guard let path = item.imagePath else { return nil }
@@ -92,11 +93,23 @@ struct MaterialDetailView: View {
         .confirmationDialog("Archiver ce matériel ?", isPresented: $confirmArchive, titleVisibility: .visible) {
             Button("Archiver", role: .destructive) {
                 Task {
-                    try? await ItemService().archive(id: item.id)
-                    await listViewModel.load()
-                    dismiss()
+                    do {
+                        try await ItemService().archive(id: item.id)
+                        await listViewModel.load()
+                        dismiss()
+                    } catch {
+                        archiveError = "Échec de l'archivage. Réessaie."
+                    }
                 }
             }
+        }
+        .alert("Erreur", isPresented: Binding(
+            get: { archiveError != nil },
+            set: { if !$0 { archiveError = nil } }
+        )) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text(archiveError ?? "")
         }
     }
 }

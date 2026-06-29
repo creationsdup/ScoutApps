@@ -25,6 +25,7 @@ final class MaterialFormViewModel: ObservableObject {
     private let storage = ImageStorageService()
     private let editingItemId: String?
     private var existingImagePath: String?
+    private var existingQuantityAvailable: Int?
 
     var isEditing: Bool { editingItemId != nil }
     var title: String { isEditing ? "Modifier" : "Nouveau matériel" }
@@ -33,6 +34,7 @@ final class MaterialFormViewModel: ObservableObject {
         if let item {
             editingItemId = item.id
             existingImagePath = item.imagePath
+            existingQuantityAvailable = item.quantityAvailable
             name = item.name
             inventoryCode = item.inventoryCode
             itemDescription = item.description ?? ""
@@ -55,8 +57,13 @@ final class MaterialFormViewModel: ObservableObject {
     }
 
     func loadReferentials() async {
-        categories = (try? await service.listCategories()) ?? []
-        locations = (try? await service.listLocations()) ?? []
+        let cats = try? await service.listCategories()
+        let locs = try? await service.listLocations()
+        categories = cats ?? []
+        locations = locs ?? []
+        if cats == nil && locs == nil {
+            errorMessage = "Impossible de charger catégories/localisations."
+        }
     }
 
     /// Retourne true si la sauvegarde a réussi.
@@ -79,7 +86,7 @@ final class MaterialFormViewModel: ObservableObject {
                 locationId: locationId,
                 trackingType: trackingType,
                 quantity: quantity,
-                quantityAvailable: quantity,
+                quantityAvailable: isEditing ? (existingQuantityAvailable ?? quantity) : quantity,
                 status: status,
                 condition: condition,
                 branch: branch,
