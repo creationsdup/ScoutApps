@@ -8,7 +8,7 @@ struct SGDFBadge: View {
             .font(.system(.caption, design: .rounded).weight(.semibold))
             .padding(.horizontal, SGDFTheme.Spacing.sm)
             .padding(.vertical, SGDFTheme.Spacing.xs)
-            .foregroundStyle(.white)
+            .foregroundStyle(SGDFColors.onColor)
             .background(StatusColorMapper.color(for: status))
             .clipShape(RoundedRectangle(cornerRadius: SGDFTheme.Radius.badge))
     }

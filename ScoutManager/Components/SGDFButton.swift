@@ -40,7 +40,7 @@ struct SGDFButton: View {
     }
     private var foreground: Color {
         switch kind {
-        case .primary, .quickAction: return .white
+        case .primary, .quickAction: return SGDFColors.onColor
         case .secondary:             return SGDFColors.primaryBlue
         }
     }

@@ -20,4 +20,7 @@ enum SGDFColors {
     static let border        = Color(hex: "#E3E6EB")
     static let textPrimary   = Color(hex: "#003a5d")
     static let textSecondary = Color(hex: "#5B6B7A")
+
+    /// Texte/icône sur un fond coloré fort (bouton primaire, badge). Blanc charté.
+    static let onColor       = Color(hex: "#FFFFFF")
 }
