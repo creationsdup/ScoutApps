@@ -2,12 +2,13 @@ import SwiftUI
 
 @main
 struct ScoutManagerApp: App {
-    @StateObject private var appState = AppState()
+    @StateObject private var session = SessionStore()
     var body: some Scene {
         WindowGroup {
             RootView()
-                .environmentObject(appState)
+                .environmentObject(session)
                 .tint(SGDFColors.primaryBlue)
+                .task { await session.restore() }
         }
     }
 }

@@ -1,11 +1,10 @@
 import SwiftUI
 
-/// Aiguillage racine : non connecté → login existant ; connecté → MainTabView.
 struct RootView: View {
-    @EnvironmentObject private var appState: AppState
+    @EnvironmentObject private var session: SessionStore
     var body: some View {
         Group {
-            if appState.isAuthenticated {
+            if session.isAuthenticated {
                 MainTabView()
             } else {
                 LoginView()
