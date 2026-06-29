@@ -3,6 +3,7 @@ import SwiftUI
 struct DashboardView: View {
     @EnvironmentObject private var router: AppRouter
     @StateObject private var viewModel = DashboardViewModel()
+    @State private var initialLoadDone = false
 
     private let columns = [GridItem(.flexible(), spacing: SGDFTheme.Spacing.md),
                            GridItem(.flexible(), spacing: SGDFTheme.Spacing.md)]
@@ -47,8 +48,13 @@ struct DashboardView: View {
             }
             .background(SGDFColors.background)
             .navigationTitle("Tableau de bord")
-            .overlay { if viewModel.isLoading { LoadingView() } }
-            .task { await viewModel.load() }
+            // Overlay plein écran seulement au premier chargement ; le pull-to-refresh
+            // a déjà son propre indicateur natif.
+            .overlay { if viewModel.isLoading && !initialLoadDone { LoadingView() } }
+            .task {
+                await viewModel.load()
+                initialLoadDone = true
+            }
             .refreshable { await viewModel.load() }
         }
     }
