@@ -8,10 +8,22 @@
 
 /* Begin PBXFileReference section */
 		AA00000000000000000000A2 /* ScoutInventory.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ScoutInventory.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		AA00000000000000000000C1 /* Secrets.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Secrets.xcconfig; sourceTree = "<group>"; };
+		AA00000000000000000000C2 /* Secrets.example.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Secrets.example.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		AA00000000000000000000D1 /* Exceptions for "ScoutInventory" folder in "ScoutInventory" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = AA00000000000000000000A6 /* ScoutInventory */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		AA00000000000000000000A1 /* ScoutInventory */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = ScoutInventory; sourceTree = "<group>"; };
+		AA00000000000000000000A1 /* ScoutInventory */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (AA00000000000000000000D1 /* Exceptions for "ScoutInventory" folder in "ScoutInventory" target */, ); explicitFileTypes = {}; explicitFolders = (); path = ScoutInventory; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -29,6 +41,8 @@
 			isa = PBXGroup;
 			children = (
 				AA00000000000000000000A1 /* ScoutInventory */,
+				AA00000000000000000000C1 /* Secrets.xcconfig */,
+				AA00000000000000000000C2 /* Secrets.example.xcconfig */,
 				AA00000000000000000000A5 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -240,13 +254,16 @@
 		};
 		AA00000000000000000000B3 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = AA00000000000000000000C1 /* Secrets.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 89MZRCK4N3;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ScoutInventory/Info.plist;
 				INFOPLIST_KEY_NSCameraUsageDescription = "Scanner les QR codes du matériel scout.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -268,13 +285,16 @@
 		};
 		AA00000000000000000000B4 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = AA00000000000000000000C1 /* Secrets.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 89MZRCK4N3;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ScoutInventory/Info.plist;
 				INFOPLIST_KEY_NSCameraUsageDescription = "Scanner les QR codes du matériel scout.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;

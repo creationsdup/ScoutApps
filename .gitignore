@@ -10,6 +10,9 @@ xcuserdata/
 *.dSYM.zip
 *.dSYM
 
+# Secrets — local only; copy Secrets.example.xcconfig to create it
+Secrets.xcconfig
+
 # macOS
 .DS_Store
 
