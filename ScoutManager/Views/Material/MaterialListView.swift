@@ -3,6 +3,7 @@ import SwiftUI
 struct MaterialListView: View {
     @StateObject private var viewModel = MaterialListViewModel()
     @State private var showFilters = false
+    @State private var showAddForm = false
 
     var body: some View {
         NavigationStack {
@@ -12,6 +13,9 @@ struct MaterialListView: View {
                 .searchable(text: $viewModel.search, prompt: "Rechercher un matériel")
                 .onSubmit(of: .search) { Task { await viewModel.load() } }
                 .toolbar {
+                    ToolbarItem(placement: .topBarLeading) {
+                        Button { showAddForm = true } label: { Image(systemName: "plus") }
+                    }
                     ToolbarItem(placement: .topBarTrailing) {
                         Button { showFilters = true } label: {
                             Image(systemName: viewModel.activeFilterCount > 0
@@ -19,6 +23,9 @@ struct MaterialListView: View {
                                   : "line.3.horizontal.decrease.circle")
                         }
                     }
+                }
+                .sheet(isPresented: $showAddForm) {
+                    MaterialFormView(item: nil) { Task { await viewModel.load() } }
                 }
                 .sheet(isPresented: $showFilters) {
                     MaterialFilterView(viewModel: viewModel)

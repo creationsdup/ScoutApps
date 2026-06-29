@@ -3,6 +3,9 @@ import SwiftUI
 struct MaterialDetailView: View {
     let item: Item
     @ObservedObject var listViewModel: MaterialListViewModel
+    @Environment(\.dismiss) private var dismiss
+    @State private var showEdit = false
+    @State private var confirmArchive = false
 
     private var imageURL: URL? {
         guard let path = item.imagePath else { return nil }
@@ -70,6 +73,31 @@ struct MaterialDetailView: View {
         .background(SGDFColors.background)
         .navigationTitle("Fiche matériel")
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Menu {
+                    Button { showEdit = true } label: { Label("Modifier", systemImage: "pencil") }
+                    Button(role: .destructive) { confirmArchive = true } label: {
+                        Label("Archiver", systemImage: "archivebox")
+                    }
+                } label: { Image(systemName: "ellipsis.circle") }
+            }
+        }
+        .sheet(isPresented: $showEdit) {
+            MaterialFormView(item: item) {
+                Task { await listViewModel.load() }
+                dismiss()
+            }
+        }
+        .confirmationDialog("Archiver ce matériel ?", isPresented: $confirmArchive, titleVisibility: .visible) {
+            Button("Archiver", role: .destructive) {
+                Task {
+                    try? await ItemService().archive(id: item.id)
+                    await listViewModel.load()
+                    dismiss()
+                }
+            }
+        }
     }
 }
 
