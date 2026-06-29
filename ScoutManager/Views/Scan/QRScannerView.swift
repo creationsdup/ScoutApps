@@ -7,6 +7,7 @@ struct QRScannerView: View {
     @State private var manualCode = ""
     @State private var message = "Scanne une étiquette TAG-000001 ou saisis le code."
     @State private var resolvedItem: Item?
+    @State private var blankTagCode: String?
 
     var body: some View {
         NavigationStack {
@@ -41,6 +42,11 @@ struct QRScannerView: View {
             .navigationDestination(item: $resolvedItem) { item in
                 MaterialDetailView(item: item, listViewModel: listViewModel)
             }
+            .sheet(item: $blankTagCode) { code in
+                AssignQRCodeView(tagCode: code) {
+                    message = "Étiquette \(code) associée."
+                }
+            }
             .task { await listViewModel.loadReferentials() }
         }
     }
@@ -51,7 +57,10 @@ struct QRScannerView: View {
             switch await viewModel.resolve(raw) {
             case .item(let item):
                 resolvedItem = item
-            case .unassigned(let m), .disabled(let m), .unknown(let m), .invalid(let m):
+            case .unassigned(let m):
+                message = m
+                blankTagCode = TagCode.parse(raw)
+            case .disabled(let m), .unknown(let m), .invalid(let m):
                 message = m
             }
         }
@@ -138,4 +147,9 @@ final class QRScannerController: UIViewController, AVCaptureMetadataOutputObject
         sessionQueue.async { [session] in session.stopRunning() }
         onScan?(value)
     }
+}
+
+// MARK: - String Identifiable (shared; used by sheet(item:) in this file and MaterialDetailView)
+extension String: @retroactive Identifiable {
+    public var id: String { self }
 }

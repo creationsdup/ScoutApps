@@ -7,6 +7,18 @@ struct MaterialDetailView: View {
     @State private var showEdit = false
     @State private var confirmArchive = false
     @State private var archiveError: String?
+    @State private var qrCode: String?
+    @State private var qrError: String?
+
+    private func showQRCode() {
+        Task {
+            if let tag = try? await QRCodeService().tag(forItemId: item.id) {
+                qrCode = tag.tagCode
+            } else {
+                qrError = "Aucune étiquette QR associée à ce matériel."
+            }
+        }
+    }
 
     private var imageURL: URL? {
         guard let path = item.imagePath else { return nil }
@@ -77,6 +89,7 @@ struct MaterialDetailView: View {
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Menu {
+                    Button { showQRCode() } label: { Label("QR code", systemImage: "qrcode") }
                     Button { showEdit = true } label: { Label("Modifier", systemImage: "pencil") }
                     Button(role: .destructive) { confirmArchive = true } label: {
                         Label("Archiver", systemImage: "archivebox")
@@ -84,6 +97,10 @@ struct MaterialDetailView: View {
                 } label: { Image(systemName: "ellipsis.circle") }
             }
         }
+        .sheet(item: $qrCode) { code in QRCodeGeneratorView(code: code) }
+        .alert("Aucune étiquette", isPresented: Binding(
+            get: { qrError != nil }, set: { if !$0 { qrError = nil } })
+        ) { Button("OK", role: .cancel) {} } message: { Text(qrError ?? "") }
         .sheet(isPresented: $showEdit) {
             MaterialFormView(item: item) {
                 Task { await listViewModel.load() }

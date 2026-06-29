@@ -23,6 +23,13 @@ struct QRCodeService {
         return rows.first
     }
 
+    /// Étiquette associée à un matériel (qr_tags.assigned_item_id), si elle existe.
+    func tag(forItemId id: String) async throws -> QRCode? {
+        let rows: [QRCode] = try await client.from("qr_tags")
+            .select().eq("assigned_item_id", value: id).limit(1).execute().value
+        return rows.first
+    }
+
     /// Associe une étiquette vierge à un matériel.
     func assign(tagCode: String, toItem itemId: String) async throws {
         let payload = AssignPayload(
