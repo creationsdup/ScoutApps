@@ -12,10 +12,14 @@ struct MaterialDetailView: View {
 
     private func showQRCode() {
         Task {
-            if let tag = try? await QRCodeService().tag(forItemId: item.id) {
-                qrCode = tag.tagCode
-            } else {
-                qrError = "Aucune étiquette QR associée à ce matériel."
+            do {
+                if let tag = try await QRCodeService().tag(forItemId: item.id) {
+                    qrCode = tag.tagCode
+                } else {
+                    qrError = "Aucune étiquette QR associée à ce matériel."
+                }
+            } catch {
+                qrError = "Erreur réseau. Réessaie."
             }
         }
     }
