@@ -6,6 +6,10 @@
 	objectVersion = 71;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		AA00000000000000000000F3 /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = AA00000000000000000000F2 /* Supabase */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		AA00000000000000000000A2 /* ScoutInventory.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ScoutInventory.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA00000000000000000000C1 /* Secrets.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Secrets.xcconfig; sourceTree = "<group>"; };
@@ -13,7 +17,7 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		AA00000000000000000000D1 /* Exceptions for "ScoutInventory" folder in "ScoutInventory" target */ = {
+		AA00000000000000000000D1 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
@@ -23,7 +27,7 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		AA00000000000000000000A1 /* ScoutInventory */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (AA00000000000000000000D1 /* Exceptions for "ScoutInventory" folder in "ScoutInventory" target */, ); explicitFileTypes = {}; explicitFolders = (); path = ScoutInventory; sourceTree = "<group>"; };
+		AA00000000000000000000A1 /* ScoutInventory */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (AA00000000000000000000D1 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = ScoutInventory; sourceTree = "<group>"; };
 		AA00000000000000000000E1 /* ScoutManager */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = ScoutManager; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
@@ -32,6 +36,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AA00000000000000000000F3 /* Supabase in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -77,6 +82,9 @@
 				AA00000000000000000000E1 /* ScoutManager */,
 			);
 			name = ScoutInventory;
+			packageProductDependencies = (
+				AA00000000000000000000F2 /* Supabase */,
+			);
 			productName = ScoutInventory;
 			productReference = AA00000000000000000000A2 /* ScoutInventory.app */;
 			productType = "com.apple.product-type.application";
@@ -106,6 +114,9 @@
 			);
 			mainGroup = AA00000000000000000000A4;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				AA00000000000000000000F1 /* XCRemoteSwiftPackageReference "supabase-swift" */,
+			);
 			productRefGroup = AA00000000000000000000A5 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -114,6 +125,25 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		AA00000000000000000000F1 /* XCRemoteSwiftPackageReference "supabase-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/supabase/supabase-swift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		AA00000000000000000000F2 /* Supabase */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AA00000000000000000000F1 /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Supabase;
+		};
+/* End XCSwiftPackageProductDependency section */
 
 /* Begin PBXResourcesBuildPhase section */
 		AA00000000000000000000A8 /* Resources */ = {
