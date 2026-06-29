@@ -17,7 +17,7 @@ struct MainTabView: View {
             MaterialListView()
                 .tabItem { Label("Matériel", systemImage: "shippingbox") }
                 .tag(AppRouter.Tab.material)
-            ComingSoonView(title: "Scan")
+            QRScannerView()
                 .tabItem { Label("Scan", systemImage: "qrcode.viewfinder") }
                 .tag(AppRouter.Tab.scan)
             ComingSoonView(title: "Intendance")
