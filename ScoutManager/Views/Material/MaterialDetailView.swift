@@ -3,12 +3,16 @@ import SwiftUI
 struct MaterialDetailView: View {
     let item: Item
     @ObservedObject var listViewModel: MaterialListViewModel
+    @EnvironmentObject private var session: SessionStore
     @Environment(\.dismiss) private var dismiss
     @State private var showEdit = false
     @State private var confirmArchive = false
     @State private var archiveError: String?
     @State private var qrCode: String?
     @State private var qrError: String?
+    @State private var displayStatus: ItemStatus?
+    @State private var actionError: String?
+    @State private var runningAction = false
 
     private func showQRCode() {
         Task {
@@ -21,6 +25,40 @@ struct MaterialDetailView: View {
             } catch {
                 qrError = "Erreur réseau. Réessaie."
             }
+        }
+    }
+
+    private func perform(_ action: MovementAction) {
+        guard !runningAction else { return }
+        runningAction = true
+        Task {
+            do {
+                try await MovementService().record(itemId: item.id, action: action)
+                displayStatus = action.nextStatus
+                await listViewModel.load()
+            } catch {
+                actionError = "Action impossible. Réessaie."
+            }
+            runningAction = false
+        }
+    }
+
+    /// Sortir = orange (à préparer) ; Retour = vert (validation) ; sinon bleu.
+    private func buttonKind(for action: MovementAction) -> SGDFButtonStyleKind {
+        switch action {
+        case .checkout: return .quickAction
+        case .return:   return .primary
+        default:        return .secondary
+        }
+    }
+
+    private func icon(for action: MovementAction) -> String {
+        switch action {
+        case .checkout: return "arrow.up.right.circle"
+        case .return:   return "arrow.down.left.circle"
+        case .cleaning: return "sparkles"
+        case .repair:   return "wrench.adjustable"
+        case .transfer: return "arrow.left.arrow.right"
         }
     }
 
@@ -53,7 +91,7 @@ struct MaterialDetailView: View {
                         .font(SGDFTheme.FontStyle.screenTitle())
                         .foregroundStyle(SGDFColors.textPrimary)
                     Spacer()
-                    SGDFBadge(status: item.status)
+                    SGDFBadge(status: displayStatus ?? item.status)
                 }
                 Text(item.inventoryCode)
                     .font(SGDFTheme.FontStyle.caption())
@@ -76,6 +114,14 @@ struct MaterialDetailView: View {
                         DetailRow(label: "Localisation", value: loc)
                     }
                 }
+
+                FieldActionsSection(
+                    session: session,
+                    runningAction: runningAction,
+                    buttonKind: buttonKind,
+                    icon: icon,
+                    perform: perform
+                )
 
                 if let notes = item.notes, !notes.isEmpty {
                     VStack(alignment: .leading, spacing: SGDFTheme.Spacing.xs) {
@@ -131,6 +177,43 @@ struct MaterialDetailView: View {
             Button("OK", role: .cancel) {}
         } message: {
             Text(archiveError ?? "")
+        }
+        .alert("Erreur", isPresented: Binding(
+            get: { actionError != nil }, set: { if !$0 { actionError = nil } })
+        ) { Button("OK", role: .cancel) {} } message: { Text(actionError ?? "") }
+    }
+}
+
+// MARK: - Field Actions Section (extracted to help type inference)
+
+private struct FieldActionsSection: View {
+    let session: SessionStore
+    let runningAction: Bool
+    let buttonKind: (MovementAction) -> SGDFButtonStyleKind
+    let icon: (MovementAction) -> String
+    let perform: (MovementAction) -> Void
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: SGDFTheme.Spacing.sm) {
+            Text("Actions terrain")
+                .font(SGDFTheme.FontStyle.sectionTitle())
+                .foregroundStyle(SGDFColors.textPrimary)
+
+            if session.canWrite {
+                ForEach(MovementAction.allCases, id: \.self) { action in
+                    SGDFButton(action.label, kind: buttonKind(action),
+                               systemImage: icon(action)) {
+                        perform(action)
+                    }
+                    .disabled(runningAction)
+                }
+            } else {
+                SGDFCard {
+                    Label("Lecture seule — ton rôle ne permet pas d'agir.",
+                          systemImage: "lock")
+                        .foregroundStyle(SGDFColors.textSecondary)
+                }
+            }
         }
     }
 }
