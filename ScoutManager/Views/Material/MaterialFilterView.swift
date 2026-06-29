@@ -10,7 +10,8 @@ struct MaterialFilterView: View {
                 Section("Statut") {
                     Picker("Statut", selection: $viewModel.statusFilter) {
                         Text("Tous").tag(ItemStatus?.none)
-                        ForEach(ItemStatus.allCases, id: \.self) { status in
+                        // 'archived' est exclu des listes par défaut (ItemService.list) → pas filtrable ici.
+                        ForEach(ItemStatus.allCases.filter { $0 != .archive }, id: \.self) { status in
                             Text(status.label).tag(ItemStatus?.some(status))
                         }
                     }

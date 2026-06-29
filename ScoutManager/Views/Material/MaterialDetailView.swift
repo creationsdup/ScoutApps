@@ -140,9 +140,11 @@ struct MaterialDetailView: View {
             ToolbarItem(placement: .topBarTrailing) {
                 Menu {
                     Button { showQRCode() } label: { Label("QR code", systemImage: "qrcode") }
-                    Button { showEdit = true } label: { Label("Modifier", systemImage: "pencil") }
-                    Button(role: .destructive) { confirmArchive = true } label: {
-                        Label("Archiver", systemImage: "archivebox")
+                    if session.canWrite {
+                        Button { showEdit = true } label: { Label("Modifier", systemImage: "pencil") }
+                        Button(role: .destructive) { confirmArchive = true } label: {
+                            Label("Archiver", systemImage: "archivebox")
+                        }
                     }
                 } label: { Image(systemName: "ellipsis.circle") }
             }
