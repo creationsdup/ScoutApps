@@ -1,27 +1,31 @@
 import SwiftUI
 
-/// Navigation principale : 5 onglets, identité bleu SGDF dominante.
-/// Les écrans réels remplaceront les ComingSoonView dans les plans suivants.
 struct MainTabView: View {
+    @EnvironmentObject private var router: AppRouter
+
     init() {
-        // TabBar et NavBar ancrées sur le bleu SGDF (identité dominante).
         let tint = UIColor(SGDFColors.primaryBlue)
         UITabBar.appearance().tintColor = tint
         UINavigationBar.appearance().tintColor = tint
     }
 
     var body: some View {
-        TabView {
-            ComingSoonView(title: "Dashboard")
+        TabView(selection: $router.selectedTab) {
+            DashboardView()
                 .tabItem { Label("Dashboard", systemImage: "square.grid.2x2") }
+                .tag(AppRouter.Tab.dashboard)
             ComingSoonView(title: "Matériel")
                 .tabItem { Label("Matériel", systemImage: "shippingbox") }
+                .tag(AppRouter.Tab.material)
             ComingSoonView(title: "Scan")
                 .tabItem { Label("Scan", systemImage: "qrcode.viewfinder") }
+                .tag(AppRouter.Tab.scan)
             ComingSoonView(title: "Intendance")
                 .tabItem { Label("Intendance", systemImage: "fork.knife") }
+                .tag(AppRouter.Tab.intendance)
             ComingSoonView(title: "Camp")
                 .tabItem { Label("Camp", systemImage: "tent") }
+                .tag(AppRouter.Tab.camp)
         }
         .tint(SGDFColors.primaryBlue)
     }
