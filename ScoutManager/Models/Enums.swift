@@ -1,15 +1,17 @@
 import Foundation
 
-/// Statut d'un matériel. rawValue = valeur en base (inventory_items.status).
+/// Statut d'un matériel. rawValue = valeur de l'enum Postgres `item_status` (backend
+/// partagé avec CampManager). Valeurs anglaises en base, libellés FR à l'affichage.
+/// `reserve` et `indisponible` sont ajoutés à l'enum par la migration SQL.
 enum ItemStatus: String, Codable, CaseIterable {
-    case disponible   = "disponible"
+    case disponible   = "available"
     case reserve      = "reserve"
-    case sorti        = "sorti"
-    case aVerifier    = "a_verifier"
-    case aReparer     = "a_reparer"
+    case sorti        = "checked_out"
+    case aVerifier    = "cleaning_required"
+    case aReparer     = "repair_required"
     case indisponible = "indisponible"
-    case perdu        = "perdu"
-    case archive      = "archive"
+    case perdu        = "missing"
+    case archive      = "archived"
 
     var label: String {
         switch self {
@@ -25,15 +27,22 @@ enum ItemStatus: String, Codable, CaseIterable {
     }
 }
 
-/// État physique d'un matériel (inventory_items.condition).
+/// État physique d'un matériel. rawValue = enum Postgres `condition` existant
+/// (excellent/good/fair/damaged/broken), conservé tel quel ; libellés FR à l'affichage.
 enum ItemCondition: String, Codable, CaseIterable {
-    case neuf, bon, moyen, mauvais
+    case excellent = "excellent"
+    case good      = "good"
+    case fair      = "fair"
+    case damaged   = "damaged"
+    case broken    = "broken"
+
     var label: String {
         switch self {
-        case .neuf: return "Neuf"
-        case .bon: return "Bon"
-        case .moyen: return "Moyen"
-        case .mauvais: return "Mauvais"
+        case .excellent: return "Excellent"
+        case .good:      return "Bon"
+        case .fair:      return "Correct"
+        case .damaged:   return "Abîmé"
+        case .broken:    return "Cassé"
         }
     }
 }

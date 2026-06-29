@@ -4,11 +4,10 @@
 -- Conçu idempotent (réexécutable) : IF NOT EXISTS + drop/create pour les policies.
 -- Ne crée PAS de nouvelles tables items/qr_codes : on réutilise inventory_items,
 -- qr_tags, item_movements, events existantes. On ajoute categories + locations,
--- on enrichit inventory_items, et on convertit les valeurs de statut/état vers la
--- charte ScoutManager.
+-- on enrichit inventory_items (colonnes additives), et on ajoute 2 valeurs à
+-- l'enum item_status. ADDITIF UNIQUEMENT — aucune valeur existante n'est modifiée
+-- (backend partagé avec CampManager : on ne casse ni ses données ni ses vues).
 --
--- ⚠️ Les sections 3 et 4 MODIFIENT des données existantes (valeurs status/condition).
---    Relis-les avant exécution.
 -- ⚠️ Les policies RLS (section 6/7) supposent une table public.profiles(id, role)
 --    avec role ∈ admin/manager/member/viewer (cf. ton schéma actuel). Aligne-les
 --    sur tes politiques existantes si besoin.
@@ -43,52 +42,23 @@ update public.inventory_items
    set quantity_available = quantity
  where quantity_available is null;
 
--- 3. STATUT : enum -> text + conversion vers la charte ScoutManager ----------
---    La colonne `status` est un enum Postgres (item_status) avec des valeurs
---    anglaises. On la passe en text pour accueillir la charte FR, puis on
---    convertit les valeurs. (Idempotent : text->text et re-conversion sans effet.)
-alter table public.inventory_items alter column status drop default;
-alter table public.inventory_items
-  alter column status type text using status::text;
+-- 3. STATUT : on NE convertit PAS (backend partagé avec CampManager) ----------
+--    La colonne `status` est un enum Postgres (item_status) aux valeurs anglaises
+--    (available, checked_out, cleaning_required, repair_required, missing, archived).
+--    L'app iOS adopte ces valeurs avec libellés FR. On AJOUTE seulement les 2
+--    statuts de la charte qui manquent (réservé / indisponible) — additif, sans
+--    casser CampManager ni les vues (dashboard_stats…).
+--
+--    NB : `ALTER TYPE ... ADD VALUE` ne peut pas être utilisé dans la même
+--    transaction que sa première utilisation. On n'utilise pas ces valeurs ici,
+--    donc c'est sûr. Si le SQL editor renvoie une erreur de transaction, exécute
+--    ces deux lignes seules d'abord, puis le reste.
+alter type public.item_status add value if not exists 'reserve';
+alter type public.item_status add value if not exists 'indisponible';
 
-update public.inventory_items
-   set status = case status
-       when 'available'         then 'disponible'
-       when 'checked_out'       then 'sorti'
-       when 'cleaning_required' then 'a_verifier'
-       when 'repair_required'   then 'a_reparer'
-       when 'missing'           then 'perdu'
-       when 'archived'          then 'archive'
-       else status
-     end;
-
-alter table public.inventory_items alter column status set default 'disponible';
-
-alter table public.inventory_items drop constraint if exists inventory_items_status_chk;
-alter table public.inventory_items
-  add constraint inventory_items_status_chk
-  check (status in ('disponible','reserve','sorti','a_verifier','a_reparer','indisponible','perdu','archive')) not valid;
-
--- 4. ÉTAT (condition) : enum -> text + conversion ----------------------------
---    excellent/good/fair/damaged/broken  →  neuf/bon/moyen/mauvais
-alter table public.inventory_items alter column condition drop default;
-alter table public.inventory_items
-  alter column condition type text using condition::text;
-
-update public.inventory_items
-   set condition = case condition
-       when 'excellent' then 'neuf'
-       when 'good'      then 'bon'
-       when 'fair'      then 'moyen'
-       when 'damaged'   then 'mauvais'
-       when 'broken'    then 'mauvais'
-       else condition
-     end;
-
-alter table public.inventory_items drop constraint if exists inventory_items_condition_chk;
-alter table public.inventory_items
-  add constraint inventory_items_condition_chk
-  check (condition in ('neuf','bon','moyen','mauvais')) not valid;
+-- 4. ÉTAT (condition) : inchangé ---------------------------------------------
+--    L'enum condition (excellent/good/fair/damaged/broken) est conservé tel quel ;
+--    l'app iOS le lit avec des libellés FR. Aucune migration de valeurs.
 
 -- 5. Contraintes de validation (NOT VALID : n'invalide pas l'existant) --------
 alter table public.inventory_items drop constraint if exists inventory_items_tracking_type_chk;
