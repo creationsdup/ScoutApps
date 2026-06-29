@@ -75,6 +75,8 @@ final class QRScannerController: UIViewController, AVCaptureMetadataOutputObject
     private let session = AVCaptureSession()
     private var previewLayer: AVCaptureVideoPreviewLayer?
     private var didScan = false
+    private var configured = false
+    private let sessionQueue = DispatchQueue(label: "fr.scoutmanager.scan.session")
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -83,6 +85,15 @@ final class QRScannerController: UIViewController, AVCaptureMetadataOutputObject
             guard granted else { return }
             DispatchQueue.main.async { self?.configureSession() }
         }
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        // Réarme le scanner au retour (ex. après consultation d'une fiche) :
+        // sans ça, didScan reste vrai et la session stoppée → plus aucune détection.
+        guard configured, !session.isRunning else { return }
+        didScan = false
+        sessionQueue.async { [session] in session.startRunning() }
     }
 
     private func configureSession() {
@@ -102,8 +113,9 @@ final class QRScannerController: UIViewController, AVCaptureMetadataOutputObject
         layer.frame = view.layer.bounds
         view.layer.addSublayer(layer)
         previewLayer = layer
+        configured = true
 
-        Task.detached { [session] in session.startRunning() }
+        sessionQueue.async { [session] in session.startRunning() }
     }
 
     override func viewDidLayoutSubviews() {
@@ -113,7 +125,7 @@ final class QRScannerController: UIViewController, AVCaptureMetadataOutputObject
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        if session.isRunning { session.stopRunning() }
+        sessionQueue.async { [session] in if session.isRunning { session.stopRunning() } }
     }
 
     func metadataOutput(_ output: AVCaptureMetadataOutput,
@@ -123,7 +135,7 @@ final class QRScannerController: UIViewController, AVCaptureMetadataOutputObject
               let obj = metadataObjects.first as? AVMetadataMachineReadableCodeObject,
               let value = obj.stringValue else { return }
         didScan = true
-        session.stopRunning()
+        sessionQueue.async { [session] in session.stopRunning() }
         onScan?(value)
     }
 }
