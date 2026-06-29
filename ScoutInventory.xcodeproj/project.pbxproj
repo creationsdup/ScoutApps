@@ -24,6 +24,7 @@
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		AA00000000000000000000A1 /* ScoutInventory */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (AA00000000000000000000D1 /* Exceptions for "ScoutInventory" folder in "ScoutInventory" target */, ); explicitFileTypes = {}; explicitFolders = (); path = ScoutInventory; sourceTree = "<group>"; };
+		AA00000000000000000000E1 /* ScoutManager */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = ScoutManager; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -40,6 +41,7 @@
 		AA00000000000000000000A4 = {
 			isa = PBXGroup;
 			children = (
+				AA00000000000000000000E1 /* ScoutManager */,
 				AA00000000000000000000A1 /* ScoutInventory */,
 				AA00000000000000000000C1 /* Secrets.xcconfig */,
 				AA00000000000000000000C2 /* Secrets.example.xcconfig */,
@@ -72,6 +74,7 @@
 			);
 			fileSystemSynchronizedGroups = (
 				AA00000000000000000000A1 /* ScoutInventory */,
+				AA00000000000000000000E1 /* ScoutManager */,
 			);
 			name = ScoutInventory;
 			productName = ScoutInventory;
@@ -275,7 +278,8 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.scout.inventory;
+				PRODUCT_BUNDLE_IDENTIFIER = com.scout.manager;
+				PRODUCT_MODULE_NAME = ScoutManager;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -306,7 +310,8 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.scout.inventory;
+				PRODUCT_BUNDLE_IDENTIFIER = com.scout.manager;
+				PRODUCT_MODULE_NAME = ScoutManager;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
