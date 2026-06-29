@@ -2,172 +2,142 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-**ScoutInventory-iOS** — native SwiftUI iOS app for the scout (SGDF) field inventory
-flow: **scan a QR tag → object sheet → field action**. It is a thin native client
-over the same Supabase backend as the **CampManager** monorepo (a *separate* sibling
-repo at `../CampManager`, Next.js web + Expo mobile + `packages/shared`). This repo
-contains only the iOS app; there is no TypeScript here.
+**ScoutManager** — native SwiftUI iOS app to manage a scout group's gear, QR tracking,
+events, intendance and camp program (SGDF). It evolved in place from an earlier
+`ScoutInventory` prototype: the Xcode project file is still `ScoutInventory.xcodeproj`
+(scheme `ScoutInventory`, target product `ScoutInventory.app`), but the **app module is
+`ScoutManager`** (`PRODUCT_MODULE_NAME`), the bundle id is `com.scout.manager`, and all
+source lives under `ScoutManager/`. The `ScoutInventory/` folder is retired/empty.
+
+The **Supabase backend is shared with CampManager** (a separate web/mobile project). This
+is the single most important constraint — see "Shared backend" below.
 
 ---
 
 ## Build / run
 
-Single Xcode project, single scheme `ScoutInventory`, single target. No package
-manager — **zero external dependencies**.
+Single Xcode project, single scheme `ScoutInventory`. Dependency: **supabase-swift** (SPM).
 
 ```bash
-# Build for a simulator
+# Build (use a simulator that exists on the machine — list with: xcrun simctl list devices)
 xcodebuild -project ScoutInventory.xcodeproj -scheme ScoutInventory \
-  -destination 'platform=iOS Simulator,name=iPhone 16' build
+  -destination 'generic/platform=iOS Simulator' build
 
-# List schemes / destinations
-xcodebuild -list -project ScoutInventory.xcodeproj
+# Resolve SPM packages
+xcodebuild -resolvePackageDependencies -project ScoutInventory.xcodeproj -scheme ScoutInventory
 ```
 
-Normal workflow is to open `ScoutInventory.xcodeproj` in Xcode (16+, tested on 26),
-pick a simulator or device, and run (⌘R). iOS 17+.
-
-**First-time setup — the Supabase key is required and not in git:**
-
-```bash
-cp Secrets.example.xcconfig Secrets.xcconfig   # then paste the anon key into it
-```
-
-Without `Secrets.xcconfig` the app builds but shows "clé Supabase manquante" instead
-of connecting (Xcode also emits a base-config warning). The key comes from
-CampManager's `apps/web/.env.local` → `NEXT_PUBLIC_SUPABASE_ANON_KEY`.
-
-- There is **no test target** yet — don't claim tests pass; there are none to run.
-- The **camera scanner does not work in the Simulator**. Use manual code entry
-  (`TAG-000001`); real device for camera scan.
-
-### Supabase credentials (key is out of source control)
-
-The `anon` key is a public client key (security is enforced by Postgres RLS, not key
-secrecy) but is still kept out of git so the repo carries no project credential. The
-wiring, if you touch it:
-
-- `Secrets.xcconfig` (**gitignored**) defines `SUPABASE_ANON_KEY`. `Secrets.example.xcconfig`
-  is the committed template.
-- It is the **base configuration** of both Debug/Release, so `$(SUPABASE_ANON_KEY)`
-  is available as a build setting.
-- `ScoutInventory/Info.plist` carries `SupabaseAnonKey = $(SUPABASE_ANON_KEY)`, which
-  the build substitutes. (A custom `INFOPLIST_KEY_*` build setting does **not** work —
-  Xcode only injects its own allowlisted keys into the generated plist, so a real
-  `Info.plist` with `INFOPLIST_FILE` set is required. It's excluded from the
-  synchronized-folder resource membership to avoid a duplicate-output build error.)
-- `Config.swift` reads it at runtime via `Bundle.main.object(forInfoDictionaryKey:)`.
-- The project **URL** is not secret and stays hardcoded in `Config.swift`.
-
-To add another secret, follow the same chain: xcconfig var → `Info.plist` key → read
-in `Config.swift`. Don't reintroduce hardcoded credentials in Swift.
+- **First-time setup — Supabase anon key is required and not in git:**
+  `cp Secrets.example.xcconfig Secrets.xcconfig` then paste the anon key. Without it the
+  app builds but shows "clé Supabase manquante". Chain: `Secrets.xcconfig`
+  (`SUPABASE_ANON_KEY`, gitignored) → base config of Debug/Release → `ScoutManager/App/Info.plist`
+  carries `SupabaseAnonKey = $(SUPABASE_ANON_KEY)` (a real `Info.plist` via `INFOPLIST_FILE`;
+  custom `INFOPLIST_KEY_*` are NOT injected) → `Config.swift` reads it at runtime.
+- **No XCTest target exists** — don't claim tests pass; verify by `xcodebuild build` and by
+  running the app. (Adding tests requires creating the target in Xcode.)
+- **Synchronized folder groups:** `ScoutManager/` is a `PBXFileSystemSynchronizedRootGroup`.
+  New `.swift` files under it are auto-compiled — **do NOT edit `project.pbxproj`** to add
+  files. SourceKit/Xcode may show stale "Cannot find X in scope" diagnostics for newly
+  added files; only `xcodebuild` is authoritative.
+- **Camera scan does not work in the Simulator** — use manual code entry (`TAG-000001`).
+- Git is **local only** (no remote). UI copy is in **French** — match it.
 
 ---
 
-## Architecture
+## Architecture (MVVM)
 
 ```
-ScoutInventory/
-  ScoutInventoryApp.swift     @main; injects a single AppState into the environment
-  Config.swift                Supabase URL + anon key (key read from Info.plist, see below)
-  Info.plist                  carries SupabaseAnonKey = $(SUPABASE_ANON_KEY) for injection
-  Models/Domain.swift         domain enums/structs — Swift mirror of CampManager's shared TS package
-  Services/
-    SupabaseService.swift     all network I/O: GoTrue auth + PostgREST REST (the only place URLSession lives)
-    AppState.swift            @MainActor ObservableObject: session, role, selected event; facade over the service
-  Views/
-    RootView.swift            login ↔ MainTabView switch on isAuthenticated
-    LoginView.swift           email + password
-    MainTabView.swift         tabs: Scan / Matériel / Évènements
-    ScanView.swift            VisionKit DataScanner + manual entry → resolveTag
-    ItemDetailView.swift      object sheet + field action buttons
-    MaterialListView.swift    browse inventory
-    EventsListView.swift      browse / create events
+ScoutManager/
+  App/            ScoutManagerApp (@main), RootView (login ↔ tabs), MainTabView (5 tabs),
+                  AppRouter (tab selection), Config, Info.plist
+  DesignSystem/   SGDFColors, SGDFTheme, StatusColorMapper, Color+Hex (see charter below)
+  Components/     SGDFButton, SGDFCard, SGDFBadge, SGDFTextField, EmptyStateView, LoadingView
+  Models/         Enums (ItemStatus/ItemCondition/TrackingType/Branch/UserRole), Item,
+                  ItemCategory, ItemLocation, QRCode, MovementHistory
+  Services/       SupabaseService (SDK client + auth), ItemService, ImageStorageService,
+                  QRCodeService
+  Stores/         SessionStore (@MainActor: auth session + role)
+  ViewModels/     DashboardViewModel, MaterialListViewModel, MaterialFormViewModel, ScannerViewModel
+  Views/          Dashboard/, Material/, Scan/, Placeholder/ (Intendance & Camp tabs are
+                  ComingSoonView until built)
+supabase/migrations/   SQL run by the user in the Supabase SQL editor
+docs/superpowers/specs|plans/   design spec + per-increment implementation plans
 ```
 
-**Layering is strict and worth preserving:**
-`Views → AppState → SupabaseService → Supabase REST`. Views never touch the network
-or `URLSession`; they call `AppState`. `AppState` is the only consumer of
-`SupabaseService`. All HTTP lives in `SupabaseService` (one point of contact).
+**Strict layering:** `Views → ViewModels/Stores → Services → SupabaseClient`. Views never
+touch the network. `SupabaseService.shared.client` is the **only** `SupabaseClient` — all
+services reuse it. ViewModels/Stores are `@MainActor ObservableObject`.
 
-### Things that are easy to get wrong
-
-- **`SupabaseService.createMovement` ordering is deliberate.** It PATCHes the item
-  status (idempotent) *before* inserting the movement row (append-only journal), so a
-  retry/replay is safe. Don't reorder these to "insert then update."
-
-- **`MovementStatusMapping.nextStatus(for:)` in `Domain.swift` is the single source of
-  truth** for action → resulting status. `AppState.runMovement` and
-  `SupabaseService.createMovement` both derive the next status from it — never hardcode
-  a status string for an action; extend the mapping.
-
-- **Role guard.** Writes go through `AppState.runMovement`, which checks `canWrite`
-  (`role.canWrite`; a `viewer` is read-only) before calling the service. Keep new
-  write paths behind this guard. This mirrors `can_write_inventory` in the SQL/RLS.
-
-- **Codable ↔ Postgres column names.** Domain structs use explicit `CodingKeys` to map
-  camelCase Swift to snake_case columns (`tag_code`, `assigned_item_id`,
-  `inventory_code`, …). New fields need their `CodingKeys` entry or decoding breaks.
-
-- **Tag format** is validated by `TagCode.parse` — `^TAG-\d{6}$`, uppercased/trimmed.
-  This mirrors `parseTagCode` in shared. `resolveTag` then branches on
-  `QrTagStatus` (assigned / unassigned / disabled) and returns a `TagResolution`
-  the view renders.
-
-- **v1 is online-first.** There is no offline queue / action replay yet. Reads use
-  `try?`-swallow-to-empty in `AppState`; writes surface errors via `AppError`.
-
-The domain layer is intentionally a faithful mirror of CampManager's `shared` package.
-When the backend contract changes (statuses, actions, columns), keep `Domain.swift`
-in sync with that package rather than improvising.
+**What's built (MVP-1):** design system, 5-tab shell, SDK auth (login), Dashboard (stats),
+Material module (list/search/filters/detail/add/edit/image/archive), Scan core (resolve
+tag → fiche). **Not yet:** blank-QR assign/generate, quick status change + movements,
+Intendance, Camp program.
 
 ---
 
-## Design authority — SGDF color charter
+## Shared backend (the critical constraint)
 
-ScoutInventory must be **immediately identifiable** as an SGDF app: sober, legible,
-field-ready, professional. The institutional blue **`#003a5d`** is the visual anchor —
-navigation, identity, primary buttons — and should stay dominant.
+The Supabase project is shared with CampManager. **Never mutate existing data, column
+types, or enum values** — it would break CampManager and existing DB views (e.g.
+`dashboard_stats` depends on `inventory_items.status`). Migrations must be **additive
+only** (new tables/columns, `ADD VALUE` to enums, new RLS, buckets).
 
-> Status today: the SwiftUI app does **not** yet define a theme or use chart colors
-> (it relies on system defaults). When you introduce color, **centralize it** — a
-> single Swift theme source (e.g. `ScoutInventory/Theme/`) defining these tokens and a
-> status→color mapping — and import from there. **Never scatter hardcoded hex /
-> `Color(red:…)` literals across views.** If a color isn't in the palette below, it
-> doesn't exist in the app.
+Consequences baked into the code:
+- `ItemStatus` rawValues are the **existing English DB enum values** (`available`,
+  `checked_out`, `cleaning_required`, `repair_required`, `missing`, `archived`) plus the two
+  additively-added (`reserve`, `indisponible`). The French is only the `.label`. Same for
+  `ItemCondition` (`excellent/good/fair/damaged/broken` with French labels).
+- The app reuses existing tables: `inventory_items`, `qr_tags`, `item_movements`, `events`,
+  `profiles`; and adds `categories`, `locations`, the `item-images` Storage bucket, and
+  additive columns on `inventory_items`.
 
-### Allowed palette
+## Things easy to get wrong
 
-| Role | Hex | Usage |
-|------|-----|-------|
-| **Primary** — institutional blue | `#003a5d` | navigation, titles, primary buttons, QR scan, global identity |
-| Orange | `#ff8300` | important actions, creation, checked-out, items to prepare |
-| Light blue | `#0077b3` | information, availability, links, active filters |
-| Red | `#d03f15` | error, deletion, broken / to-repair / missing |
-| Dark green | `#007254` | validation, returns, OK status, completed checklist |
-| Light green | `#65bc99` | light success, available, secondary confirmation |
-| Violet | `#6e74aa` | program, activities, pedagogical organisation |
-
-Neutrals (text/surfaces) stay sober — not "strong" colors. A color must **never** be
-used outside its role (no orange for validation, no red for a filter).
-
-### Status → color mapping (when implemented)
-
-Map `ItemStatus` once, in the theme layer, not per-view:
-`available → lightGreen`, `checked_out` / `cleaning_required → orange`,
-`repair_required` / `missing → red`, `archived → neutral/textSecondary`.
-
-### Forbidden
-
-- ❌ Non-SGDF pastels, unsanctioned gradients, auto-generated / derived hues
-- ❌ Framework-default accent colors left unchart­ed
-- ❌ Hardcoded hex / `Color(...)` literals scattered in views
-- ❌ Using a color outside its section role
+- **Codable ↔ snake_case columns** via explicit `CodingKeys` (`inventory_code`,
+  `assigned_item_id`, `category_id`, …). A new field needs its key or decoding breaks.
+- **Tag format**: `TagCode.parse` → `^TAG-\d{6}$`. `ScannerViewModel.resolve` branches on
+  `QRCode.status` (assigned/unassigned/disabled).
+- **Item id on create**: generate a client `UUID().uuidString` (Postgres accepts a provided
+  uuid). On **edit**, preserve `quantityAvailable` (don't reset it to `quantity`).
+- **Role guard** (future write paths): gate on `SessionStore.canWrite` (viewer = read-only),
+  mirroring the SQL `can_write_inventory` / RLS.
+- Surface errors to the user (no swallowed `try?` on user-triggered writes like archive).
 
 ---
 
-## Notes
+## Design authority — SGDF color charter (implemented)
 
-- Git is **local only** — no remote configured. Don't assume `git push` works.
-- No app icon / asset catalog yet (dev placeholder).
-- UI copy is in **French**; match it.
+The app must be immediately identifiable as SGDF: sober, legible, field-ready. **`#003a5d`
+is dominant** (nav/tab tint, titles, primary buttons, scan identity).
+
+**The Design System is the single source of color.** No view writes `Color.blue`, `.white`,
+a hex, or `Color(red:…)`. The `Color(hex:)` helper is confined to `DesignSystem/`. Colors
+come from `SGDFColors`; status colors from `StatusColorMapper`; spacing/radius/typography
+from `SGDFTheme`; `SGDFColors.onColor` is the white-on-strong-fill token.
+
+| Token | Hex | Role |
+|-------|-----|------|
+| `primaryBlue` | `#003a5d` | navigation, titles, primary buttons, scan, identity |
+| `orange` | `#ff8300` | important/quick actions, creation, checked-out |
+| `lightBlue` | `#0077b3` | information, events |
+| `red` | `#d03f15` | error, deletion, broken/repair/missing |
+| `green` | `#007254` | validation, returns, OK |
+| `lightGreen` | `#65bc99` | available, light success |
+| `violet` | `#6e74aa` | program, reserved |
+| neutrals | `background #F7F8FA`, `surface #FFFFFF`, `border #E3E6EB`, `textPrimary #003a5d`, `textSecondary #5B6B7A`, `onColor #FFFFFF` |
+
+Status mapping lives once in `StatusColorMapper`: disponible→lightGreen, réservé→violet,
+sorti/à vérifier→orange, à réparer/indisponible/perdu→red, archivé→textSecondary. A color
+must never be used outside its role.
+
+**Forbidden:** non-SGDF pastels, unsanctioned gradients, framework default accents, hardcoded
+hex/`Color(...)` in views, a color used outside its role.
+
+---
+
+## Workflow notes
+
+This branch (`feature/scoutmanager-mvp1`) was built via the superpowers
+subagent-driven-development flow: specs in `docs/superpowers/specs/`, per-increment plans in
+`docs/superpowers/plans/`, a progress ledger in `.superpowers/sdd/progress.md`. Each task is
+build-verified and reviewed before the next.
