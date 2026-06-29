@@ -14,7 +14,7 @@ struct MainTabView: View {
             DashboardView()
                 .tabItem { Label("Dashboard", systemImage: "square.grid.2x2") }
                 .tag(AppRouter.Tab.dashboard)
-            ComingSoonView(title: "Matériel")
+            MaterialListView()
                 .tabItem { Label("Matériel", systemImage: "shippingbox") }
                 .tag(AppRouter.Tab.material)
             ComingSoonView(title: "Scan")
