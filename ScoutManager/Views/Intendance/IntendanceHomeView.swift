@@ -5,10 +5,7 @@ struct IntendanceHomeView: View {
     @EnvironmentObject private var session: SessionStore
     @State private var showingCreateCamp = false
 
-    // Sous-modules placeholder (task S — Menus, Recettes, Courses, Budget, Stock sont navigables)
-    private let placeholderModules: [(title: String, icon: String)] = [
-        ("Registre", "doc.text")
-    ]
+    // Plus aucun placeholder : tous les sous-modules sont navigables depuis Task S
 
     var body: some View {
         NavigationStack {
@@ -63,7 +60,7 @@ struct IntendanceHomeView: View {
                         .padding(.horizontal, SGDFTheme.Spacing.md)
                 }
 
-                // Grille des sous-modules (placeholders)
+                // Grille des sous-modules
                 VStack(alignment: .leading, spacing: SGDFTheme.Spacing.sm) {
                     Text("Modules")
                         .font(SGDFTheme.FontStyle.sectionTitle())
@@ -107,10 +104,11 @@ struct IntendanceHomeView: View {
                         }
                         .buttonStyle(.plain)
 
-                        // Cartes placeholders (task S)
-                        ForEach(placeholderModules, id: \.title) { module in
-                            subModuleCard(title: module.title, icon: module.icon, isActive: false)
+                        // Carte Registre — navigable (Task S)
+                        NavigationLink(destination: FoodTraceListView()) {
+                            subModuleCard(title: "Registre", icon: "shield.checkerboard", isActive: true)
                         }
+                        .buttonStyle(.plain)
                     }
                     .padding(.horizontal, SGDFTheme.Spacing.md)
                 }

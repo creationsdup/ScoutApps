@@ -199,3 +199,31 @@ drop policy if exists food_stock_write_roles on public.food_stock;
 create policy food_stock_write_roles on public.food_stock for all to authenticated
   using      (exists (select 1 from public.profiles p where p.id = auth.uid() and p.role in ('admin','manager','member')))
   with check (exists (select 1 from public.profiles p where p.id = auth.uid() and p.role in ('admin','manager','member')));
+
+-- ============================================================================
+-- Task S : Registre de traçabilité alimentaire — table food_traceability (ADDITIF)
+-- ============================================================================
+create table if not exists public.food_traceability (
+  id            uuid primary key default gen_random_uuid(),
+  camp_id       uuid not null references public.camps(id) on delete cascade,
+  product_name  text not null,
+  brand         text,
+  supplier      text,
+  lot_number    text,
+  barcode       text,
+  quantity      numeric,
+  received_date date,
+  expiry_date   date,
+  meal_id       uuid references public.meals(id) on delete set null,
+  photo_path    text,
+  created_at    timestamptz not null default now()
+);
+
+alter table public.food_traceability enable row level security;
+
+drop policy if exists food_traceability_select_auth on public.food_traceability;
+create policy food_traceability_select_auth on public.food_traceability for select to authenticated using (true);
+drop policy if exists food_traceability_write_roles on public.food_traceability;
+create policy food_traceability_write_roles on public.food_traceability for all to authenticated
+  using      (exists (select 1 from public.profiles p where p.id = auth.uid() and p.role in ('admin','manager','member')))
+  with check (exists (select 1 from public.profiles p where p.id = auth.uid() and p.role in ('admin','manager','member')));
