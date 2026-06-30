@@ -237,3 +237,103 @@ Tasks 3+4: review Needs fixes -> fix wave 94cf46e (Important: list error banner;
 REVUE FINALE (opus): ✅ Ready. SQL additive PASS, anti-survente+atomicité+cohérence PASS, canWrite+RLS, 0 Critical/0 Important.
   Minors OK-to-defer: status force available (par design), onAppear min(1,remaining) cosmétique, SGDFBadge non applicable, loadAvailable try?.
 === BON DE SORTIE COMPLET — merge dans main ===
+
+=== PLAN: Stock Management (cycle 1/3) — branch feature/stock-management ===
+Plan: docs/superpowers/plans/2026-06-30-stock-management.md
+Base SHA: a75421e (plan commit). Subagent-driven execution starting.
+Task 1: complete (commits a75421e..c9f43ad, review clean — Spec OK, Quality approved, 0 findings)
+Task 2: complete (commits c9f43ad..26a30d5, review clean — Spec OK, Quality approved).
+  NOTE: MovementAction.adjustment forced adding icon(for:) .adjustment case in MaterialDetailView (Task 4 Step 1) — pulled forward; Task 4 Step 1 is now a no-op.
+  Minor (deferred): cosmetic re-alignment of icon(for:) case returns; Item/MovementHistory CodingKeys internal (pre-existing pattern, correct).
+Task 3: complete (commits 26a30d5..36be580, review clean — Spec OK, Quality approved).
+  Minor (deferred to final review): adjustStock get()+update() is non-atomic (TOCTOU) — matches existing project pattern (e.g. archive); acceptable for single-operator MVP, document before multi-user writes.
+Task 4: complete (commits 36be580..6ad009d, review clean — Spec OK, Quality approved).
+  Minor (deferred to final review): (a) adjustStock(by:) sets liveAvailable = updated.quantityAvailable (Int?) — if nil, silently falls back to stale value; consider guard-let. (b) StockCard note uses bare TextField instead of SGDFTextField (design-system consistency).
+Task 5: complete (commits 6ad009d..5075510, review clean — Spec OK, Quality approved).
+  Minor (no action): seuil/unit kept in memory on global->specifique switch; save() null-fills them; reasonable UX.
+Task 6: complete (commits 5075510..afe0a1f, review clean — Spec OK, Quality approved).
+  Minor (no action): redundant accessibilityLabel on Label (brief-prescribed, harmless).
+=== ALL 6 TASKS COMPLETE — launching final whole-branch review ===
+FINAL REVIEW (opus): NEEDS FIXES → 1 Important (stale duplicate quantity row) + 1 new Minor (global->specifique available>total).
+FIX commit 1e97cc3 (build SUCCEEDED): hide static Quantité row for global; clamp quantityAvailable=min(existing,quantity) on save. Both verified.
+DEFERRED to next cycle (final-review triage = OK to defer): TOCTOU adjustStock; liveAvailable guard (non-issue); SGDFTextField for note; seuil/unit in-memory on type switch; redundant accessibilityLabel; status-vs-availability after +adjust on checked_out item (by design).
+=== STOCK MANAGEMENT (cycle 1/3) CODE COMPLETE — branch feature/stock-management ready; pending: user runs 20260701_stock_management.sql + runtime smoke test ===
+
+=== PLAN: Dashboard Alerts + Sorties (cycle 2/3) — branch feature/dashboard-alerts-sorties ===
+Plan: docs/superpowers/plans/2026-06-30-dashboard-alerts-sorties.md
+Base SHA: e4728ee (plan commit). Subagent-driven execution starting.
+C2-Task 1: complete (commits e4728ee..51f4b6f, review clean — Spec OK, Quality approved). Both schemes build.
+  Minor (deferred): cutoff fallback to Date() if calendar arithmetic fails (negligible); per-call service allocation (matches project pattern).
+C2-Task 2: complete (commits 51f4b6f..2fe04b6, review clean — Spec OK, Quality approved).
+  Minor (no action): isLoading=false after do/catch rather than defer (functionally correct).
+C2-Task 3: complete (commits 2fe04b6..cbe1ce9, review clean — Spec OK, Quality approved).
+  Minor (no action): AlertCard struct placed before StatCard rather than after (cosmetic ordering, no functional impact).
+C2-Task 4: complete (commits cbe1ce9..4f5aae9, review clean — Spec OK, Quality approved).
+  Minor (no action): badges are colored text not pill capsules (spec-prescribed); revisit later.
+C2-Task 5: complete (commits 4f5aae9..2b24543, review clean — Spec OK, Quality approved, 0 findings).
+=== ALL 5 C2 TASKS COMPLETE — launching final whole-branch review ===
+FINAL REVIEW (opus): READY TO MERGE — 0 Critical / 0 Important.
+  New Minor (deferred): M-A stale alert list/counts after in-detail action until pull-to-refresh; M-B N+1 (lines per checkout + items per camp) harmless at scout-group scale.
+  5 known minors: all DEFER (cutoff fallback, per-call service alloc, isLoading vs defer, AlertCard ordering, colored-text badges).
+
+=== PLAN: Inventaire Rapide (cycle 3/3) — branch feature/inventaire-rapide ===
+Plan: docs/superpowers/plans/2026-06-30-inventaire-rapide.md
+Base SHA: b18de50 (plan commit). Subagent-driven execution starting.
+C3-Task 1: complete (commits b18de50..59350c3, review clean — Spec OK, Quality approved). Both schemes build. `in` backticked.
+  Minor (deferred): ISO8601DateFormatter() allocated per markChecked call (infrequent path; could be static).
+C3-Task 2: complete (commits 59350c3..c84f782, review clean — Spec OK, Quality approved). File verified in ScoutInventory Sources build phase.
+  Minor (deferred): loadReferentials() swallows single-source failure (error only if BOTH nil); resolve() unstructured Task -> scanMessage last-wins on concurrent scans.
+C3-Task 3: complete (commits c84f782..9581cce, review clean — Spec OK, Quality approved). File in Sources phase; no camera; color-clean.
+  Minor (no action): summaryRow uses .system(.title3,design:.rounded) like existing StatCard/AlertCard big-number pattern; SGDFTheme has no such token.
+C3-Task 4: complete (commits 9581cce..c71d341, review clean — Spec OK, Quality approved, 0 findings).
+=== ALL 4 C3 TASKS COMPLETE — launching final whole-branch review ===
+FINAL REVIEW (opus): READY TO MERGE — 0 Critical / 0 Important.
+  Fix commit 9fc3946 (both schemes build): removed dead InventoryScope enum; loadReferentials guard && -> || (surface single-source failure).
+  Deferred minors: ISO8601 formatter per call; resolve() concurrent-task scanMessage last-wins; summaryRow .system font (matches StatCard pattern); archived item scanned shows as en-trop.
+=== INVENTAIRE RAPIDE (cycle 3/3) READY — merging to main ===
+
+=== PLAN: Catégories/sous-catégories, codes auto, vignettes — branch feature/categories-subcategories-codes ===
+Plan: docs/superpowers/plans/2026-06-30-categories-subcategories-codes.md
+Base SHA: 63bb643 (plan commit). Subagent-driven execution starting.
+C4-Task 1: complete (commits 63bb643..573f242, review clean — Spec OK, Quality approved). SQL-only, additive+idempotent.
+  Minor (deferred): code could contain regex metachar (admin-controlled, TEN/CUI safe); lpad(4) overflows at seq>=9999 (won't reach at scout scale); no explicit GRANT EXECUTE (Supabase grants PUBLIC by default).
+C4-Task 2: complete (commits 573f242..126d1e9, review clean — Spec OK, Quality approved, 0 findings). Both schemes build.
+C4-Task 3: complete (commits 126d1e9..d534d81, review clean — Spec OK, Quality approved, 0 findings). Both schemes build.
+C4-Task 4: complete (commits d534d81..f188a44, review clean — Spec OK, Quality approved). Both schemes build.
+  Minor (deferred, anticipated by brief): qrError @State + .alert in MaterialDetailView now unreachable (no failure mode); ScanResolution.unassigned/.disabled now dead return paths (enum kept intact per plan).
+C4-Task 5: complete (commits f188a44..3089502, review clean — Spec OK, Quality approved). Both schemes build. Manual sim check deferred to QA.
+  Minor (deferred, brief-mandated): loadReferentials surfaces error only if BOTH cats+locs nil; silent subcategory load failure gives no feedback.
+C4-Task 6: complete (commits 3089502..4271eb4, review clean — Spec OK, Quality approved). Both schemes build. Manual sim check deferred to QA.
+  Minor (deferred): MaterialRow instantiates ImageStorageService() per body eval (stateless URL builder, matches MaterialDetailView pattern; negligible).
+=== ALL 6 C4 TASKS COMPLETE — launching final whole-branch review ===
+FINAL REVIEW (opus): 0 Critical, 3 Important, 2 Minor.
+  Fix commit df2d988 (both schemes build): (1) dropped always-true missingQR dashboard alert (+removed assignedItemIds round-trip); (2) DB CHECK categories.code ~ ^[A-Z]{2,4}$; (3) partial unique index on inventory_items(inventory_code) for ^[A-Z]{2,4}-[0-9]{4}$ (excludes legacy TAG-).
+  Deferred minors: qrError/.alert + ScanResolution.unassigned/.disabled dead-but-inert; per-row ImageStorageService() alloc.
+=== C4 FEATURE COMPLETE — branch feature/categories-subcategories-codes ready ===
+C4-tweak: thumbnail leading inset reduced (photo hugs left). Both schemes build.
+
+=== PLAN: Gestion catégories/sous-catégories — branch feature/category-management ===
+Plan: docs/superpowers/plans/2026-06-30-category-management.md
+Base SHA: 3d0abf1 (plan commit). Subagent-driven execution starting.
+C5-Task 1: complete (commits 3d0abf1..a640250, review clean — Spec OK, Quality approved, 0 findings). Both schemes build. CategoryService CRUD+itemCount.
+C5-Task 2: complete (commits a640250..2e4e1af, review clean — Spec OK, Quality approved). Both schemes build. VM in ScoutInventory target (grep=2 normal). [retry after transient API overload killed first attempt — clean re-dispatch]
+  Minor (deferred): load() does N+1 itemCount queries (one per category); fine at scout scale.
+C5-Task 3: complete (commits 2e4e1af..b939490, review clean — Spec OK, Quality approved). Both schemes build. View in target (grep=2).
+  Minor (deferred, flag final review): two chained .alert modifiers on same view could shadow on iOS <16.4; alerts are mutually exclusive so low risk on iOS 16+.
+C5-Task 4: complete (commits b939490..8f87e2d, review clean — Spec OK, Quality approved, 0 findings). Both schemes build. SessionStore injection confirmed at app root. Manual QA deferred.
+  Note (out of scope): existing "+" add-item button is unconditional (viewer can add items) — pre-existing pattern, not introduced here.
+=== ALL 4 C5 TASKS COMPLETE — launching final whole-branch review ===
+FINAL REVIEW (opus): 0 Critical, 1 Important. All deferred-minor checks verified clean (FK on delete cascade/set null confirmed; code-lock solid; UI/DB regex agree; null grouping safe; iOS target 17 so dual-alert fine).
+  Fix commit f463caa (both schemes build): added .confirmationDialog before deleting category (with N-objets-détachés count) and subcategory — spec §2/§4 compliance.
+=== C5 FEATURE COMPLETE — merging to main + pushing to GitHub ===
+
+=== PLAN: Sélection multiple + déplacement matériel — branch feature/multi-select-move-material ===
+Plan: docs/superpowers/plans/2026-06-30-multi-select-move-material.md
+Base SHA: 7435a3e (plan commit). Subagent-driven execution starting.
+Task 1: complete (commits 7435a3e..05a3e3f, review clean — Spec OK, Quality approved, 0 findings). Build OK. ItemService.move + MovePayload (explicit null encode).
+Task 2: complete (commits 05a3e3f..f5e4bce, review clean — Spec OK, Quality approved). Build OK. VM.move returns error string (does not touch errorMessage), reloads on success.
+Task 3: complete (commits f5e4bce..f80067d, review clean — Spec OK, Quality approved). Build OK. Selection mode + MoveItemsSheet in MaterialListView, local alert, canWrite-gated. Manual QA deferred.
+  Minor (deferred, flag final review): checkmark uses primaryBlue (overloaded token) — cosmetic only.
+=== ALL 3 TASKS COMPLETE — launching final whole-branch review ===
+FINAL REVIEW (opus): 0 Critical, 0 Important, 4 Minor (polish). Merge-ready.
+Toolbar reorg (user request, build OK, simulator-verified): collapsed secondary actions into a ••• menu (Sélectionner / Organiser); move action "Déplacer (N)" moved from .bottomBar (was hidden behind TabView tab bar — bug) to topBarTrailing; selection mode shows Annuler + "N sélectionné(s)" principal + Déplacer (N). Menu gated canWrite.

@@ -52,13 +52,15 @@ migration nécessaire. Additif uniquement, conforme à la contrainte backend par
 `/ScoutMateriel/ViewModels/MaterialListViewModel.swift`
 
 ```swift
-func move(itemIds: Set<String>, categoryId: String, subcategoryId: String?) async -> Bool
+func move(itemIds: Set<String>, categoryId: String, subcategoryId: String?) async -> String?
 ```
 
 - Appelle `service.move(itemIds: Array(itemIds), categoryId:, subcategoryId:)`.
 - Sur succès : `await load()` (rafraîchit `items` et donc le groupement `groups`),
-  retourne `true`.
-- Sur erreur : positionne `errorMessage`, retourne `false`. Pas de `try?` silencieux.
+  retourne `nil`.
+- Sur erreur : retourne un message d'erreur FR. **Ne touche pas** `errorMessage`
+  (qui pilote un écran d'erreur plein écran et effacerait la liste) ; l'erreur est
+  affichée via une alerte locale dédiée dans la vue. Pas de `try?` silencieux.
 
 Le VM possède déjà `categories: [ItemCategory]` et `subcategories: [Subcategory]`
 (chargés par `loadReferentials()`), réutilisés tels quels pour le picker cible.
@@ -71,12 +73,19 @@ Le VM possède déjà `categories: [ItemCategory]` et `subcategories: [Subcatego
 - `@State private var isSelecting = false`
 - `@State private var selectedIds: Set<String> = []`
 - `@State private var showMoveSheet = false`
+- `@State private var moveErrorMessage: String?` (alerte locale d'échec)
 
-Toolbar (gating `if session.canWrite`) :
-- **Hors mode sélection :** ajoute un bouton **« Sélectionner »** qui passe
-  `isSelecting = true`. Les boutons existants (+, organiser, filtres) restent.
-- **En mode sélection :** bouton **« Annuler »** (`isSelecting = false`,
-  `selectedIds = []`) et bouton **« Déplacer (N) »** désactivé si
+Toolbar — disposition épurée (les actions secondaires sont regroupées dans un
+menu `•••` pour ne pas surcharger la barre ; l'écran Matériel vit dans une
+`TabView`, donc **aucune action n'est placée en `.bottomBar`** — elle serait
+masquée par la barre d'onglets) :
+- **Hors mode sélection :** `+` (ajout, `.topBarLeading`) ; à droite, le bouton
+  **filtres** puis un **menu `•••`** (`ellipsis.circle`, gated `if session.canWrite`)
+  contenant **Sélectionner** (`isSelecting = true`) et **Organiser le matériel**
+  (ouvre `CategoryManagerView`). Un viewer ne voit que `+` et filtres.
+- **En mode sélection :** **« Annuler »** (`.topBarLeading` ; `isSelecting = false`,
+  `selectedIds = []`), un titre central **« N sélectionné(s) »** (`.principal`) comme
+  retour visuel, et **« Déplacer (N) »** (`.topBarTrailing`, gras) désactivé si
   `selectedIds.isEmpty`, qui ouvre `showMoveSheet`.
 
 Liste / `MaterialRow` :
@@ -109,11 +118,11 @@ Présentée en `.sheet(isPresented: $showMoveSheet)` depuis `MaterialListView`.
 
 ## Flux de données
 
-1. `canWrite` → bouton « Sélectionner » → `isSelecting = true`.
+1. `canWrite` → menu `•••` → « Sélectionner » → `isSelecting = true`.
 2. Taps sur lignes → mise à jour de `selectedIds`.
-3. « Déplacer (N) » → `MoveItemsSheet`.
+3. « Déplacer (N) » (haut droite) → `MoveItemsSheet`.
 4. Choix catégorie (+ sous-catégorie optionnelle) → callback →
-   `Task { let ok = await viewModel.move(...) ; if ok { isSelecting = false; selectedIds = [] } }`.
+   `Task { let error = await viewModel.move(...) ; if let error { moveErrorMessage = error } else { isSelecting = false; selectedIds = [] } }`.
 5. `viewModel.move` → `ItemService.move` (1 requête) → `await load()` → la liste se
    regroupe automatiquement via `groups`.
 
