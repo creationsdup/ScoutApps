@@ -148,8 +148,3 @@ final class QRScannerController: UIViewController, AVCaptureMetadataOutputObject
         onScan?(value)
     }
 }
-
-// MARK: - String Identifiable (shared; used by sheet(item:) in this file and MaterialDetailView)
-extension String: @retroactive Identifiable {
-    public var id: String { self }
-}
