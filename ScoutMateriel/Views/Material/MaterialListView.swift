@@ -76,8 +76,19 @@ private struct MaterialRow: View {
                 Text(item.inventoryCode)
                     .font(SGDFTheme.FontStyle.caption())
                     .foregroundStyle(SGDFColors.textSecondary)
+                if item.trackingType == .global {
+                    Text("Dispo \(item.quantityAvailable ?? item.quantity) / \(item.quantity)")
+                        .font(SGDFTheme.FontStyle.caption())
+                        .foregroundStyle(SGDFColors.textSecondary)
+                }
             }
             Spacer()
+            if item.isLowStock {
+                Label("Stock faible", systemImage: "exclamationmark.triangle.fill")
+                    .labelStyle(.iconOnly)
+                    .foregroundStyle(SGDFColors.orange)
+                    .accessibilityLabel("Stock faible")
+            }
             SGDFBadge(status: item.status)
         }
         .padding(.vertical, SGDFTheme.Spacing.xs)
