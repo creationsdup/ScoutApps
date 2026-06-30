@@ -24,63 +24,18 @@ struct ShoppingService {
         try await client.from("shopping_items").delete().eq("id", value: id).execute()
     }
 
-    /// Régénère les lignes `auto` du camp depuis les menus. Préserve les lignes `manual`.
-    /// `participants` : effectif du camp (défaut 1 si non renseigné).
-    func regenerateAuto(campId: String, participants: Int) async throws {
-        // 1. Récupère les liens repas->recette du camp.
-        struct MealIdRow: Decodable { let id: String }
-        let meals: [MealIdRow] = try await client.from("meals")
-            .select("id").eq("camp_id", value: campId).execute().value
-        let mealIds = meals.map(\.id)
-
-        var recipeIdsPerOccurrence: [String] = []   // un élément par (repas×recette)
-        if !mealIds.isEmpty {
-            struct LinkRow: Decodable { let recipe_id: String }
-            let links: [LinkRow] = try await client.from("meal_recipes")
-                .select("recipe_id").in("meal_id", values: mealIds).execute().value
-            recipeIdsPerOccurrence = links.map(\.recipe_id)
-        }
-
-        // 2. Charge recettes (servings_base) + ingrédients pour les recettes utilisées.
-        let usedRecipeIds = Array(Set(recipeIdsPerOccurrence))
-        var servingsByRecipe: [String: Int] = [:]
-        var ingredientsByRecipe: [String: [RecipeIngredient]] = [:]
-        if !usedRecipeIds.isEmpty {
-            let recipes: [Recipe] = try await client.from("recipes")
-                .select().in("id", values: usedRecipeIds).execute().value
-            for r in recipes { servingsByRecipe[r.id] = max(1, r.servingsBase) }
-
-            let ingredients: [RecipeIngredient] = try await client.from("recipe_ingredients")
-                .select().in("recipe_id", values: usedRecipeIds).execute().value
-            for ing in ingredients { ingredientsByRecipe[ing.recipeId, default: []].append(ing) }
-        }
-
-        // 3. Agrège par (nom normalisé, unité). Quantité = somme sur occurrences de
-        //    ingredient.quantity * ceil(participants / servings_base).
-        struct Key: Hashable { let name: String; let unit: String? }
-        var agg: [Key: (display: String, unit: String?, qty: Double, anyQty: Bool)] = [:]
-        for recipeId in recipeIdsPerOccurrence {
-            let servings = servingsByRecipe[recipeId] ?? 1
-            let factor = Double(Int(ceil(Double(participants) / Double(servings))))
-            for ing in ingredientsByRecipe[recipeId] ?? [] {
-                let key = Key(name: ing.name.lowercased(), unit: ing.unit)
-                var entry = agg[key] ?? (display: ing.name, unit: ing.unit, qty: 0, anyQty: false)
-                if let q = ing.quantity { entry.qty += q * factor; entry.anyQty = true }
-                agg[key] = entry
-            }
-        }
-
-        // 4. Remplace les lignes auto : delete puis insert.
-        try await client.from("shopping_items")
-            .delete().eq("camp_id", value: campId).eq("source", value: ShoppingSource.auto.rawValue)
+    /// Régénère les lignes `auto` du camp depuis les menus, préserve les lignes `manual`.
+    ///
+    /// Délègue à la fonction Postgres transactionnelle `regenerate_shopping_auto`
+    /// (cf. migration `20260630_scoutmanager_shopping_rpc.sql`) : l'agrégation
+    /// (occurrences repas×recette × ceil(participants / servings_base), groupées
+    /// par nom/unité) et le couple delete/insert s'exécutent dans une seule
+    /// transaction côté serveur — atomique (plus de perte de lignes si l'insert
+    /// échoue après le delete). L'effectif est lu depuis `camps.participants_count`.
+    /// La RLS s'applique (`security invoker`) : un viewer reçoit une erreur.
+    func regenerateAuto(campId: String) async throws {
+        try await client
+            .rpc("regenerate_shopping_auto", params: ["p_camp_id": campId])
             .execute()
-        let rows = agg.values.map { v in
-            ShoppingItem(id: UUID().uuidString, campId: campId,
-                         name: v.display, quantity: v.anyQty ? v.qty : nil,
-                         unit: v.unit, checked: false, source: .auto)
-        }
-        if !rows.isEmpty {
-            try await client.from("shopping_items").insert(rows).execute()
-        }
     }
 }
