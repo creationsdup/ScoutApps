@@ -18,7 +18,7 @@ struct CheckoutDetailView: View {
             Section {
                 VStack(alignment: .leading, spacing: SGDFTheme.Spacing.sm) {
                     Text(checkout.label)
-                        .font(SGDFTheme.FontStyle.title())
+                        .font(SGDFTheme.FontStyle.sectionTitle())
                         .foregroundStyle(SGDFColors.textPrimary)
                     HStack {
                         Text(checkout.status.label)
