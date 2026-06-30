@@ -33,6 +33,7 @@ struct ProgramSlotFormView: View {
 
     private let programService = ProgramService()
     private let itemService = ItemService()
+    private let campMaterialService = CampMaterialService()
 
     private static let timeDF: DateFormatter = {
         let f = DateFormatter()
@@ -264,6 +265,16 @@ struct ProgramSlotFormView: View {
                                                       itemIds: Array(selectedItemIds))
                 } catch {
                     errorMessage = "Créneau enregistré. Lien matériel non sauvegardé : \(error.localizedDescription)"
+                    return
+                }
+                // Auto-feed : le matériel d'une activité entre dans le chargement du camp (passe 'sorti').
+                // Idempotent et non-bloquant : une erreur s'affiche mais ne bloque pas l'enregistrement.
+                do {
+                    for id in selectedItemIds {
+                        try await campMaterialService.assign(campId: campId, itemId: id)
+                    }
+                } catch {
+                    errorMessage = "Créneau enregistré. Matériel non ajouté au chargement : \(error.localizedDescription)"
                     return
                 }
             }
