@@ -32,6 +32,22 @@ struct DashboardView: View {
                                  systemImage: "wrench.adjustable.fill", accent: StatusColorMapper.color(for: .aReparer))
                     }
 
+                    if !viewModel.snapshot.alerts.isEmpty {
+                        Text("Alertes")
+                            .font(SGDFTheme.FontStyle.sectionTitle())
+                            .foregroundStyle(SGDFColors.textPrimary)
+                        VStack(spacing: SGDFTheme.Spacing.sm) {
+                            ForEach(viewModel.snapshot.alerts) { alert in
+                                NavigationLink {
+                                    AlertItemsListView(title: alert.kind.label, items: alert.items)
+                                } label: {
+                                    AlertCard(alert: alert)
+                                }
+                                .buttonStyle(.plain)
+                            }
+                        }
+                    }
+
                     Text("Raccourcis")
                         .font(SGDFTheme.FontStyle.sectionTitle())
                         .foregroundStyle(SGDFColors.textPrimary)
@@ -61,6 +77,38 @@ struct DashboardView: View {
     }
 }
 
+/// Carte d'alerte : icône + libellé + nombre, couleur selon le type (rôle charte).
+private struct AlertCard: View {
+    let alert: DashboardAlert
+
+    private var color: Color {
+        switch alert.kind {
+        case .checkedOutOver7d, .lowStock, .toVerify: return SGDFColors.orange
+        case .toRepair, .missingQR:                   return SGDFColors.red
+        case .missingPhoto:                           return SGDFColors.textSecondary
+        }
+    }
+
+    var body: some View {
+        SGDFCard {
+            HStack(spacing: SGDFTheme.Spacing.md) {
+                Image(systemName: alert.kind.systemImage)
+                    .foregroundStyle(color)
+                Text(alert.kind.label)
+                    .font(SGDFTheme.FontStyle.body())
+                    .foregroundStyle(SGDFColors.textPrimary)
+                Spacer()
+                Text("\(alert.items.count)")
+                    .font(.system(.title3, design: .rounded).weight(.bold))
+                    .foregroundStyle(color)
+                Image(systemName: "chevron.right")
+                    .font(SGDFTheme.FontStyle.caption())
+                    .foregroundStyle(SGDFColors.textSecondary)
+            }
+        }
+    }
+}
+
 /// Carte statistique : grand chiffre + libellé + accent coloré.
 private struct StatCard: View {
     let value: Int
@@ -81,5 +129,41 @@ private struct StatCard: View {
                 .font(SGDFTheme.FontStyle.caption())
                 .foregroundStyle(SGDFColors.textSecondary)
         }
+    }
+}
+
+/// Liste auto-suffisante des objets d'une alerte ; chaque ligne pousse la fiche détail.
+struct AlertItemsListView: View {
+    let title: String
+    let items: [Item]
+    @StateObject private var materialVM = MaterialListViewModel()
+
+    var body: some View {
+        List {
+            ForEach(items) { item in
+                NavigationLink {
+                    MaterialDetailView(item: item, listViewModel: materialVM)
+                } label: {
+                    VStack(alignment: .leading, spacing: SGDFTheme.Spacing.xs) {
+                        Text(item.name)
+                            .font(.system(.body, design: .rounded).weight(.semibold))
+                            .foregroundStyle(SGDFColors.textPrimary)
+                        HStack {
+                            Text(item.inventoryCode)
+                                .font(SGDFTheme.FontStyle.caption())
+                                .foregroundStyle(SGDFColors.textSecondary)
+                            Spacer()
+                            SGDFBadge(status: item.status)
+                        }
+                    }
+                    .padding(.vertical, SGDFTheme.Spacing.xs)
+                }
+            }
+        }
+        .listStyle(.plain)
+        .background(SGDFColors.background)
+        .navigationTitle(title)
+        .navigationBarTitleDisplayMode(.inline)
+        .task { await materialVM.loadReferentials() }
     }
 }
