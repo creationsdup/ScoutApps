@@ -21,7 +21,6 @@ final class InventoryViewModel: ObservableObject {
     @Published var closed = false
 
     private let itemService = ItemService()
-    private let qrService = QRCodeService()
 
     var present: [Item] { expected.filter { pointedIds.contains($0.id) } }
     var missing: [Item] { expected.filter { !pointedIds.contains($0.id) } }
@@ -59,27 +58,21 @@ final class InventoryViewModel: ObservableObject {
     func resolve(_ raw: String) {
         manualCode = ""
         guard let code = TagCode.parse(raw) else {
-            scanMessage = "Code invalide. Format attendu : TAG-000001."
+            scanMessage = "Code invalide. Format attendu : TEN-0001."
             return
         }
         Task {
             do {
-                guard let tag = try await qrService.tag(byCode: code) else {
-                    scanMessage = "QR inconnu."
+                guard let item = try await itemService.item(byCode: code) else {
+                    scanMessage = "Code inconnu."
                     return
                 }
-                guard tag.status == .assigned, let itemId = tag.assignedItemId else {
-                    scanMessage = "Étiquette non associée à un objet."
-                    return
-                }
-                if let item = expected.first(where: { $0.id == itemId }) {
-                    pointedIds.insert(item.id)
-                    scanMessage = "✓ \(item.name)"
-                } else if let item = try await itemService.get(id: itemId) {
+                if let known = expected.first(where: { $0.id == item.id }) {
+                    pointedIds.insert(known.id)
+                    scanMessage = "✓ \(known.name)"
+                } else {
                     if !extras.contains(where: { $0.id == item.id }) { extras.append(item) }
                     scanMessage = "En trop : \(item.name) (hors périmètre)"
-                } else {
-                    scanMessage = "Objet associé introuvable."
                 }
             } catch {
                 scanMessage = "Erreur de lecture. Réessaie."

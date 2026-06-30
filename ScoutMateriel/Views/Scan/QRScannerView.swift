@@ -6,7 +6,7 @@ struct QRScannerView: View {
     @StateObject private var viewModel = ScannerViewModel()
     @StateObject private var listViewModel = MaterialListViewModel()
     @State private var manualCode = ""
-    @State private var message = "Scanne une étiquette TAG-000001 ou saisis le code."
+    @State private var message = "Scanne une étiquette ou saisis le code (ex. TEN-0001)."
     @State private var resolvedItem: Item?
     @State private var blankTagCode: String?
 
@@ -29,7 +29,7 @@ struct QRScannerView: View {
                     .frame(maxWidth: .infinity)
 
                 HStack(spacing: SGDFTheme.Spacing.sm) {
-                    SGDFTextField("TAG-000001", text: $manualCode, systemImage: "number")
+                    SGDFTextField("TEN-0001", text: $manualCode, systemImage: "number")
                         .textInputAutocapitalization(.characters)
                         .autocorrectionDisabled()
                     SGDFButton("Vérifier", kind: .primary) { resolve(manualCode) }

@@ -21,17 +21,7 @@ struct MaterialDetailView: View {
     @State private var adjustNote = ""
 
     private func showQRCode() {
-        Task {
-            do {
-                if let tag = try await QRCodeService().tag(forItemId: item.id) {
-                    qrCode = tag.tagCode
-                } else {
-                    qrError = "Aucune étiquette QR associée à ce matériel."
-                }
-            } catch {
-                qrError = "Erreur réseau. Réessaie."
-            }
-        }
+        qrCode = item.inventoryCode
     }
 
     private func perform(_ action: MovementAction) {

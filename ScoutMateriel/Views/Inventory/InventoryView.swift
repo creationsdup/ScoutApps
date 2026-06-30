@@ -79,7 +79,7 @@ struct InventoryView: View {
 
             List {
                 Section {
-                    SGDFTextField("TAG-000001", text: $viewModel.manualCode, systemImage: "qrcode")
+                    SGDFTextField("TEN-0001", text: $viewModel.manualCode, systemImage: "qrcode")
                         .textInputAutocapitalization(.characters)
                         .autocorrectionDisabled()
                     SGDFButton("Valider le code", kind: .secondary, systemImage: "checkmark") {
