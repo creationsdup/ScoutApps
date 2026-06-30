@@ -150,7 +150,13 @@ final class MaterialFormViewModel: ObservableObject {
             }
             return true
         } catch {
-            errorMessage = "Échec de l'enregistrement. Réessaie."
+            // Cas fréquent : la catégorie choisie n'a pas de code → le serveur
+            // refuse de générer le code inventaire. Message actionnable.
+            if String(reflecting: error).contains("sans code") {
+                errorMessage = "Cette catégorie n'a pas de code. Ouvre « Organiser le matériel », ajoute-lui un code (2–4 lettres, ex. ANIM), puis réessaie."
+            } else {
+                errorMessage = "Échec de l'enregistrement. Réessaie."
+            }
             return false
         }
     }
