@@ -203,3 +203,15 @@ CLEANUP (chore/phase2-cleanup, commit e0bd49b): mergé dans main. Build vérifi�
 === PHASE 2 + CLEANUP TERMINÉS, mergés dans main ===
 RPC courses (feat/shopping-rpc, f3e6810): mergée dans main. Revue: équivalence sémantique/atomicité/RLS/additivité PASS, 0 Critical.
   regenerate_shopping_auto (security invoker). ShoppingService.regenerateAuto = 2 lignes (appel rpc). Build vérifié vert. Branche supprimée.
+
+=== SCISSION ScoutMatériel + ScoutCamp (branche feat/split-scoutcamp) ===
+Spec 2026-06-30-split-..., plan 2026-06-30-plan-split-... Approche A (package ScoutKit + 2 targets).
+Tasks 1-5 (fichiers): ScoutKit package créé, commun déplacé (Models/Services/Stores/DesignSystem/
+  Components/Config/Auth), sweep public (subagent, 46 fichiers), ScoutMateriel (3 onglets) + ScoutCamp
+  (2 onglets) carvés, BarcodeScannerView déplacé vers ScoutCamp. Commits 465e192..387d0ce.
+Task 6 (Xcode): utilisateur a wiré ScoutMateriel (package+groupes+display name) ; assistant a créé le
+  target ScoutCamp via gem xcodeproj (39 fichiers, ScoutKit lié, base config Secrets, com.scout.camp,
+  Info.plist, scheme partagé) + dédup ScoutKit + retrait doublons sources dans le bundle. Commits 2d31444, bc72006.
+Task 7 (build): LES DEUX APPS BUILD SUCCEEDED (zéro fix public nécessaire — sweep complet).
+Task 8: CLAUDE.md mis à jour (2 apps + ScoutKit). RESTE: smoke test des 2 apps par l'utilisateur (runtime).
+=== SCISSION quasi terminée — manque smoke test runtime + merge dans main ===
