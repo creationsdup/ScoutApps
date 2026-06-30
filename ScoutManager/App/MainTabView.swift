@@ -23,7 +23,7 @@ struct MainTabView: View {
             IntendanceHomeView()
                 .tabItem { Label("Intendance", systemImage: "fork.knife") }
                 .tag(AppRouter.Tab.intendance)
-            ComingSoonView(title: "Camp")
+            ProgramHomeView()
                 .tabItem { Label("Camp", systemImage: "tent") }
                 .tag(AppRouter.Tab.camp)
         }
