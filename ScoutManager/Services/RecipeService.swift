@@ -11,6 +11,12 @@ struct RecipeService {
         try await client.from("recipes").select().order("name").execute().value
     }
 
+    func get(id: String) async throws -> Recipe? {
+        let rows: [Recipe] = try await client.from("recipes")
+            .select().eq("id", value: id).limit(1).execute().value
+        return rows.first
+    }
+
     @discardableResult
     func create(_ recipe: Recipe) async throws -> Recipe {
         try await client.from("recipes").insert(recipe).select().single().execute().value

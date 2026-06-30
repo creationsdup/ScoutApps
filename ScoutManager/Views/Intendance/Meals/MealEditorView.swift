@@ -29,12 +29,6 @@ struct MealEditorView: View {
         f.dateFormat = "EEE d MMM"
         return f
     }()
-    private static let parseDF: DateFormatter = {
-        let f = DateFormatter()
-        f.locale = Locale(identifier: "en_US_POSIX")
-        f.dateFormat = "yyyy-MM-dd"
-        return f
-    }()
 
     init(viewModel: MealPlanViewModel, campId: String, date: String,
          slot: MealSlot, existingMeal: Meal?) {
@@ -48,7 +42,7 @@ struct MealEditorView: View {
     }
 
     private var dateDisplay: String {
-        if let d = Self.parseDF.date(from: date) {
+        if let d = SGDFDate.day(from: date) {
             return Self.displayDF.string(from: d).capitalized
         }
         return date

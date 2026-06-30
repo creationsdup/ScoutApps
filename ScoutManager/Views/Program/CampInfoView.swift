@@ -6,12 +6,6 @@ struct CampInfoView: View {
     @EnvironmentObject private var session: SessionStore
     @State private var showingEdit = false
 
-    private static let parseDF: DateFormatter = {
-        let f = DateFormatter()
-        f.locale = Locale(identifier: "en_US_POSIX")
-        f.dateFormat = "yyyy-MM-dd"
-        return f
-    }()
     private static let displayDF: DateFormatter = {
         let f = DateFormatter()
         f.locale = Locale(identifier: "fr_FR")
@@ -42,7 +36,7 @@ struct CampInfoView: View {
     }
 
     private func formatDate(_ s: String) -> String {
-        if let d = Self.parseDF.date(from: s) {
+        if let d = SGDFDate.day(from: s) {
             return Self.displayDF.string(from: d)
         }
         return s

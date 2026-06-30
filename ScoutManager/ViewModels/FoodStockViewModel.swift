@@ -7,15 +7,8 @@ final class FoodStockViewModel: ObservableObject {
     @Published var errorMessage: String?
 
     private let service = FoodStockService()
-    private static let df: DateFormatter = {
-        let f = DateFormatter()
-        f.locale = Locale(identifier: "en_US_POSIX")
-        f.dateFormat = "yyyy-MM-dd"
-        return f
-    }()
-
     func expiryStatus(_ item: FoodStockItem) -> ExpiryStatus {
-        guard let s = item.expiryDate, let date = Self.df.date(from: s) else { return .none }
+        guard let s = item.expiryDate, let date = SGDFDate.day(from: s) else { return .none }
         let cal = Calendar(identifier: .gregorian)
         let today = cal.startOfDay(for: Date())
         let day = cal.startOfDay(for: date)
