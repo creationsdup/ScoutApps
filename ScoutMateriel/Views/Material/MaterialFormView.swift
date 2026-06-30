@@ -41,7 +41,16 @@ struct MaterialFormView: View {
                     Picker("Type de suivi", selection: $viewModel.trackingType) {
                         ForEach(TrackingType.allCases, id: \.self) { Text($0.label).tag($0) }
                     }
-                    Stepper("Quantité : \(viewModel.quantity)", value: $viewModel.quantity, in: 1...9999)
+                    if viewModel.trackingType == .global {
+                        Stepper("Quantité : \(viewModel.quantity)", value: $viewModel.quantity, in: 1...9999)
+                        Stepper(viewModel.minimumThreshold == 0
+                                ? "Seuil minimum : aucun"
+                                : "Seuil minimum : \(viewModel.minimumThreshold)",
+                                value: $viewModel.minimumThreshold, in: 0...9999)
+                        Picker("Unité", selection: $viewModel.unit) {
+                            ForEach(ItemUnit.allCases, id: \.self) { Text($0.label).tag($0) }
+                        }
+                    }
                     Picker("Statut", selection: $viewModel.status) {
                         ForEach(ItemStatus.allCases, id: \.self) { Text($0.label).tag($0) }
                     }
@@ -78,6 +87,9 @@ struct MaterialFormView: View {
                 }
             }
             .task { await viewModel.loadReferentials() }
+            .onChange(of: viewModel.trackingType) { _, newValue in
+                if newValue == .specifique { viewModel.quantity = 1 }
+            }
             .onChange(of: photoItem) { _, newItem in
                 Task {
                     if let data = try? await newItem?.loadTransferable(type: Data.self) {

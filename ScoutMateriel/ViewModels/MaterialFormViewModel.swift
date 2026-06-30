@@ -15,6 +15,8 @@ final class MaterialFormViewModel: ObservableObject {
     @Published var condition: ItemCondition = .good
     @Published var branch: Branch?
     @Published var notes = ""
+    @Published var minimumThreshold = 0   // 0 = pas de seuil
+    @Published var unit: ItemUnit = .piece
 
     @Published var categories: [ItemCategory] = []
     @Published var locations: [ItemLocation] = []
@@ -47,6 +49,8 @@ final class MaterialFormViewModel: ObservableObject {
             condition = item.condition
             branch = item.branch
             notes = item.notes ?? ""
+            minimumThreshold = item.minimumThreshold ?? 0
+            unit = item.unit ?? .piece
         } else {
             editingItemId = nil
         }
@@ -94,7 +98,9 @@ final class MaterialFormViewModel: ObservableObject {
                 eventId: nil,
                 imagePath: imagePath,
                 notes: notes.isEmpty ? nil : notes,
-                lastCheckedAt: nil
+                lastCheckedAt: nil,
+                minimumThreshold: trackingType == .global && minimumThreshold > 0 ? minimumThreshold : nil,
+                unit: trackingType == .global ? unit : nil
             )
             if isEditing {
                 try await service.update(item)
