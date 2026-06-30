@@ -14,6 +14,8 @@ public struct MovementService {
         let action: String
         let user_id: String
         let event_id: String?
+        let quantity: Int?
+        let note: String?
     }
 
     public func record(itemId: String, action: MovementAction, eventId: String? = nil) async throws {
@@ -29,7 +31,21 @@ public struct MovementService {
         // 2. mouvement (journal)
         try await client.from("item_movements")
             .insert(MovementPayload(item_id: itemId, action: action.rawValue,
-                                    user_id: userId, event_id: eventId))
+                                    user_id: userId, event_id: eventId,
+                                    quantity: nil, note: nil))
+            .execute()
+    }
+
+    /// Enregistre un ajustement de stock dans le journal. NE modifie PAS le statut.
+    public func recordAdjustment(itemId: String, quantity: Int, note: String?) async throws {
+        guard let userId = SupabaseService.shared.currentUserID?.uuidString else {
+            throw NSError(domain: "ScoutManager", code: 401,
+                          userInfo: [NSLocalizedDescriptionKey: "Utilisateur non authentifié."])
+        }
+        try await client.from("item_movements")
+            .insert(MovementPayload(item_id: itemId, action: MovementAction.adjustment.rawValue,
+                                    user_id: userId, event_id: nil,
+                                    quantity: quantity, note: note))
             .execute()
     }
 }

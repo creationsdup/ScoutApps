@@ -13,6 +13,11 @@ public struct ItemService {
         let status: String
     }
 
+    private struct StockPayload: Encodable {
+        let quantity: Int
+        let quantity_available: Int
+    }
+
     // MARK: - Items
 
     /// Liste filtrée. Exclut l'archivé par défaut.
@@ -51,6 +56,28 @@ public struct ItemService {
         let payload = ArchivePayload(status: ItemStatus.archive.rawValue)
         try await client.from("inventory_items")
             .update(payload).eq("id", value: id).execute()
+    }
+
+    /// Ajuste le stock total d'un matériel global. Le disponible suit le même delta,
+    /// borné à [0, total]. Enregistre un mouvement d'ajustement. Le statut est inchangé.
+    @discardableResult
+    public func adjustStock(itemId: String, delta: Int, note: String?) async throws -> Item {
+        guard let item = try await get(id: itemId) else {
+            throw NSError(domain: "ScoutManager", code: 404,
+                          userInfo: [NSLocalizedDescriptionKey: "Matériel introuvable."])
+        }
+        let newTotal = max(0, item.quantity + delta)
+        let currentAvailable = item.quantityAvailable ?? item.quantity
+        let newAvailable = min(max(0, currentAvailable + delta), newTotal)
+        try await client.from("inventory_items")
+            .update(StockPayload(quantity: newTotal, quantity_available: newAvailable))
+            .eq("id", value: itemId)
+            .execute()
+        try await MovementService().recordAdjustment(itemId: itemId, quantity: delta, note: note)
+        var updated = item
+        updated.quantity = newTotal
+        updated.quantityAvailable = newAvailable
+        return updated
     }
 
     // MARK: - Referentials
