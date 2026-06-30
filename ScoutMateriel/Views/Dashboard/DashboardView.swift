@@ -72,7 +72,7 @@ struct DashboardView: View {
                         }
                     }
 
-                    Text("Raccourcis")
+                    Text("Actions rapides")
                         .font(SGDFTheme.FontStyle.sectionTitle())
                         .foregroundStyle(SGDFColors.textPrimary)
 
@@ -81,6 +81,15 @@ struct DashboardView: View {
                             router.selectedTab = .material
                         }
                         SGDFButton("Scanner un QR", kind: .primary, systemImage: "qrcode.viewfinder") {
+                            router.selectedTab = .scan
+                        }
+                        SGDFButton("Préparer une sortie", kind: .secondary, systemImage: "arrow.up.bin") {
+                            router.selectedTab = .sorties
+                        }
+                        SGDFButton("Inventaire rapide (bientôt)", kind: .secondary, systemImage: "checklist") {
+                        }
+                        .disabled(true)
+                        SGDFButton("Signaler une réparation", kind: .secondary, systemImage: "wrench.adjustable") {
                             router.selectedTab = .scan
                         }
                     }
