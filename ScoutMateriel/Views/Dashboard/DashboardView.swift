@@ -48,6 +48,30 @@ struct DashboardView: View {
                         }
                     }
 
+                    if !viewModel.snapshot.ongoingCheckouts.isEmpty || !viewModel.snapshot.ongoingCamps.isEmpty {
+                        Text("Sorties en cours")
+                            .font(SGDFTheme.FontStyle.sectionTitle())
+                            .foregroundStyle(SGDFColors.textPrimary)
+                        VStack(spacing: SGDFTheme.Spacing.sm) {
+                            ForEach(viewModel.snapshot.ongoingCheckouts) { ongoing in
+                                NavigationLink {
+                                    CheckoutDetailView(checkout: ongoing.checkout)
+                                } label: {
+                                    OngoingCheckoutCard(ongoing: ongoing)
+                                }
+                                .buttonStyle(.plain)
+                            }
+                            ForEach(viewModel.snapshot.ongoingCamps) { camp in
+                                NavigationLink {
+                                    AlertItemsListView(title: camp.camp.name, items: camp.items)
+                                } label: {
+                                    OngoingCampCard(ongoing: camp)
+                                }
+                                .buttonStyle(.plain)
+                            }
+                        }
+                    }
+
                     Text("Raccourcis")
                         .font(SGDFTheme.FontStyle.sectionTitle())
                         .foregroundStyle(SGDFColors.textPrimary)
@@ -128,6 +152,82 @@ private struct StatCard: View {
             Text(title)
                 .font(SGDFTheme.FontStyle.caption())
                 .foregroundStyle(SGDFColors.textSecondary)
+        }
+    }
+}
+
+/// Carte d'un bon de sortie ouvert : libellé, date, nb objets, taux de retour, badge.
+private struct OngoingCheckoutCard: View {
+    let ongoing: OngoingCheckout
+
+    private var rate: Int { Int((ongoing.returnRate * 100).rounded()) }
+
+    var body: some View {
+        SGDFCard {
+            VStack(alignment: .leading, spacing: SGDFTheme.Spacing.xs) {
+                HStack {
+                    Text(ongoing.checkout.label)
+                        .font(SGDFTheme.FontStyle.body().weight(.semibold))
+                        .foregroundStyle(SGDFColors.textPrimary)
+                    Spacer()
+                    Text("Ouvert")
+                        .font(SGDFTheme.FontStyle.caption().weight(.semibold))
+                        .foregroundStyle(SGDFColors.orange)
+                }
+                if let createdAt = ongoing.checkout.createdAt {
+                    Text(SGDFDate.displayShort(String(createdAt.prefix(10))))
+                        .font(SGDFTheme.FontStyle.caption())
+                        .foregroundStyle(SGDFColors.textSecondary)
+                }
+                Text("\(ongoing.returnedItems)/\(ongoing.totalItems) rendus — \(rate) %")
+                    .font(SGDFTheme.FontStyle.caption())
+                    .foregroundStyle(SGDFColors.textSecondary)
+            }
+        }
+    }
+}
+
+/// Carte d'un camp détenant du matériel (pont ScoutCamp).
+private struct OngoingCampCard: View {
+    let ongoing: OngoingCamp
+
+    private var dateRange: String? {
+        switch (ongoing.camp.startDate, ongoing.camp.endDate) {
+        case let (start?, end?): return "\(SGDFDate.displayShort(start)) – \(SGDFDate.displayShort(end))"
+        case let (start?, nil):  return SGDFDate.displayShort(start)
+        case let (nil, end?):    return SGDFDate.displayShort(end)
+        default:                 return nil
+        }
+    }
+
+    var body: some View {
+        SGDFCard {
+            VStack(alignment: .leading, spacing: SGDFTheme.Spacing.xs) {
+                HStack {
+                    Text(ongoing.camp.name)
+                        .font(SGDFTheme.FontStyle.body().weight(.semibold))
+                        .foregroundStyle(SGDFColors.textPrimary)
+                    Spacer()
+                    Text("Camp")
+                        .font(SGDFTheme.FontStyle.caption().weight(.semibold))
+                        .foregroundStyle(SGDFColors.violet)
+                }
+                HStack(spacing: SGDFTheme.Spacing.sm) {
+                    if let dateRange {
+                        Text(dateRange)
+                            .font(SGDFTheme.FontStyle.caption())
+                            .foregroundStyle(SGDFColors.textSecondary)
+                    }
+                    if let branch = ongoing.camp.branch {
+                        Text(branch.label)
+                            .font(SGDFTheme.FontStyle.caption())
+                            .foregroundStyle(SGDFColors.textSecondary)
+                    }
+                }
+                Text("\(ongoing.itemCount) objet\(ongoing.itemCount > 1 ? "s" : "")")
+                    .font(SGDFTheme.FontStyle.caption())
+                    .foregroundStyle(SGDFColors.textSecondary)
+            }
         }
     }
 }
