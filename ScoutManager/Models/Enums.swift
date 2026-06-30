@@ -66,6 +66,23 @@ enum Branch: String, Codable, CaseIterable {
     }
 }
 
+/// Créneau de repas (meals.slot). rawValue = valeur stockée en base.
+enum MealSlot: String, Codable, CaseIterable, Hashable {
+    case petitDej = "petit_dej"
+    case midi
+    case gouter
+    case diner
+
+    var label: String {
+        switch self {
+        case .petitDej: return "Petit-déj"
+        case .midi:     return "Midi"
+        case .gouter:   return "Goûter"
+        case .diner:    return "Dîner"
+        }
+    }
+}
+
 /// Rôle utilisateur (profiles.role). Repris du legacy Domain.swift.
 enum UserRole: String, Codable {
     case admin, manager, member, viewer

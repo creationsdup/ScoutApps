@@ -5,9 +5,8 @@ struct IntendanceHomeView: View {
     @EnvironmentObject private var session: SessionStore
     @State private var showingCreateCamp = false
 
-    // Sous-modules placeholder (Task M — arrive aux tasks N→S)
-    private let subModules: [(title: String, icon: String)] = [
-        ("Menus", "fork.knife"),
+    // Sous-modules placeholder (tasks O→S — Menus est déjà navigable)
+    private let placeholderModules: [(title: String, icon: String)] = [
         ("Recettes", "book.closed"),
         ("Courses", "cart"),
         ("Budget", "eurosign.circle"),
@@ -82,8 +81,15 @@ struct IntendanceHomeView: View {
                         ],
                         spacing: SGDFTheme.Spacing.sm
                     ) {
-                        ForEach(subModules, id: \.title) { module in
-                            subModuleCard(title: module.title, icon: module.icon)
+                        // Carte Menus — navigable
+                        NavigationLink(destination: MealPlanView()) {
+                            subModuleCard(title: "Menus", icon: "fork.knife", isActive: true)
+                        }
+                        .buttonStyle(.plain)
+
+                        // Cartes placeholders (tasks O→S)
+                        ForEach(placeholderModules, id: \.title) { module in
+                            subModuleCard(title: module.title, icon: module.icon, isActive: false)
                         }
                     }
                     .padding(.horizontal, SGDFTheme.Spacing.md)
@@ -94,18 +100,20 @@ struct IntendanceHomeView: View {
         .background(SGDFColors.background)
     }
 
-    private func subModuleCard(title: String, icon: String) -> some View {
+    private func subModuleCard(title: String, icon: String, isActive: Bool) -> some View {
         SGDFCard {
             VStack(alignment: .leading, spacing: SGDFTheme.Spacing.sm) {
                 Image(systemName: icon)
                     .font(.title2)
-                    .foregroundStyle(SGDFColors.primaryBlue)
+                    .foregroundStyle(isActive ? SGDFColors.orange : SGDFColors.primaryBlue)
                 Text(title)
                     .font(SGDFTheme.FontStyle.body().weight(.semibold))
                     .foregroundStyle(SGDFColors.textPrimary)
-                Text("Bientôt")
-                    .font(SGDFTheme.FontStyle.caption())
-                    .foregroundStyle(SGDFColors.textSecondary)
+                if !isActive {
+                    Text("Bientôt")
+                        .font(SGDFTheme.FontStyle.caption())
+                        .foregroundStyle(SGDFColors.textSecondary)
+                }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
         }

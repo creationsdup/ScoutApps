@@ -32,3 +32,47 @@ create policy camps_write_roles on public.camps
   for all to authenticated
   using      (exists (select 1 from public.profiles p where p.id = auth.uid() and p.role in ('admin','manager','member')))
   with check (exists (select 1 from public.profiles p where p.id = auth.uid() and p.role in ('admin','manager','member')));
+
+-- ============================================================================
+-- Task N : Menus (repas) — tables meals + meal_recipes (ADDITIF)
+-- ============================================================================
+create table if not exists public.meals (
+  id         uuid primary key default gen_random_uuid(),
+  camp_id    uuid not null references public.camps(id) on delete cascade,
+  date       date not null,
+  slot       text not null,
+  title      text,
+  notes      text,
+  created_at timestamptz not null default now(),
+  unique (camp_id, date, slot)
+);
+
+alter table public.meals drop constraint if exists meals_slot_chk;
+alter table public.meals
+  add constraint meals_slot_chk
+  check (slot in ('petit_dej','midi','gouter','diner')) not valid;
+
+-- Lien N-N repas <-> recettes (la table recipes arrive en Task O ; on crée la
+-- jointure dès maintenant, sans FK vers recipes pour ne pas dépendre de l'ordre).
+create table if not exists public.meal_recipes (
+  meal_id    uuid not null references public.meals(id) on delete cascade,
+  recipe_id  uuid not null,
+  primary key (meal_id, recipe_id)
+);
+
+alter table public.meals       enable row level security;
+alter table public.meal_recipes enable row level security;
+
+drop policy if exists meals_select_auth on public.meals;
+create policy meals_select_auth on public.meals for select to authenticated using (true);
+drop policy if exists meals_write_roles on public.meals;
+create policy meals_write_roles on public.meals for all to authenticated
+  using      (exists (select 1 from public.profiles p where p.id = auth.uid() and p.role in ('admin','manager','member')))
+  with check (exists (select 1 from public.profiles p where p.id = auth.uid() and p.role in ('admin','manager','member')));
+
+drop policy if exists meal_recipes_select_auth on public.meal_recipes;
+create policy meal_recipes_select_auth on public.meal_recipes for select to authenticated using (true);
+drop policy if exists meal_recipes_write_roles on public.meal_recipes;
+create policy meal_recipes_write_roles on public.meal_recipes for all to authenticated
+  using      (exists (select 1 from public.profiles p where p.id = auth.uid() and p.role in ('admin','manager','member')))
+  with check (exists (select 1 from public.profiles p where p.id = auth.uid() and p.role in ('admin','manager','member')));
