@@ -16,6 +16,8 @@ struct CampTabView: View {
                 .tabItem { Label("Intendance", systemImage: "fork.knife") }
             ProgramHomeView()
                 .tabItem { Label("Programme", systemImage: "tent") }
+            CampMaterialView()
+                .tabItem { Label("Matériel", systemImage: "shippingbox") }
         }
         .tint(SGDFColors.primaryBlue)
     }
