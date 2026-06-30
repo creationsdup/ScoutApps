@@ -222,3 +222,7 @@ Task 5 (ScoutMatériel 'Sorti pour camp'): COMPLETE — review Approved (0 issue
 REVUE FINALE Projet 2 (opus): ✅ Ready. SQL additive PASS, atomicité/cohérence PASS, canWrite+RLS, 0 Critical/0 Important.
   Minors OK-to-defer: Row.inventory_items doc; add-sheet dismiss en erreur + flash; assign loop partiel; cross-camp single-item (hors scope v1).
 === PROJET 2 COMPLET — merge dans main ===
+
+=== BON DE SORTIE (panier) — branche feat/checkout-cart ===
+Spec 2026-06-30-checkout-cart ; plan 2026-06-30-plan-checkout-cart (5 tasks).
+Task 1 (SQL checkouts/checkout_items + RPC create/return): COMPLETE (contrôleur, verbatim). additif. à exécuter dans Supabase.
