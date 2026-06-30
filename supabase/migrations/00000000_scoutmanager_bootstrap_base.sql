@@ -40,17 +40,9 @@ drop policy if exists profiles_self_write on public.profiles;
 create policy profiles_self_write on public.profiles for all to authenticated
   using (id = auth.uid()) with check (id = auth.uid());
 
--- Crée automatiquement un profil (role 'viewer') à l'inscription d'un utilisateur.
-create or replace function public.handle_new_user()
-returns trigger language plpgsql security definer set search_path = public as $$
-begin
-  insert into public.profiles (id, role) values (new.id, 'viewer')
-    on conflict (id) do nothing;
-  return new;
-end; $$;
-drop trigger if exists on_auth_user_created on auth.users;
-create trigger on_auth_user_created
-  after insert on auth.users for each row execute function public.handle_new_user();
+-- NB (base PARTAGÉE avec une autre app) : on n'ajoute PAS de trigger sur auth.users
+-- (un trigger/fonction `handle_new_user` y existe sûrement déjà — on ne l'écrase pas).
+-- Crée ton profil scout à la main après login (cf. bas de fichier).
 
 -- 3) events (l'app n'en référence que l'id — pont optionnel) -------------------
 create table if not exists public.events (
@@ -126,7 +118,9 @@ create policy item_movements_write_roles on public.item_movements for all to aut
 -- APRÈS ce socle : exécuter 20260629_scoutmanager_mvp1.sql puis
 -- 20260630_scoutmanager_phase2_all.sql.
 --
--- Pour t'octroyer les droits d'écriture (après avoir créé ton compte / login) :
---   update public.profiles set role = 'admin' where id = auth.uid();
--- (ou remplace auth.uid() par ton id utilisateur depuis Authentication > Users)
+-- Après avoir créé ton compte (Authentication > Users, ou login dans l'app), crée
+-- ton profil scout avec le rôle admin. Remplace <TON_UUID> par ton id utilisateur
+-- (Authentication > Users > copie l'UID) :
+--   insert into public.profiles (id, role) values ('<TON_UUID>', 'admin')
+--     on conflict (id) do update set role = 'admin';
 -- ============================================================================
