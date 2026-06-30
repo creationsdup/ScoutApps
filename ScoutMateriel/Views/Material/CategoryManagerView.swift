@@ -10,6 +10,8 @@ struct CategoryManagerView: View {
     @State private var addingSubTo: ItemCategory?          // alerte nouvelle sous-cat
     @State private var renamingSub: Subcategory?           // alerte renommer sous-cat
     @State private var subNameField = ""
+    @State private var pendingCategoryDelete: ItemCategory?
+    @State private var pendingSubDelete: Subcategory?
 
     var body: some View {
         NavigationStack {
@@ -60,6 +62,33 @@ struct CategoryManagerView: View {
                         }
                     }
                 }
+                .confirmationDialog("Supprimer la catégorie ?",
+                                    isPresented: Binding(get: { pendingCategoryDelete != nil },
+                                                         set: { if !$0 { pendingCategoryDelete = nil } }),
+                                    titleVisibility: .visible,
+                                    presenting: pendingCategoryDelete) { cat in
+                    Button("Supprimer", role: .destructive) {
+                        Task { await viewModel.deleteCategory(id: cat.id) }
+                    }
+                    Button("Annuler", role: .cancel) {}
+                } message: { cat in
+                    let n = viewModel.itemCounts[cat.id] ?? 0
+                    Text(n > 0
+                         ? "« \(cat.name) » et ses sous-catégories seront supprimées. \(n) objet(s) seront détachés."
+                         : "« \(cat.name) » et ses sous-catégories seront supprimées.")
+                }
+                .confirmationDialog("Supprimer la sous-catégorie ?",
+                                    isPresented: Binding(get: { pendingSubDelete != nil },
+                                                         set: { if !$0 { pendingSubDelete = nil } }),
+                                    titleVisibility: .visible,
+                                    presenting: pendingSubDelete) { sub in
+                    Button("Supprimer", role: .destructive) {
+                        Task { await viewModel.deleteSubcategory(id: sub.id) }
+                    }
+                    Button("Annuler", role: .cancel) {}
+                } message: { sub in
+                    Text("« \(sub.name) » sera supprimée. Les objets concernés seront détachés.")
+                }
         }
     }
 
@@ -83,7 +112,7 @@ struct CategoryManagerView: View {
                                 .foregroundStyle(SGDFColors.textPrimary)
                                 .swipeActions(edge: .trailing) {
                                     Button(role: .destructive) {
-                                        Task { await viewModel.deleteSubcategory(id: sub.id) }
+                                        pendingSubDelete = sub
                                     } label: { Label("Supprimer", systemImage: "trash") }
                                     Button {
                                         subNameField = sub.name; renamingSub = sub
@@ -108,7 +137,7 @@ struct CategoryManagerView: View {
                                     Label("Renommer", systemImage: "pencil")
                                 }
                                 Button(role: .destructive) {
-                                    Task { await viewModel.deleteCategory(id: cat.id) }
+                                    pendingCategoryDelete = cat
                                 } label: { Label("Supprimer", systemImage: "trash") }
                             } label: {
                                 Image(systemName: "ellipsis.circle")
