@@ -215,3 +215,10 @@ Task 6 (Xcode): utilisateur a wiré ScoutMateriel (package+groupes+display name)
 Task 7 (build): LES DEUX APPS BUILD SUCCEEDED (zéro fix public nécessaire — sweep complet).
 Task 8: CLAUDE.md mis à jour (2 apps + ScoutKit). RESTE: smoke test des 2 apps par l'utilisateur (runtime).
 === SCISSION quasi terminée — manque smoke test runtime + merge dans main ===
+Task 4 (auto-feed activité->chargement): COMPLETE — review Approved (no Critical/Important). commit f45860e. Build ScoutCamp OK.
+  Minor différé: échec partiel de la boucle assign (self-healing via RPC idempotente, conforme au brief).
+Task 5 (ScoutMatériel 'Sorti pour camp'): COMPLETE — review Approved (0 issue). commit cc733fd. Build ScoutMatériel OK.
+=== PROJET 2 : 5 tasks complètes — revue finale de branche en cours ===
+REVUE FINALE Projet 2 (opus): ✅ Ready. SQL additive PASS, atomicité/cohérence PASS, canWrite+RLS, 0 Critical/0 Important.
+  Minors OK-to-defer: Row.inventory_items doc; add-sheet dismiss en erreur + flash; assign loop partiel; cross-camp single-item (hors scope v1).
+=== PROJET 2 COMPLET — merge dans main ===
