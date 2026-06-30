@@ -52,6 +52,7 @@
 		807F6758E6AD146013A5F235 /* CampListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 615CBFC29BF864183505D10D /* CampListView.swift */; };
 		81087FD02E5BC53772624874 /* RecipeListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AF99ADB908B32BAEFA60C9B /* RecipeListViewModel.swift */; };
 		82AD5CA39C41F4C75D2F9F84 /* FoodTraceViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83E093516DCB38DB77ECCCDC /* FoodTraceViewModel.swift */; };
+		98816067A46610FD21C32E3D /* CategoryManagerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 204965D60CC3A4934D530255 /* CategoryManagerViewModel.swift */; };
 		9DCA6DBCEE50B5B3A30FEAA4 /* ActivityLibraryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 152C58FDB1AFAF0B35B446F9 /* ActivityLibraryViewModel.swift */; };
 		AA00000000000000000000F3 /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = AA00000000000000000000F2 /* Supabase */; };
 		AA9FB5447DDEC1F5260C32F4 /* RecipeFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 572118F5B4B0577BD6E94A37 /* RecipeFormView.swift */; };
@@ -104,6 +105,7 @@
 		139558CC077E0C6F9998599E /* CheckoutListView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CheckoutListView.swift; path = Views/Checkout/CheckoutListView.swift; sourceTree = "<group>"; };
 		152C58FDB1AFAF0B35B446F9 /* ActivityLibraryViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ActivityLibraryViewModel.swift; path = ViewModels/ActivityLibraryViewModel.swift; sourceTree = "<group>"; };
 		1659EB22B973501CE4146816 /* MealPlanViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MealPlanViewModel.swift; path = ViewModels/MealPlanViewModel.swift; sourceTree = "<group>"; };
+		204965D60CC3A4934D530255 /* CategoryManagerViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CategoryManagerViewModel.swift; sourceTree = "<group>"; };
 		20549A1E8DEEAA67D4FB5A09 /* CheckoutListViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CheckoutListViewModel.swift; path = ViewModels/CheckoutListViewModel.swift; sourceTree = "<group>"; };
 		23B66E6CC300E2019172BEF3 /* RecipeDetailView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = RecipeDetailView.swift; path = Views/Intendance/Recipes/RecipeDetailView.swift; sourceTree = "<group>"; };
 		2F017D39CE8F2731BBD9DD20 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
@@ -217,6 +219,7 @@
 				0FC029492FF3C1D1006F2EBF /* MaterialListViewModel.swift */,
 				0FC0294A2FF3C1D1006F2EBF /* ScannerViewModel.swift */,
 				57E14B87EA70EB093840A642 /* InventoryViewModel.swift */,
+				204965D60CC3A4934D530255 /* CategoryManagerViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -552,6 +555,7 @@
 				6412FBEDEAF2AB9CFEE5FD84 /* CheckoutDetailView.swift in Sources */,
 				0B6336A1B38CE1B326488E1D /* InventoryViewModel.swift in Sources */,
 				7300FDD6DE89BCA7895097C7 /* InventoryView.swift in Sources */,
+				98816067A46610FD21C32E3D /* CategoryManagerViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
