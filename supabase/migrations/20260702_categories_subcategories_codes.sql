@@ -11,6 +11,12 @@ alter table public.categories
 create unique index if not exists categories_code_key
   on public.categories (upper(code)) where code is not null;
 
+-- Le code doit être 2 à 4 lettres majuscules (préfixe de tag scannable)
+alter table public.categories drop constraint if exists categories_code_format_chk;
+alter table public.categories
+  add constraint categories_code_format_chk
+  check (code is null or code ~ '^[A-Z]{2,4}$');
+
 -- 2. Sous-catégories (niveau 2) ----------------------------------------------
 create table if not exists public.subcategories (
   id          uuid primary key default gen_random_uuid(),
@@ -60,6 +66,12 @@ begin
   return v_code || '-' || lpad(v_seq::text, 4, '0');
 end;
 $$;
+
+-- Garde-fou d'unicité sur les codes générés (format PRÉFIXE-NNNN, 4 chiffres).
+-- Exclut volontairement les anciens codes TAG-000000 (6 chiffres).
+create unique index if not exists inventory_items_inventory_code_key
+  on public.inventory_items (inventory_code)
+  where inventory_code ~ '^[A-Z]{2,4}-[0-9]{4}$';
 
 -- 6. Seed d'exemple (à adapter / remplacer par tes vraies catégories) ---------
 -- Décommente et ajuste si tu veux des données de démo :

@@ -78,7 +78,6 @@ public struct DashboardService {
 
     public func loadSnapshot() async throws -> DashboardSnapshot {
         let items = try await ItemService().list(includeArchived: false)
-        let assigned = try await QRCodeService().assignedItemIds()
 
         var snap = DashboardSnapshot()
         snap.total = items.count
@@ -121,7 +120,6 @@ public struct DashboardService {
         }
         add(.checkedOutOver7d, over7dUnique)
         add(.toRepair, items.filter { $0.status == .aReparer })
-        add(.missingQR, items.filter { !assigned.contains($0.id) })
         add(.missingPhoto, items.filter { $0.imagePath == nil })
         add(.lowStock, items.filter { $0.isLowStock })
         add(.toVerify, items.filter { $0.status == .aVerifier })
