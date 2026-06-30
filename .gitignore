@@ -19,3 +19,7 @@ Secrets.xcconfig
 # Swift Package Manager
 .swiftpm/
 .build/
+
+# Image-bank tooling outputs (generated / user data)
+image-bank/
+items-list.csv
