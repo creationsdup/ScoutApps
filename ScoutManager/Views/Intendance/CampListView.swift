@@ -18,12 +18,16 @@ struct CampListView: View {
                 } else {
                     List {
                         ForEach(campStore.camps) { camp in
-                            Button {
-                                editingCamp = camp
-                            } label: {
+                            if session.canWrite {
+                                Button {
+                                    editingCamp = camp
+                                } label: {
+                                    CampRowView(camp: camp)
+                                }
+                                .foregroundStyle(SGDFColors.textPrimary)
+                            } else {
                                 CampRowView(camp: camp)
                             }
-                            .foregroundStyle(SGDFColors.textPrimary)
                         }
                         .onDelete(perform: session.canWrite ? deleteCamps : nil)
                     }
@@ -56,7 +60,10 @@ struct CampListView: View {
                     try await campStore.delete(camp)
                 } catch {
                     errorMessage = "Impossible de supprimer : \(error.localizedDescription)"
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 3) { errorMessage = nil }
+                    Task {
+                        try? await Task.sleep(for: .seconds(3))
+                        errorMessage = nil
+                    }
                 }
             }
         }
