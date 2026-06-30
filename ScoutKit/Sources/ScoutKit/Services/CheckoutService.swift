@@ -34,4 +34,14 @@ public struct CheckoutService {
     public func returnAll(checkoutId: String) async throws {
         try await client.rpc("return_checkout_all", params: ["p_checkout_id": checkoutId]).execute()
     }
+
+    /// Libellé du bon de sortie OUVERT contenant cet item (pour ScoutMatériel), nil sinon.
+    public func openCheckoutLabel(forItemId itemId: String) async throws -> String? {
+        struct CheckoutName: Decodable { let label: String; let status: String }
+        struct Row: Decodable { let checkouts: CheckoutName? }
+        let rows: [Row] = try await client.from("checkout_items")
+            .select("checkouts(label,status)").eq("inventory_item_id", value: itemId)
+            .execute().value
+        return rows.compactMap(\.checkouts).first(where: { $0.status == "open" })?.label
+    }
 }

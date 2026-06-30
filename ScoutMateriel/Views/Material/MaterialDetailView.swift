@@ -15,6 +15,7 @@ struct MaterialDetailView: View {
     @State private var actionError: String?
     @State private var runningAction = false
     @State private var campLabel: String?
+    @State private var openCheckoutLabel: String?
 
     private func showQRCode() {
         Task {
@@ -105,6 +106,12 @@ struct MaterialDetailView: View {
                         .foregroundStyle(SGDFColors.textSecondary)
                 }
 
+                if let openCheckoutLabel {
+                    Label("Dans la sortie : \(openCheckoutLabel)", systemImage: "arrow.up.bin")
+                        .font(SGDFTheme.FontStyle.caption())
+                        .foregroundStyle(SGDFColors.textSecondary)
+                }
+
                 if let description = item.description, !description.isEmpty {
                     Text(description).foregroundStyle(SGDFColors.textPrimary)
                 }
@@ -142,6 +149,7 @@ struct MaterialDetailView: View {
             .padding(SGDFTheme.Spacing.md)
         }
         .task { campLabel = try? await CampMaterialService().campLabel(forItemId: item.id) }
+        .task { openCheckoutLabel = try? await CheckoutService().openCheckoutLabel(forItemId: item.id) }
         .background(SGDFColors.background)
         .navigationTitle("Fiche matériel")
         .navigationBarTitleDisplayMode(.inline)
