@@ -20,10 +20,10 @@ struct MainTabView: View {
             QRScannerView()
                 .tabItem { Label("Scan", systemImage: "qrcode.viewfinder") }
                 .tag(AppRouter.Tab.scan)
-            ComingSoonView(title: "Intendance")
+            IntendanceHomeView()
                 .tabItem { Label("Intendance", systemImage: "fork.knife") }
                 .tag(AppRouter.Tab.intendance)
-            ComingSoonView(title: "Camp")
+            ProgramHomeView()
                 .tabItem { Label("Camp", systemImage: "tent") }
                 .tag(AppRouter.Tab.camp)
         }
