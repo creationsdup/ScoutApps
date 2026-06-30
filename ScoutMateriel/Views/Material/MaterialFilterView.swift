@@ -24,6 +24,17 @@ struct MaterialFilterView: View {
                             Text(cat.name).tag(String?.some(cat.id))
                         }
                     }
+                    .onChange(of: viewModel.categoryFilter) { _, _ in
+                        viewModel.subcategoryFilter = nil
+                    }
+                    if !viewModel.filteredSubcategories.isEmpty {
+                        Picker("Sous-catégorie", selection: $viewModel.subcategoryFilter) {
+                            Text("Toutes").tag(String?.none)
+                            ForEach(viewModel.filteredSubcategories) { sub in
+                                Text(sub.name).tag(String?.some(sub.id))
+                            }
+                        }
+                    }
                 }
                 Section("Localisation") {
                     Picker("Localisation", selection: $viewModel.locationFilter) {

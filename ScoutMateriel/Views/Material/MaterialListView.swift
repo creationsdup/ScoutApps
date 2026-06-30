@@ -55,20 +55,42 @@ struct MaterialListView: View {
                            message: "Aucun matériel ne correspond à ta recherche.")
         } else {
             List {
-                ForEach(viewModel.items) { item in
-                    NavigationLink(value: item) { MaterialRow(item: item) }
+                ForEach(viewModel.groups) { group in
+                    Section {
+                        ForEach(group.subgroups) { sub in
+                            DisclosureGroup {
+                                ForEach(sub.items) { item in
+                                    NavigationLink(value: item) { MaterialRow(item: item) }
+                                }
+                            } label: {
+                                Text(sub.name)
+                                    .font(SGDFTheme.FontStyle.caption())
+                                    .foregroundStyle(SGDFColors.textSecondary)
+                            }
+                        }
+                    } header: {
+                        Text(group.name)
+                            .foregroundStyle(SGDFColors.primaryBlue)
+                    }
                 }
             }
-            .listStyle(.plain)
+            .listStyle(.insetGrouped)
         }
     }
 }
 
-/// Ligne de liste : nom + code + badge statut (+ quantité).
+/// Ligne de liste : vignette + nom + code + badge statut (+ quantité).
 private struct MaterialRow: View {
     let item: Item
+
+    private var imageURL: URL? {
+        guard let path = item.imagePath else { return nil }
+        return try? ImageStorageService().publicURL(for: path)
+    }
+
     var body: some View {
         HStack(spacing: SGDFTheme.Spacing.md) {
+            thumbnail
             VStack(alignment: .leading, spacing: SGDFTheme.Spacing.xs) {
                 Text(item.name)
                     .font(.system(.body, design: .rounded).weight(.semibold))
@@ -92,5 +114,21 @@ private struct MaterialRow: View {
             SGDFBadge(status: item.status)
         }
         .padding(.vertical, SGDFTheme.Spacing.xs)
+    }
+
+    @ViewBuilder
+    private var thumbnail: some View {
+        AsyncImage(url: imageURL) { phase in
+            switch phase {
+            case .success(let image):
+                image.resizable().scaledToFill()
+            default:
+                Rectangle().fill(SGDFColors.border)
+                    .overlay(Image(systemName: "photo")
+                        .foregroundStyle(SGDFColors.textSecondary))
+            }
+        }
+        .frame(width: 48, height: 48)
+        .clipShape(RoundedRectangle(cornerRadius: SGDFTheme.Radius.card))
     }
 }
