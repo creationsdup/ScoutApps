@@ -61,33 +61,63 @@ struct BudgetView: View {
     // MARK: - Content
 
     private var content: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: SGDFTheme.Spacing.lg) {
-                // Récapitulatif
+        List {
+            // Section 1 : récapitulatif
+            Section {
                 summaryCard
+                    .listRowInsets(EdgeInsets())
+                    .listRowBackground(Color.clear)
 
                 if let err = viewModel.errorMessage {
                     Text(err)
                         .font(SGDFTheme.FontStyle.caption())
                         .foregroundStyle(SGDFColors.red)
-                        .padding(.horizontal, SGDFTheme.Spacing.md)
+                        .listRowBackground(Color.clear)
                 }
+            }
 
-                // Liste des dépenses
-                if viewModel.isLoading {
+            // Section 2 : dépenses
+            if viewModel.isLoading {
+                Section {
                     LoadingView()
-                } else if viewModel.expenses.isEmpty {
+                        .listRowBackground(Color.clear)
+                }
+            } else if viewModel.expenses.isEmpty {
+                Section {
                     EmptyStateView(
                         systemImage: "eurosign.circle",
                         title: "Aucune dépense",
                         message: "Aucune dépense. Ajoute ta première ligne."
                     )
-                } else {
-                    expenseList
+                    .listRowBackground(Color.clear)
+                }
+            } else {
+                Section {
+                    ForEach(viewModel.expenses) { expense in
+                        expenseRow(expense)
+                            .contentShape(Rectangle())
+                            .onTapGesture {
+                                if session.canWrite {
+                                    editingExpense = expense
+                                }
+                            }
+                            .listRowInsets(EdgeInsets())
+                            .listRowBackground(SGDFColors.surface)
+                    }
+                    .onDelete { offsets in
+                        let toDelete = offsets.map { viewModel.expenses[$0] }
+                        Task {
+                            for expense in toDelete {
+                                await viewModel.delete(expense)
+                            }
+                        }
+                    }
+                    .deleteDisabled(!session.canWrite)
                 }
             }
-            .padding(.vertical, SGDFTheme.Spacing.md)
         }
+        .listStyle(.plain)
+        .scrollContentBackground(.hidden)
         .background(SGDFColors.background)
     }
 
@@ -139,36 +169,6 @@ struct BudgetView: View {
         if e > 0 { return SGDFColors.red }
         if e < 0 { return SGDFColors.green }
         return SGDFColors.textPrimary
-    }
-
-    // MARK: - Expense list
-
-    private var expenseList: some View {
-        VStack(spacing: 0) {
-            ForEach(viewModel.expenses) { expense in
-                expenseRow(expense)
-                    .contentShape(Rectangle())
-                    .onTapGesture {
-                        if session.canWrite {
-                            editingExpense = expense
-                        }
-                    }
-                    .swipeActions(edge: .trailing, allowsFullSwipe: false) {
-                        if session.canWrite {
-                            Button(role: .destructive) {
-                                Task { await viewModel.delete(expense) }
-                            } label: {
-                                Label("Supprimer", systemImage: "trash")
-                            }
-                        }
-                    }
-                Divider()
-                    .padding(.leading, SGDFTheme.Spacing.md)
-            }
-        }
-        .background(SGDFColors.surface)
-        .clipShape(RoundedRectangle(cornerRadius: SGDFTheme.Radius.card))
-        .padding(.horizontal, SGDFTheme.Spacing.md)
     }
 
     private func expenseRow(_ expense: Expense) -> some View {

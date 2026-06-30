@@ -89,8 +89,8 @@ struct ExpenseFormView: View {
         guard let e = expense else { return }
         label = e.label
         category = e.category
-        if let p = e.amountPlanned { plannedStr = String(p) }
-        if let r = e.amountReal { realStr = String(r) }
+        if let p = e.amountPlanned { plannedStr = String(p).replacingOccurrences(of: ".", with: ",") }
+        if let r = e.amountReal    { realStr    = String(r).replacingOccurrences(of: ".", with: ",") }
     }
 
     private func save() async {
