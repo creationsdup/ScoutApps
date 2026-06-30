@@ -70,6 +70,23 @@ final class MaterialFormViewModel: ObservableObject {
         return subcategories.filter { $0.categoryId == categoryId }
     }
 
+    /// URL publique de l'image déjà enregistrée (édition), pour l'aperçu. nil si aucune.
+    var existingImageURL: URL? {
+        guard let existingImagePath else { return nil }
+        return try? ImageStorageService().publicURL(for: existingImagePath)
+    }
+
+    /// Déplier « Plus d'options » à l'ouverture ? (édition avec au moins un champ avancé renseigné)
+    var shouldExpandAdvanced: Bool {
+        guard isEditing else { return false }
+        return !itemDescription.isEmpty
+            || locationId != nil
+            || branch != nil
+            || condition != .good
+            || (trackingType == .global && (minimumThreshold > 0 || unit != .piece))
+            || !notes.isEmpty
+    }
+
     func loadReferentials() async {
         let cats = try? await service.listCategories()
         let locs = try? await service.listLocations()
