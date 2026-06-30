@@ -3,8 +3,10 @@ import ScoutKit
 
 struct MaterialListView: View {
     @StateObject private var viewModel = MaterialListViewModel()
+    @EnvironmentObject private var session: SessionStore
     @State private var showFilters = false
     @State private var showAddForm = false
+    @State private var showCategoryManager = false
 
     var body: some View {
         NavigationStack {
@@ -16,6 +18,14 @@ struct MaterialListView: View {
                 .toolbar {
                     ToolbarItem(placement: .topBarLeading) {
                         Button { showAddForm = true } label: { Image(systemName: "plus") }
+                    }
+                    if session.canWrite {
+                        ToolbarItem(placement: .topBarLeading) {
+                            Button { showCategoryManager = true } label: {
+                                Image(systemName: "folder.badge.gearshape")
+                            }
+                            .accessibilityLabel("Organiser le matériel")
+                        }
                     }
                     ToolbarItem(placement: .topBarTrailing) {
                         Button { showFilters = true } label: {
@@ -30,6 +40,11 @@ struct MaterialListView: View {
                 }
                 .sheet(isPresented: $showFilters) {
                     MaterialFilterView(viewModel: viewModel)
+                }
+                .sheet(isPresented: $showCategoryManager, onDismiss: {
+                    Task { await viewModel.loadReferentials(); await viewModel.load() }
+                }) {
+                    CategoryManagerView()
                 }
                 .navigationDestination(for: Item.self) { item in
                     MaterialDetailView(item: item, listViewModel: viewModel)
