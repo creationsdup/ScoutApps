@@ -176,3 +176,26 @@ drop policy if exists expenses_write_roles on public.expenses;
 create policy expenses_write_roles on public.expenses for all to authenticated
   using      (exists (select 1 from public.profiles p where p.id = auth.uid() and p.role in ('admin','manager','member')))
   with check (exists (select 1 from public.profiles p where p.id = auth.uid() and p.role in ('admin','manager','member')));
+
+-- ============================================================================
+-- Task R : Stock / réserve alimentaire — table food_stock (ADDITIF)
+-- ============================================================================
+create table if not exists public.food_stock (
+  id          uuid primary key default gen_random_uuid(),
+  camp_id     uuid not null references public.camps(id) on delete cascade,
+  name        text not null,
+  quantity    numeric,
+  unit        text,
+  expiry_date date,
+  location    text,
+  created_at  timestamptz not null default now()
+);
+
+alter table public.food_stock enable row level security;
+
+drop policy if exists food_stock_select_auth on public.food_stock;
+create policy food_stock_select_auth on public.food_stock for select to authenticated using (true);
+drop policy if exists food_stock_write_roles on public.food_stock;
+create policy food_stock_write_roles on public.food_stock for all to authenticated
+  using      (exists (select 1 from public.profiles p where p.id = auth.uid() and p.role in ('admin','manager','member')))
+  with check (exists (select 1 from public.profiles p where p.id = auth.uid() and p.role in ('admin','manager','member')));
