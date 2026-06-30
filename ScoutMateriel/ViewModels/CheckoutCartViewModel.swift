@@ -35,11 +35,6 @@ final class CheckoutCartViewModel: ObservableObject {
         cart.remove(atOffsets: offsets)
     }
 
-    func setQty(itemId: String, qty: Int) {
-        guard let idx = cart.firstIndex(where: { $0.id == itemId }) else { return }
-        cart[idx].qty = qty
-    }
-
     var canValidate: Bool {
         !label.trimmingCharacters(in: .whitespaces).isEmpty && !cart.isEmpty
     }

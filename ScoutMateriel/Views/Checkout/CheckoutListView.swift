@@ -11,6 +11,11 @@ struct CheckoutListView: View {
             Group {
                 if vm.isLoading {
                     LoadingView()
+                } else if let err = vm.errorMessage {
+                    Text(err)
+                        .font(SGDFTheme.FontStyle.caption())
+                        .foregroundStyle(SGDFColors.red)
+                        .padding()
                 } else if vm.checkouts.isEmpty {
                     EmptyStateView(
                         systemImage: "arrow.up.bin",

@@ -132,12 +132,14 @@ private struct CartItemPickerView: View {
                     )
                 } else {
                     List(filtered) { item in
+                        let alreadyInCart = vm.cart.contains { $0.item.id == item.id }
                         Button {
                             vm.add(item)
                             dismiss()
                         } label: {
-                            PickerItemRow(item: item, maxQty: vm.maxQty(item))
+                            PickerItemRow(item: item, maxQty: vm.maxQty(item), isInCart: alreadyInCart)
                         }
+                        .disabled(alreadyInCart)
                     }
                     .listStyle(.insetGrouped)
                     .searchable(text: $search, prompt: "Rechercher un article")
@@ -161,20 +163,27 @@ private struct CartItemPickerView: View {
 private struct PickerItemRow: View {
     let item: Item
     let maxQty: Int
+    let isInCart: Bool
 
     var body: some View {
         HStack {
             VStack(alignment: .leading, spacing: SGDFTheme.Spacing.xs) {
                 Text(item.name)
                     .font(SGDFTheme.FontStyle.body().weight(.semibold))
-                    .foregroundStyle(SGDFColors.textPrimary)
-                Text("Dispo : \(maxQty)")
-                    .font(SGDFTheme.FontStyle.caption())
-                    .foregroundStyle(SGDFColors.textSecondary)
+                    .foregroundStyle(isInCart ? SGDFColors.textSecondary : SGDFColors.textPrimary)
+                if isInCart {
+                    Text("Déjà ajouté")
+                        .font(SGDFTheme.FontStyle.caption())
+                        .foregroundStyle(SGDFColors.textSecondary)
+                } else {
+                    Text("Dispo : \(maxQty)")
+                        .font(SGDFTheme.FontStyle.caption())
+                        .foregroundStyle(SGDFColors.textSecondary)
+                }
             }
             Spacer()
-            Image(systemName: "plus.circle.fill")
-                .foregroundStyle(SGDFColors.orange)
+            Image(systemName: isInCart ? "checkmark.circle.fill" : "plus.circle.fill")
+                .foregroundStyle(isInCart ? SGDFColors.textSecondary : SGDFColors.orange)
         }
     }
 }

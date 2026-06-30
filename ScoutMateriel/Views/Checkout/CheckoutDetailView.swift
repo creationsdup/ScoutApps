@@ -32,6 +32,11 @@ struct CheckoutDetailView: View {
                                 .lineLimit(2)
                         }
                     }
+                    if let dateStr = checkout.createdAt {
+                        Text(String(dateStr.prefix(10)))
+                            .font(SGDFTheme.FontStyle.caption())
+                            .foregroundStyle(SGDFColors.textSecondary)
+                    }
                 }
                 .padding(.vertical, SGDFTheme.Spacing.xs)
             }
