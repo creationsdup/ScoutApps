@@ -222,3 +222,18 @@ Task 5 (ScoutMatériel 'Sorti pour camp'): COMPLETE — review Approved (0 issue
 REVUE FINALE Projet 2 (opus): ✅ Ready. SQL additive PASS, atomicité/cohérence PASS, canWrite+RLS, 0 Critical/0 Important.
   Minors OK-to-defer: Row.inventory_items doc; add-sheet dismiss en erreur + flash; assign loop partiel; cross-camp single-item (hors scope v1).
 === PROJET 2 COMPLET — merge dans main ===
+
+=== BON DE SORTIE (panier) — branche feat/checkout-cart ===
+Spec 2026-06-30-checkout-cart ; plan 2026-06-30-plan-checkout-cart (5 tasks).
+Task 1 (SQL checkouts/checkout_items + RPC create/return): COMPLETE (contrôleur, verbatim). additif. à exécuter dans Supabase.
+Task 2 (ScoutKit Checkout models+service): COMPLETE — review Approved (0 issue). commit d6166f5. Build OK.
+Tasks 3+4 (UI Sorties, arbre principal) + Task 5 (worktree) lancées EN PARALLÈLE.
+Tasks 3+4 (UI Sorties): impl 01a54ad ; registration+fix FontStyle e60b6d2 ; build OK. Revue en cours.
+Task 5 (indicateur fiche, worktree 9996fa2): mergé (a3ed951), build combiné OK. Revue en cours.
+Task 5 (indicateur 'dans la sortie'): COMPLETE — review Approved (0 issue). mergé a3ed951.
+Tasks 3+4: review Needs fixes -> fix wave 94cf46e (Important: list error banner; Minors: date header, picker dupe guard, dead setQty). Build OK.
+  Note: M2 (SGDFBadge) écarté (SGDFBadge typé ItemStatus, pas CheckoutStatus). M5 différé (read try? acceptable).
+=== 5 tasks complètes — revue finale de branche ===
+REVUE FINALE (opus): ✅ Ready. SQL additive PASS, anti-survente+atomicité+cohérence PASS, canWrite+RLS, 0 Critical/0 Important.
+  Minors OK-to-defer: status force available (par design), onAppear min(1,remaining) cosmétique, SGDFBadge non applicable, loadAvailable try?.
+=== BON DE SORTIE COMPLET — merge dans main ===

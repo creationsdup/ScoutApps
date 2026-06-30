@@ -21,6 +21,9 @@ struct MainTabView: View {
             QRScannerView()
                 .tabItem { Label("Scan", systemImage: "qrcode.viewfinder") }
                 .tag(AppRouter.Tab.scan)
+            CheckoutListView()
+                .tabItem { Label("Sorties", systemImage: "arrow.up.bin") }
+                .tag(AppRouter.Tab.sorties)
         }
         .tint(SGDFColors.primaryBlue)
     }
