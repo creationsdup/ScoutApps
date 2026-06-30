@@ -120,3 +120,32 @@ drop policy if exists recipe_ingredients_write_roles on public.recipe_ingredient
 create policy recipe_ingredients_write_roles on public.recipe_ingredients for all to authenticated
   using      (exists (select 1 from public.profiles p where p.id = auth.uid() and p.role in ('admin','manager','member')))
   with check (exists (select 1 from public.profiles p where p.id = auth.uid() and p.role in ('admin','manager','member')));
+
+-- ============================================================================
+-- Task P : Liste de courses — table shopping_items (ADDITIF)
+--   source = 'auto' (généré depuis les menus) | 'manual' (ajouté à la main).
+-- ============================================================================
+create table if not exists public.shopping_items (
+  id         uuid primary key default gen_random_uuid(),
+  camp_id    uuid not null references public.camps(id) on delete cascade,
+  name       text not null,
+  quantity   numeric,
+  unit       text,
+  checked    boolean not null default false,
+  source     text not null default 'manual',
+  created_at timestamptz not null default now()
+);
+
+alter table public.shopping_items drop constraint if exists shopping_items_source_chk;
+alter table public.shopping_items
+  add constraint shopping_items_source_chk
+  check (source in ('auto','manual')) not valid;
+
+alter table public.shopping_items enable row level security;
+
+drop policy if exists shopping_items_select_auth on public.shopping_items;
+create policy shopping_items_select_auth on public.shopping_items for select to authenticated using (true);
+drop policy if exists shopping_items_write_roles on public.shopping_items;
+create policy shopping_items_write_roles on public.shopping_items for all to authenticated
+  using      (exists (select 1 from public.profiles p where p.id = auth.uid() and p.role in ('admin','manager','member')))
+  with check (exists (select 1 from public.profiles p where p.id = auth.uid() and p.role in ('admin','manager','member')));
