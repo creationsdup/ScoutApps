@@ -1,4 +1,5 @@
 import SwiftUI
+import ScoutKit
 
 struct DashboardView: View {
     @EnvironmentObject private var router: AppRouter

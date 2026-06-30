@@ -1,4 +1,5 @@
 import Foundation
+import ScoutKit
 
 @MainActor
 final class MaterialListViewModel: ObservableObject {

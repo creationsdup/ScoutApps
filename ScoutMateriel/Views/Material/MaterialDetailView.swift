@@ -1,4 +1,5 @@
 import SwiftUI
+import ScoutKit
 
 struct MaterialDetailView: View {
     let item: Item

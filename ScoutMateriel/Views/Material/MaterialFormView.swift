@@ -1,4 +1,5 @@
 import SwiftUI
+import ScoutKit
 import PhotosUI
 
 struct MaterialFormView: View {

@@ -1,4 +1,5 @@
 import SwiftUI
+import ScoutKit
 
 /// Associe une étiquette QR vierge à un matériel existant (choisi dans la liste).
 struct AssignQRCodeView: View {

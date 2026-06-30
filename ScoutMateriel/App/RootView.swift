@@ -1,4 +1,5 @@
 import SwiftUI
+import ScoutKit
 
 struct RootView: View {
     @EnvironmentObject private var session: SessionStore

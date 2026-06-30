@@ -1,4 +1,5 @@
 import SwiftUI
+import ScoutKit
 
 struct MaterialListView: View {
     @StateObject private var viewModel = MaterialListViewModel()

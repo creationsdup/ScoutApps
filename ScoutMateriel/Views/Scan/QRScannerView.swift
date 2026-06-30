@@ -1,4 +1,5 @@
 import SwiftUI
+import ScoutKit
 import AVFoundation
 
 struct QRScannerView: View {

@@ -1,4 +1,5 @@
 import Foundation
+import ScoutKit
 
 /// Statistiques agrégées du matériel pour le tableau de bord.
 struct DashboardStats: Equatable {

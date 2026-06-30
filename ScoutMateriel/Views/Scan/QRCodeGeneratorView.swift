@@ -1,4 +1,5 @@
 import SwiftUI
+import ScoutKit
 
 /// Affiche (et permet de partager) le QR correspondant à un code d'étiquette.
 struct QRCodeGeneratorView: View {

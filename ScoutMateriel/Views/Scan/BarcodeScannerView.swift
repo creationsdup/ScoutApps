@@ -1,4 +1,5 @@
 import SwiftUI
+import ScoutKit
 import AVFoundation
 
 /// Scanner de code-barres (EAN-8/EAN-13 + QR) présenté en sheet. Renvoie la chaîne brute lue.

@@ -1,4 +1,5 @@
 import SwiftUI
+import ScoutKit
 
 struct MainTabView: View {
     @EnvironmentObject private var router: AppRouter
@@ -20,12 +21,6 @@ struct MainTabView: View {
             QRScannerView()
                 .tabItem { Label("Scan", systemImage: "qrcode.viewfinder") }
                 .tag(AppRouter.Tab.scan)
-            IntendanceHomeView()
-                .tabItem { Label("Intendance", systemImage: "fork.knife") }
-                .tag(AppRouter.Tab.intendance)
-            ProgramHomeView()
-                .tabItem { Label("Camp", systemImage: "tent") }
-                .tag(AppRouter.Tab.camp)
         }
         .tint(SGDFColors.primaryBlue)
     }

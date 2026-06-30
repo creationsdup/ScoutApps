@@ -1,4 +1,5 @@
 import SwiftUI
+import ScoutKit
 
 struct MaterialFilterView: View {
     @ObservedObject var viewModel: MaterialListViewModel

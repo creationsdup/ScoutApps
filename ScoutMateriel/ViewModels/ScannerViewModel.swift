@@ -1,4 +1,5 @@
 import Foundation
+import ScoutKit
 
 enum ScanResolution {
     case item(Item)
