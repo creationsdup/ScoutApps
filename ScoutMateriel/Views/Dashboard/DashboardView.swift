@@ -5,6 +5,7 @@ struct DashboardView: View {
     @EnvironmentObject private var router: AppRouter
     @StateObject private var viewModel = DashboardViewModel()
     @State private var initialLoadDone = false
+    @State private var showInventory = false
 
     private let columns = [GridItem(.flexible(), spacing: SGDFTheme.Spacing.md),
                            GridItem(.flexible(), spacing: SGDFTheme.Spacing.md)]
@@ -86,9 +87,9 @@ struct DashboardView: View {
                         SGDFButton("Préparer une sortie", kind: .secondary, systemImage: "arrow.up.bin") {
                             router.selectedTab = .sorties
                         }
-                        SGDFButton("Inventaire rapide (bientôt)", kind: .secondary, systemImage: "checklist") {
+                        SGDFButton("Inventaire rapide", kind: .secondary, systemImage: "checklist") {
+                            showInventory = true
                         }
-                        .disabled(true)
                         SGDFButton("Signaler une réparation", kind: .secondary, systemImage: "wrench.adjustable") {
                             router.selectedTab = .scan
                         }
@@ -106,6 +107,7 @@ struct DashboardView: View {
                 initialLoadDone = true
             }
             .refreshable { await viewModel.load() }
+            .fullScreenCover(isPresented: $showInventory) { InventoryView() }
         }
     }
 }
