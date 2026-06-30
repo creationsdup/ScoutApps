@@ -101,8 +101,11 @@ until a value is chosen) → `start(scope:)`.
 
 **2. Scanning (`.scanning`):** a progress header — "Présent X / N attendus · Non scanné R ·
 En trop E". Below:
-- **Camera:** `QRCameraView { code in viewModel.resolve(code) }` (reused). Inoperative in
-  the Simulator.
+- **No live camera this cycle** (decided during planning): the existing `QRScannerController`
+  is single-shot (stops after one code), so reusing it would allow only one scan per session,
+  and modifying that shared controller risks the Scan tab. Live camera scanning is deferred;
+  the camera does not work in the Simulator regardless. Inventory uses manual TAG entry + the
+  checklist (a hardware barcode wedge on device still types into the manual field).
 - **Manual entry:** `SGDFTextField` placeholder "TAG-000001" + a Valider button →
   `resolve(manualCode)`. `scanMessage` shows the outcome (present ✓ / en trop / inconnu).
 - **Checklist of expected items:** a list of `expected`; each row (name + code + status
