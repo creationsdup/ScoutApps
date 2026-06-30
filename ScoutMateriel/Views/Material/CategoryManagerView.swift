@@ -166,7 +166,11 @@ private struct CategoryEditView: View {
     private var isEditing: Bool { category != nil }
     private var codeLocked: Bool {
         guard let category else { return false }
-        return !viewModel.canEditCode(category.id)
+        // On ne verrouille que pour PROTÉGER un code déjà présent dont des objets
+        // dépendent. Si la catégorie n'a pas encore de code, on doit pouvoir en
+        // ajouter un (sans quoi la création de matériel dedans reste impossible).
+        let hasCode = !(category.code ?? "").trimmingCharacters(in: .whitespaces).isEmpty
+        return hasCode && !viewModel.canEditCode(category.id)
     }
     private var codeValid: Bool {
         code.range(of: "^[A-Z]{2,4}$", options: .regularExpression) != nil
