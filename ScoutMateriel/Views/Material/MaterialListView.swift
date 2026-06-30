@@ -21,42 +21,53 @@ struct MaterialListView: View {
                 .onSubmit(of: .search) { Task { await viewModel.load() } }
                 .toolbar {
                     ToolbarItem(placement: .topBarLeading) {
-                        Button { showAddForm = true } label: { Image(systemName: "plus") }
-                    }
-                    if session.canWrite {
-                        ToolbarItem(placement: .topBarLeading) {
-                            Button { showCategoryManager = true } label: {
-                                Image(systemName: "folder.badge.gearshape")
-                            }
-                            .accessibilityLabel("Organiser le matériel")
-                        }
-                    }
-                    ToolbarItem(placement: .topBarTrailing) {
-                        Button { showFilters = true } label: {
-                            Image(systemName: viewModel.activeFilterCount > 0
-                                  ? "line.3.horizontal.decrease.circle.fill"
-                                  : "line.3.horizontal.decrease.circle")
-                        }
-                    }
-                    if session.canWrite {
-                        ToolbarItem(placement: .topBarTrailing) {
-                            if isSelecting {
-                                Button("Annuler") {
-                                    isSelecting = false
-                                    selectedIds = []
-                                }
-                            } else {
-                                Button("Sélectionner") { isSelecting = true }
-                            }
-                        }
                         if isSelecting {
-                            ToolbarItem(placement: .bottomBar) {
-                                Button {
-                                    showMoveSheet = true
+                            Button("Annuler") {
+                                isSelecting = false
+                                selectedIds = []
+                            }
+                        } else {
+                            Button { showAddForm = true } label: { Image(systemName: "plus") }
+                        }
+                    }
+                    if isSelecting {
+                        ToolbarItem(placement: .principal) {
+                            Text("\(selectedIds.count) sélectionné(s)")
+                                .font(SGDFTheme.FontStyle.caption())
+                                .foregroundStyle(SGDFColors.textSecondary)
+                        }
+                    }
+                    if isSelecting {
+                        ToolbarItem(placement: .topBarTrailing) {
+                            Button {
+                                showMoveSheet = true
+                            } label: {
+                                Text("Déplacer (\(selectedIds.count))")
+                                    .fontWeight(.semibold)
+                            }
+                            .disabled(selectedIds.isEmpty)
+                        }
+                    } else {
+                        ToolbarItem(placement: .topBarTrailing) {
+                            Button { showFilters = true } label: {
+                                Image(systemName: viewModel.activeFilterCount > 0
+                                      ? "line.3.horizontal.decrease.circle.fill"
+                                      : "line.3.horizontal.decrease.circle")
+                            }
+                        }
+                        if session.canWrite {
+                            ToolbarItem(placement: .topBarTrailing) {
+                                Menu {
+                                    Button { isSelecting = true } label: {
+                                        Label("Sélectionner", systemImage: "checkmark.circle")
+                                    }
+                                    Button { showCategoryManager = true } label: {
+                                        Label("Organiser le matériel", systemImage: "folder.badge.gearshape")
+                                    }
                                 } label: {
-                                    Text("Déplacer (\(selectedIds.count))")
+                                    Image(systemName: "ellipsis.circle")
                                 }
-                                .disabled(selectedIds.isEmpty)
+                                .accessibilityLabel("Plus d'actions")
                             }
                         }
                     }
