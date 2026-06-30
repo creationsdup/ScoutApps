@@ -46,6 +46,7 @@
 		6412FBEDEAF2AB9CFEE5FD84 /* CheckoutDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5EF686D4EBB420B773F9905 /* CheckoutDetailView.swift */; };
 		6C23930B8361C9ABC9AFFCB2 /* ProgramHomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7826459B8EE3FDBBC96F9A3 /* ProgramHomeView.swift */; };
 		704A139EC48574B42A28BCFA /* FoodStockViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DA498E72B6D06BB42691440 /* FoodStockViewModel.swift */; };
+		7300FDD6DE89BCA7895097C7 /* InventoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7167E856A1B22ED581B6EFD0 /* InventoryView.swift */; };
 		759AD0C4A395A2D3433C9584 /* ShoppingAddView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E452048604D84C6E754D31C2 /* ShoppingAddView.swift */; };
 		7F808AF3193B95CED737B178 /* BudgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D330D7AB993A5F6E12ADD8BB /* BudgetView.swift */; };
 		807F6758E6AD146013A5F235 /* CampListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 615CBFC29BF864183505D10D /* CampListView.swift */; };
@@ -119,6 +120,7 @@
 		5D30325E0106B67930FDA951 /* ShoppingListViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ShoppingListViewModel.swift; path = ViewModels/ShoppingListViewModel.swift; sourceTree = "<group>"; };
 		615CBFC29BF864183505D10D /* CampListView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CampListView.swift; path = Views/Intendance/CampListView.swift; sourceTree = "<group>"; };
 		632DEFAD2778FB7343CD7FAC /* CheckoutCartViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CheckoutCartViewModel.swift; path = ViewModels/CheckoutCartViewModel.swift; sourceTree = "<group>"; };
+		7167E856A1B22ED581B6EFD0 /* InventoryView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = InventoryView.swift; path = Inventory/InventoryView.swift; sourceTree = "<group>"; };
 		76182AB246FB2B969E9BCE88 /* ProgramPlanViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ProgramPlanViewModel.swift; path = ViewModels/ProgramPlanViewModel.swift; sourceTree = "<group>"; };
 		76BDC2A781592543C6C7CD8C /* CampFormView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CampFormView.swift; path = Views/Intendance/CampFormView.swift; sourceTree = "<group>"; };
 		7AF99ADB908B32BAEFA60C9B /* RecipeListViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = RecipeListViewModel.swift; path = ViewModels/RecipeListViewModel.swift; sourceTree = "<group>"; };
@@ -254,6 +256,7 @@
 				0FC0294D2FF3C1D1006F2EBF /* Dashboard */,
 				0FC029522FF3C1D1006F2EBF /* Material */,
 				0FC029562FF3C1D1006F2EBF /* Scan */,
+				1728B0C94907B921FFB58766 /* Inventory */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -272,6 +275,14 @@
 				F5EF686D4EBB420B773F9905 /* CheckoutDetailView.swift */,
 			);
 			path = ScoutMateriel;
+			sourceTree = "<group>";
+		};
+		1728B0C94907B921FFB58766 /* Inventory */ = {
+			isa = PBXGroup;
+			children = (
+				7167E856A1B22ED581B6EFD0 /* InventoryView.swift */,
+			);
+			name = Inventory;
 			sourceTree = "<group>";
 		};
 		43DC71E31DA25AB61BC8996E /* ScoutCamp */ = {
@@ -540,6 +551,7 @@
 				12EF0628E92DEC7BF51FFC7D /* CheckoutCartView.swift in Sources */,
 				6412FBEDEAF2AB9CFEE5FD84 /* CheckoutDetailView.swift in Sources */,
 				0B6336A1B38CE1B326488E1D /* InventoryViewModel.swift in Sources */,
+				7300FDD6DE89BCA7895097C7 /* InventoryView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
