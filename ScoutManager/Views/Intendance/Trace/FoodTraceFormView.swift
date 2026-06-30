@@ -53,7 +53,7 @@ struct FoodTraceFormView: View {
                 Section("Traçabilité") {
                     SGDFTextField("N° de lot", text: $lotNumber)
                     HStack {
-                        TextField("Code-barres", text: $barcode)
+                        SGDFTextField("Code-barres", text: $barcode, systemImage: "barcode")
                             .keyboardType(.numbersAndPunctuation)
                             .autocorrectionDisabled()
                         Button { showScanner = true } label: { Image(systemName: "barcode.viewfinder") }

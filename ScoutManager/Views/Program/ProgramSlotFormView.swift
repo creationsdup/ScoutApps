@@ -26,6 +26,9 @@ struct ProgramSlotFormView: View {
     // Task X — lien matériel
     @State private var selectedItemIds: Set<String> = []
     @State private var allItems: [Item] = []
+    /// Fix 1 — true only after itemIds(slotId:) succeeds (or for a new slot).
+    /// Prevents save() from calling setItems when links were never loaded (would wipe all existing links).
+    @State private var linksLoaded = false
 
     private let programService = ProgramService()
     private let itemService = ItemService()
@@ -50,7 +53,16 @@ struct ProgramSlotFormView: View {
     }
 
     private var isEditing: Bool { existingSlot != nil }
-    private var canSave: Bool { !title.trimmingCharacters(in: .whitespaces).isEmpty }
+
+    /// Fix 4 — guard end ≥ start when both are set (lexicographic compare on "HH:mm" is safe for 24h zero-padded).
+    private var isTimeValid: Bool {
+        guard hasStartTime && hasEndTime else { return true }
+        return Self.timeDF.string(from: endTime) >= Self.timeDF.string(from: startTime)
+    }
+
+    private var canSave: Bool {
+        !title.trimmingCharacters(in: .whitespaces).isEmpty && isTimeValid
+    }
 
     private var campDateRange: ClosedRange<Date> {
         let start = campStartDate.flatMap { Self.dateDF.date(from: $0) } ?? Date.distantPast
@@ -107,6 +119,12 @@ struct ProgramSlotFormView: View {
             if hasEndTime {
                 DatePicker("Fin", selection: $endTime, displayedComponents: .hourAndMinute)
             }
+            // Fix 4 — inline validation message when end < start
+            if hasStartTime && hasEndTime && !isTimeValid {
+                Text("L'heure de fin doit être après l'heure de début.")
+                    .font(SGDFTheme.FontStyle.caption())
+                    .foregroundStyle(SGDFColors.red)
+            }
         }
     }
 
@@ -152,6 +170,10 @@ struct ProgramSlotFormView: View {
                     }
                 }
             }
+            // Fix 2 — liste en lecture seule des items sélectionnés avec couleur de statut
+            ForEach(allItems.filter { selectedItemIds.contains($0.id) }) { item in
+                SlotSelectedItemRow(item: item)
+            }
         }
     }
 
@@ -169,19 +191,31 @@ struct ProgramSlotFormView: View {
     // MARK: - Data
 
     private func loadItems() async {
-        do {
-            async let itemsTask = itemService.list()
-            if let slotId = existingSlot?.id {
-                async let idsTask = programService.itemIds(slotId: slotId)
+        if let slotId = existingSlot?.id {
+            // Existing slot: fetch items list AND linked ids together.
+            // linksLoaded stays false until BOTH succeed to prevent save() wiping existing links.
+            do {
+                async let itemsTask = itemService.list()
+                async let idsTask   = programService.itemIds(slotId: slotId)
                 let (items, ids) = try await (itemsTask, idsTask)
                 allItems = items
                 selectedItemIds = Set(ids)
-            } else {
-                allItems = try await itemsTask
+                linksLoaded = true
+            } catch {
+                // Surface to user so they know links are in an uncertain state.
+                errorMessage = "Impossible de charger les liens matériel — les liens existants seront préservés à l'enregistrement."
+                // Attempt to at least populate the items list for display (best-effort).
+                if let items = try? await itemService.list() {
+                    allItems = items
+                }
+                // linksLoaded remains false → save() will skip setItems
             }
-        } catch {
-            // Non-fatal: picker shows empty list
-            allItems = []
+        } else {
+            // New slot: no existing links to lose.
+            if let items = try? await itemService.list() {
+                allItems = items
+            }
+            linksLoaded = true
         }
     }
 
@@ -228,17 +262,40 @@ struct ProgramSlotFormView: View {
                 notes: notes.isEmpty ? nil : notes,
                 activityId: selectedActivityId
             )
-            // Lie le matériel (non-bloquant : on dismiss même si le lien échoue)
-            do {
-                try await programService.setItems(slotId: saved.id,
-                                                  itemIds: Array(selectedItemIds))
-            } catch {
-                errorMessage = "Créneau enregistré. Lien matériel non sauvegardé : \(error.localizedDescription)"
-                return
+            // Fix 1 — only call setItems when links were successfully loaded to avoid wiping existing links.
+            if linksLoaded {
+                do {
+                    try await programService.setItems(slotId: saved.id,
+                                                      itemIds: Array(selectedItemIds))
+                } catch {
+                    errorMessage = "Créneau enregistré. Lien matériel non sauvegardé : \(error.localizedDescription)"
+                    return
+                }
             }
             dismiss()
         } catch {
             errorMessage = "Impossible d'enregistrer : \(error.localizedDescription)"
+        }
+    }
+}
+
+// MARK: - Fix 2 private subview — évite les expressions géantes dans materialSection
+
+private struct SlotSelectedItemRow: View {
+    let item: Item
+
+    var body: some View {
+        HStack(spacing: SGDFTheme.Spacing.sm) {
+            Circle()
+                .fill(StatusColorMapper.color(for: item.status))
+                .frame(width: 8, height: 8)
+            Text(item.name)
+                .font(SGDFTheme.FontStyle.body())
+                .foregroundStyle(SGDFColors.textPrimary)
+            Spacer()
+            Text(item.status.label)
+                .font(SGDFTheme.FontStyle.caption())
+                .foregroundStyle(StatusColorMapper.color(for: item.status))
         }
     }
 }
