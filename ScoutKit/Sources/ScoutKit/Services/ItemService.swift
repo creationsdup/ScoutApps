@@ -20,6 +20,23 @@ public struct ItemService {
 
     private struct LastCheckedPayload: Encodable { let last_checked_at: String }
 
+    private struct MovePayload: Encodable {
+        let categoryId: String
+        let subcategoryId: String?
+
+        enum CodingKeys: String, CodingKey {
+            case categoryId = "category_id"
+            case subcategoryId = "subcategory_id"
+        }
+
+        func encode(to encoder: Encoder) throws {
+            var c = encoder.container(keyedBy: CodingKeys.self)
+            try c.encode(categoryId, forKey: .categoryId)
+            // `encode` (et non `encodeIfPresent`) écrit `null` quand nil → efface la sous-catégorie.
+            try c.encode(subcategoryId, forKey: .subcategoryId)
+        }
+    }
+
     // MARK: - Items
 
     /// Liste filtrée. Exclut l'archivé par défaut.
@@ -98,6 +115,17 @@ public struct ItemService {
         let now = ISO8601DateFormatter().string(from: Date())
         try await client.from("inventory_items")
             .update(LastCheckedPayload(last_checked_at: now))
+            .`in`("id", values: itemIds)
+            .execute()
+    }
+
+    /// Déplace une liste d'objets vers une catégorie (et éventuellement une
+    /// sous-catégorie) en une seule requête. No-op si la liste est vide.
+    /// `subcategoryId == nil` efface explicitement la sous-catégorie (null en DB).
+    public func move(itemIds: [String], categoryId: String, subcategoryId: String?) async throws {
+        guard !itemIds.isEmpty else { return }
+        try await client.from("inventory_items")
+            .update(MovePayload(categoryId: categoryId, subcategoryId: subcategoryId))
             .`in`("id", values: itemIds)
             .execute()
     }
