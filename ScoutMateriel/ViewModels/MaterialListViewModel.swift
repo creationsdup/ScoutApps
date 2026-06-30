@@ -55,6 +55,21 @@ final class MaterialListViewModel: ObservableObject {
         isLoading = false
     }
 
+    /// Déplace les items sélectionnés vers la catégorie (et sous-catégorie) cible.
+    /// Retourne nil au succès, sinon un message d'erreur à afficher.
+    func move(itemIds: Set<String>, categoryId: String, subcategoryId: String?) async -> String? {
+        guard !itemIds.isEmpty else { return nil }
+        do {
+            try await service.move(itemIds: Array(itemIds),
+                                   categoryId: categoryId,
+                                   subcategoryId: subcategoryId)
+            await load()
+            return nil
+        } catch {
+            return "Le déplacement a échoué : \(error.localizedDescription)"
+        }
+    }
+
     var activeFilterCount: Int {
         [statusFilter != nil, categoryFilter != nil, subcategoryFilter != nil, locationFilter != nil].filter { $0 }.count
     }
