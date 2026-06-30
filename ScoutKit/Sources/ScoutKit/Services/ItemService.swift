@@ -26,12 +26,14 @@ public struct ItemService {
     public func list(search: String? = nil,
               status: ItemStatus? = nil,
               categoryId: String? = nil,
+              subcategoryId: String? = nil,
               locationId: String? = nil,
               includeArchived: Bool = false) async throws -> [Item] {
         var query = client.from("inventory_items").select()
         if !includeArchived { query = query.neq("status", value: ItemStatus.archive.rawValue) }
         if let status { query = query.eq("status", value: status.rawValue) }
         if let categoryId { query = query.eq("category_id", value: categoryId) }
+        if let subcategoryId { query = query.eq("subcategory_id", value: subcategoryId) }
         if let locationId { query = query.eq("location_id", value: locationId) }
         if let search, !search.isEmpty { query = query.ilike("name", value: "%\(search)%") }
         return try await query.order("inventory_code").execute().value
@@ -40,6 +42,13 @@ public struct ItemService {
     public func get(id: String) async throws -> Item? {
         let rows: [Item] = try await client.from("inventory_items")
             .select().eq("id", value: id).limit(1).execute().value
+        return rows.first
+    }
+
+    /// Recherche un matériel par son code inventaire (= code scanné). Insensible à la casse via match exact uppercase.
+    public func item(byCode code: String) async throws -> Item? {
+        let rows: [Item] = try await client.from("inventory_items")
+            .select().eq("inventory_code", value: code).limit(1).execute().value
         return rows.first
     }
 
@@ -101,5 +110,15 @@ public struct ItemService {
 
     public func listLocations() async throws -> [ItemLocation] {
         try await client.from("locations").select().order("name").execute().value
+    }
+
+    public func listSubcategories() async throws -> [Subcategory] {
+        try await client.from("subcategories").select().order("name").execute().value
+    }
+
+    /// Génère le prochain code inventaire pour une catégorie (RPC atomique). Ex. "TEN-0001".
+    public func nextInventoryCode(categoryId: String) async throws -> String {
+        try await client.rpc("next_inventory_code",
+                             params: ["p_category_id": categoryId]).execute().value
     }
 }

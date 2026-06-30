@@ -32,11 +32,12 @@ public struct QRCode: Codable, Identifiable, Hashable {
     }
 }
 
-/// Validation du format d'étiquette (TAG-000001) — miroir de l'ancien parseTagCode.
+/// Validation du format de code inventaire / tag : PRÉFIXE (2-4 lettres) + "-" + 4 chiffres.
+/// Ex. "TEN-0001". Le préfixe est le code de la catégorie.
 public enum TagCode {
     public static func parse(_ raw: String) -> String? {
         let trimmed = raw.trimmingCharacters(in: .whitespacesAndNewlines).uppercased()
-        guard trimmed.range(of: "^TAG-\\d{6}$", options: .regularExpression) != nil else { return nil }
+        guard trimmed.range(of: "^[A-Z]{2,4}-\\d{4}$", options: .regularExpression) != nil else { return nil }
         return trimmed
     }
 }
