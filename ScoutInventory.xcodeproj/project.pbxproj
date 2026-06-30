@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		0496CC5309587734A000F3B0 /* ScoutKit in Frameworks */ = {isa = PBXBuildFile; productRef = A3041B188F7BA2B0E7DCB524 /* ScoutKit */; };
+		0A07A413CD3A905CBE7DE3ED /* CampMaterialViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A1CA1C0290E3D2DDCE50A13 /* CampMaterialViewModel.swift */; };
 		0FC029592FF3C1D1006F2EBF /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FC0294C2FF3C1D1006F2EBF /* DashboardView.swift */; };
 		0FC0295A2FF3C1D1006F2EBF /* ScoutMaterielApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FC029452FF3C1D1006F2EBF /* ScoutMaterielApp.swift */; };
 		0FC0295B2FF3C1D1006F2EBF /* MaterialFilterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FC0294F2FF3C1D1006F2EBF /* MaterialFilterView.swift */; };
@@ -51,6 +52,7 @@
 		B2C3E65C169BC381EAD7BF98 /* BudgetViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7FFD5B9B35B34C0ADA2F2CC /* BudgetViewModel.swift */; };
 		B6D5171895E6A1425D199897 /* ProgramPlanView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8670B8CAF51D6301CD71D345 /* ProgramPlanView.swift */; };
 		B705718041A13B86103291A5 /* ActivityFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 478D42FD05CF2EAEB28017CB /* ActivityFormView.swift */; };
+		BA6E93F671C4F974B0A1545D /* CampMaterialView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41F615C0E46818F972A889CC /* CampMaterialView.swift */; };
 		BB0E1FA6E0F976C2F6A934F6 /* RecipeDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E687195FBEE3855BD023A68 /* RecipeDetailViewModel.swift */; };
 		BDBC8F1A7D144E74129A9F10 /* IntendanceHomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E19459A1E740328A2CC31C8 /* IntendanceHomeView.swift */; };
 		C07BD926102CAE347C993D89 /* ShoppingListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53B3B231B3BC96B8F27910AF /* ShoppingListView.swift */; };
@@ -70,6 +72,7 @@
 
 /* Begin PBXFileReference section */
 		022B12230DB8EB01426AEA06 /* FoodStockView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FoodStockView.swift; path = Views/Intendance/Stock/FoodStockView.swift; sourceTree = "<group>"; };
+		0A1CA1C0290E3D2DDCE50A13 /* CampMaterialViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CampMaterialViewModel.swift; path = ViewModels/CampMaterialViewModel.swift; sourceTree = "<group>"; };
 		0CE3F84EBECEAFF702032FE8 /* BarcodeScannerView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = BarcodeScannerView.swift; path = Views/Scan/BarcodeScannerView.swift; sourceTree = "<group>"; };
 		0FB027B27B0AE334FDE1B3FD /* MealRecipesPickerView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MealRecipesPickerView.swift; path = Views/Intendance/Recipes/MealRecipesPickerView.swift; sourceTree = "<group>"; };
 		0FC029422FF3C1D1006F2EBF /* AppRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRouter.swift; sourceTree = "<group>"; };
@@ -95,6 +98,7 @@
 		37262887FE9A4D606A474F18 /* RecipeFormViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = RecipeFormViewModel.swift; path = ViewModels/RecipeFormViewModel.swift; sourceTree = "<group>"; };
 		3E687195FBEE3855BD023A68 /* RecipeDetailViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = RecipeDetailViewModel.swift; path = ViewModels/RecipeDetailViewModel.swift; sourceTree = "<group>"; };
 		40CA926E567734E1A3F0084C /* RecipeListView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = RecipeListView.swift; path = Views/Intendance/Recipes/RecipeListView.swift; sourceTree = "<group>"; };
+		41F615C0E46818F972A889CC /* CampMaterialView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CampMaterialView.swift; path = Views/Material/CampMaterialView.swift; sourceTree = "<group>"; };
 		43E80FF8AF805EC0B3976A49 /* ScoutCamp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ScoutCamp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		478D42FD05CF2EAEB28017CB /* ActivityFormView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ActivityFormView.swift; path = Views/Program/ActivityFormView.swift; sourceTree = "<group>"; };
 		4A68DE06FDBCACA193DE13E0 /* CampTabView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CampTabView.swift; path = App/CampTabView.swift; sourceTree = "<group>"; };
@@ -291,6 +295,8 @@
 				9A98D2CE92FF702A99173F09 /* ProgramSlotFormView.swift */,
 				8DAFD731C7EE270EE9360C0D /* SlotMaterialPickerView.swift */,
 				0CE3F84EBECEAFF702032FE8 /* BarcodeScannerView.swift */,
+				41F615C0E46818F972A889CC /* CampMaterialView.swift */,
+				0A1CA1C0290E3D2DDCE50A13 /* CampMaterialViewModel.swift */,
 			);
 			name = ScoutCamp;
 			path = ScoutCamp;
@@ -481,6 +487,8 @@
 				283237E6FB52E8A3984076E0 /* ProgramSlotFormView.swift in Sources */,
 				E959A77956E7C9E13C87D42D /* SlotMaterialPickerView.swift in Sources */,
 				5F240E77F5B0FF9BAABCC493 /* BarcodeScannerView.swift in Sources */,
+				BA6E93F671C4F974B0A1545D /* CampMaterialView.swift in Sources */,
+				0A07A413CD3A905CBE7DE3ED /* CampMaterialViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
