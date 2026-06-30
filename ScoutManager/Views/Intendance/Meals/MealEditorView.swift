@@ -152,9 +152,10 @@ struct MealEditorView: View {
 
     private func save() async {
         isSaving = true
+        defer { isSaving = false }
         errorMessage = nil
         do {
-            // 1. Upsert le repas — récupère l'id sauvé
+            // 1. Upsert le repas — propage l'erreur (rien à annuler)
             let saved = try await viewModel.save(
                 campId: campId,
                 date: date,
@@ -163,15 +164,18 @@ struct MealEditorView: View {
                 title: title,
                 notes: notes
             )
-            // 2. Lie les recettes APRÈS l'upsert (id requis)
-            try await recipeService.setRecipes(
-                mealId: saved.id,
-                recipeIds: Array(selectedRecipeIds)
-            )
+            // 2. Lie les recettes — non-bloquant : on dismiss dans tous les cas
+            do {
+                try await recipeService.setRecipes(
+                    mealId: saved.id,
+                    recipeIds: Array(selectedRecipeIds)
+                )
+            } catch {
+                errorMessage = "Repas enregistré. Lien recettes non sauvegardé : \(error.localizedDescription)"
+            }
             dismiss()
         } catch {
             errorMessage = "Impossible d'enregistrer : \(error.localizedDescription)"
         }
-        isSaving = false
     }
 }

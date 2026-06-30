@@ -53,9 +53,9 @@ struct RecipeListView: View {
                 NavigationLink(destination: RecipeDetailView(recipe: recipe)) {
                     recipeRow(recipe)
                 }
+                .deleteDisabled(!session.canWrite)
             }
             .onDelete { offsets in
-                guard session.canWrite else { return }
                 for i in offsets {
                     let recipe = viewModel.filtered[i]
                     Task { await viewModel.delete(recipe) }

@@ -14,4 +14,9 @@ final class RecipeDetailViewModel: ObservableObject {
         catch { errorMessage = "Impossible de charger les ingrédients." }
         isLoading = false
     }
+
+    /// Récupère une recette par son id (via la liste complète).
+    func get(id: String) async -> Recipe? {
+        try? await service.list().first(where: { $0.id == id })
+    }
 }

@@ -42,7 +42,7 @@ final class RecipeFormViewModel: ObservableObject {
                 var d = IngredientDraft()
                 d.id = ing.id
                 d.name = ing.name
-                d.quantityStr = ing.quantity.map { formatQty($0) } ?? ""
+                d.quantityStr = ing.quantity.map { $0.qtyDisplay } ?? ""
                 d.unit = ing.unit ?? ""
                 return d
             }
@@ -92,15 +92,11 @@ final class RecipeFormViewModel: ObservableObject {
                     id: d.id,
                     recipeId: recipeId,
                     name: d.name.trimmingCharacters(in: .whitespaces),
-                    quantity: Double(d.quantityStr),
+                    quantity: Double(d.quantityStr.replacingOccurrences(of: ",", with: ".")),
                     unit: d.unit.isEmpty ? nil : d.unit
                 )
             }
         try await service.replaceIngredients(recipeId: recipeId, with: ingredients)
-    }
-
-    private func formatQty(_ v: Double) -> String {
-        v.truncatingRemainder(dividingBy: 1) == 0 ? String(Int(v)) : String(v)
     }
 
     enum ValidationError: Error { case emptyName }

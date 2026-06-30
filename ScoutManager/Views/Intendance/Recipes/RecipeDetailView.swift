@@ -2,23 +2,29 @@ import SwiftUI
 
 struct RecipeDetailView: View {
     let recipe: Recipe
+    @State private var localRecipe: Recipe
     @StateObject private var viewModel = RecipeDetailViewModel()
     @EnvironmentObject private var session: SessionStore
     @State private var showEdit = false
+
+    init(recipe: Recipe) {
+        self.recipe = recipe
+        _localRecipe = State(initialValue: recipe)
+    }
 
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: SGDFTheme.Spacing.lg) {
                 // En-tête
                 VStack(alignment: .leading, spacing: SGDFTheme.Spacing.xs) {
-                    Text(recipe.name)
+                    Text(localRecipe.name)
                         .font(SGDFTheme.FontStyle.screenTitle())
                         .foregroundStyle(SGDFColors.textPrimary)
                     HStack(spacing: SGDFTheme.Spacing.sm) {
-                        Text("Pour \(recipe.servingsBase) part\(recipe.servingsBase > 1 ? "s" : "")")
+                        Text("Pour \(localRecipe.servingsBase) part\(localRecipe.servingsBase > 1 ? "s" : "")")
                             .font(SGDFTheme.FontStyle.caption())
                             .foregroundStyle(SGDFColors.textSecondary)
-                        if let branch = recipe.branch {
+                        if let branch = localRecipe.branch {
                             Text(branch.rawValue)
                                 .font(SGDFTheme.FontStyle.caption().weight(.semibold))
                                 .foregroundStyle(SGDFColors.lightBlue)
@@ -70,9 +76,9 @@ struct RecipeDetailView: View {
                         .font(SGDFTheme.FontStyle.sectionTitle())
                         .foregroundStyle(SGDFColors.textPrimary)
                     SGDFCard {
-                        Text(recipe.instructions ?? "—")
+                        Text(localRecipe.instructions ?? "—")
                             .font(SGDFTheme.FontStyle.body())
-                            .foregroundStyle(recipe.instructions != nil ? SGDFColors.textPrimary : SGDFColors.textSecondary)
+                            .foregroundStyle(localRecipe.instructions != nil ? SGDFColors.textPrimary : SGDFColors.textSecondary)
                             .frame(maxWidth: .infinity, alignment: .leading)
                     }
                 }
@@ -97,8 +103,13 @@ struct RecipeDetailView: View {
             }
         }
         .sheet(isPresented: $showEdit) {
-            RecipeFormView(recipe: recipe) {
-                Task { await viewModel.load(recipeId: recipe.id) }
+            RecipeFormView(recipe: localRecipe) {
+                Task {
+                    await viewModel.load(recipeId: recipe.id)
+                    if let updated = await viewModel.get(id: recipe.id) {
+                        localRecipe = updated
+                    }
+                }
             }
         }
         .task { await viewModel.load(recipeId: recipe.id) }
@@ -107,8 +118,7 @@ struct RecipeDetailView: View {
     private func ingredientDetail(_ ing: RecipeIngredient) -> String {
         var parts: [String] = []
         if let q = ing.quantity {
-            let qStr = q.truncatingRemainder(dividingBy: 1) == 0 ? String(Int(q)) : String(q)
-            parts.append(qStr)
+            parts.append(q.qtyDisplay)
         }
         if let u = ing.unit, !u.isEmpty { parts.append(u) }
         return parts.joined(separator: " ")
