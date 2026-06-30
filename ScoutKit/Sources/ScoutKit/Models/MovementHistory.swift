@@ -2,7 +2,7 @@ import Foundation
 
 /// Action de mouvement (item_movements.action).
 public enum MovementAction: String, Codable, CaseIterable {
-    case checkout, `return`, cleaning, repair, transfer
+    case checkout, `return`, cleaning, repair, transfer, adjustment
     public var label: String {
         switch self {
         case .checkout: return "Sortir"
@@ -10,6 +10,7 @@ public enum MovementAction: String, Codable, CaseIterable {
         case .cleaning: return "Nettoyage"
         case .repair: return "Réparation"
         case .transfer: return "Transfert"
+        case .adjustment: return "Ajustement"
         }
     }
     /// Statut résultant — source unique action → statut.
@@ -20,6 +21,7 @@ public enum MovementAction: String, Codable, CaseIterable {
         case .cleaning: return .aVerifier
         case .repair: return .aReparer
         case .transfer: return .disponible
+        case .adjustment: return .disponible
         }
     }
 }
@@ -32,6 +34,8 @@ public struct MovementHistory: Codable, Identifiable, Hashable {
     public var userId: String?
     public var eventId: String?
     public var createdAt: String?
+    public var quantity: Int?
+    public var note: String?
 
     public init(
         id: String,
@@ -39,7 +43,9 @@ public struct MovementHistory: Codable, Identifiable, Hashable {
         action: MovementAction,
         userId: String? = nil,
         eventId: String? = nil,
-        createdAt: String? = nil
+        createdAt: String? = nil,
+        quantity: Int? = nil,
+        note: String? = nil
     ) {
         self.id = id
         self.itemId = itemId
@@ -47,6 +53,8 @@ public struct MovementHistory: Codable, Identifiable, Hashable {
         self.userId = userId
         self.eventId = eventId
         self.createdAt = createdAt
+        self.quantity = quantity
+        self.note = note
     }
 
     enum CodingKeys: String, CodingKey {
@@ -56,5 +64,7 @@ public struct MovementHistory: Codable, Identifiable, Hashable {
         case userId = "user_id"
         case eventId = "event_id"
         case createdAt = "created_at"
+        case quantity
+        case note
     }
 }

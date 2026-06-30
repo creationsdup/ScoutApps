@@ -53,6 +53,23 @@ public enum TrackingType: String, Codable, CaseIterable {
     public var label: String { self == .global ? "Global (quantité)" : "Spécifique (individuel)" }
 }
 
+/// Unité de quantité pour un matériel en suivi global (inventory_items.unit).
+/// rawValue = valeur stockée en base (cf. contrainte inventory_items_unit_chk).
+public enum ItemUnit: String, Codable, CaseIterable {
+    case piece, lot, boite, paquet, metre, litre, autre
+    public var label: String {
+        switch self {
+        case .piece:  return "Pièce"
+        case .lot:    return "Lot"
+        case .boite:  return "Boîte"
+        case .paquet: return "Paquet"
+        case .metre:  return "Mètre"
+        case .litre:  return "Litre"
+        case .autre:  return "Autre"
+        }
+    }
+}
+
 /// Branche SGDF (inventory_items.branch).
 public enum Branch: String, Codable, CaseIterable {
     case lj = "LJ", sg = "SG", pc = "PC", groupe = "Groupe"

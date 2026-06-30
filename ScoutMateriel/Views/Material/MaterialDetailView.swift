@@ -57,11 +57,12 @@ struct MaterialDetailView: View {
 
     private func icon(for action: MovementAction) -> String {
         switch action {
-        case .checkout: return "arrow.up.right.circle"
-        case .return:   return "arrow.down.left.circle"
-        case .cleaning: return "sparkles"
-        case .repair:   return "wrench.adjustable"
-        case .transfer: return "arrow.left.arrow.right"
+        case .checkout:   return "arrow.up.right.circle"
+        case .return:     return "arrow.down.left.circle"
+        case .cleaning:   return "sparkles"
+        case .repair:     return "wrench.adjustable"
+        case .transfer:   return "arrow.left.arrow.right"
+        case .adjustment: return "plusminus.circle"
         }
     }
 

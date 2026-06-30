@@ -18,6 +18,8 @@ public struct Item: Codable, Identifiable, Hashable {
     public var imagePath: String?
     public var notes: String?
     public var lastCheckedAt: String?
+    public var minimumThreshold: Int?
+    public var unit: ItemUnit?
 
     public init(
         id: String,
@@ -35,7 +37,9 @@ public struct Item: Codable, Identifiable, Hashable {
         eventId: String? = nil,
         imagePath: String? = nil,
         notes: String? = nil,
-        lastCheckedAt: String? = nil
+        lastCheckedAt: String? = nil,
+        minimumThreshold: Int? = nil,
+        unit: ItemUnit? = nil
     ) {
         self.id = id
         self.inventoryCode = inventoryCode
@@ -53,6 +57,17 @@ public struct Item: Codable, Identifiable, Hashable {
         self.imagePath = imagePath
         self.notes = notes
         self.lastCheckedAt = lastCheckedAt
+        self.minimumThreshold = minimumThreshold
+        self.unit = unit
+    }
+
+    /// Quantité actuellement sortie (dérivée, non stockée).
+    public var quantityOut: Int { max(0, quantity - (quantityAvailable ?? quantity)) }
+
+    /// Stock faible : disponible sous le seuil. N'a de sens que pour le suivi global.
+    public var isLowStock: Bool {
+        guard trackingType == .global, let threshold = minimumThreshold else { return false }
+        return (quantityAvailable ?? quantity) < threshold
     }
 
     enum CodingKeys: String, CodingKey {
@@ -69,5 +84,7 @@ public struct Item: Codable, Identifiable, Hashable {
         case imagePath = "image_path"
         case notes
         case lastCheckedAt = "last_checked_at"
+        case minimumThreshold = "minimum_threshold"
+        case unit
     }
 }
