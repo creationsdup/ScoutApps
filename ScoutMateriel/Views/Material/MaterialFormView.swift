@@ -18,15 +18,21 @@ struct MaterialFormView: View {
             Form {
                 Section("Identité") {
                     TextField("Nom", text: $viewModel.name)
-                    TextField("Code inventaire (ex. TAG-000001)", text: $viewModel.inventoryCode)
-                        .textInputAutocapitalization(.characters)
-                        .autocorrectionDisabled()
+                    if viewModel.isEditing {
+                        LabeledContent("Code inventaire", value: viewModel.inventoryCode)
+                    }
                     TextField("Description", text: $viewModel.itemDescription, axis: .vertical)
                 }
                 Section("Classement") {
                     Picker("Catégorie", selection: $viewModel.categoryId) {
-                        Text("Aucune").tag(String?.none)
+                        Text("Choisir…").tag(String?.none)
                         ForEach(viewModel.categories) { Text($0.name).tag(String?.some($0.id)) }
+                    }
+                    if !viewModel.filteredSubcategories.isEmpty {
+                        Picker("Sous-catégorie", selection: $viewModel.subcategoryId) {
+                            Text("Aucune").tag(String?.none)
+                            ForEach(viewModel.filteredSubcategories) { Text($0.name).tag(String?.some($0.id)) }
+                        }
                     }
                     Picker("Localisation", selection: $viewModel.locationId) {
                         Text("Aucune").tag(String?.none)
@@ -89,6 +95,9 @@ struct MaterialFormView: View {
             .task { await viewModel.loadReferentials() }
             .onChange(of: viewModel.trackingType) { _, newValue in
                 if newValue == .specifique { viewModel.quantity = 1 }
+            }
+            .onChange(of: viewModel.categoryId) { _, _ in
+                viewModel.subcategoryId = nil
             }
             .onChange(of: photoItem) { _, newItem in
                 Task {

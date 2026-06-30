@@ -8,6 +8,8 @@ final class MaterialFormViewModel: ObservableObject {
     @Published var inventoryCode = ""
     @Published var itemDescription = ""
     @Published var categoryId: String?
+    @Published var subcategoryId: String?
+    @Published var subcategories: [Subcategory] = []
     @Published var locationId: String?
     @Published var trackingType: TrackingType = .specifique
     @Published var quantity = 1
@@ -42,6 +44,7 @@ final class MaterialFormViewModel: ObservableObject {
             inventoryCode = item.inventoryCode
             itemDescription = item.description ?? ""
             categoryId = item.categoryId
+            subcategoryId = item.subcategoryId
             locationId = item.locationId
             trackingType = item.trackingType
             quantity = item.quantity
@@ -58,14 +61,22 @@ final class MaterialFormViewModel: ObservableObject {
 
     var canSave: Bool {
         !name.trimmingCharacters(in: .whitespaces).isEmpty &&
-        !inventoryCode.trimmingCharacters(in: .whitespaces).isEmpty && !isSaving
+        categoryId != nil && !isSaving
+    }
+
+    /// Sous-catégories rattachées à la catégorie sélectionnée.
+    var filteredSubcategories: [Subcategory] {
+        guard let categoryId else { return [] }
+        return subcategories.filter { $0.categoryId == categoryId }
     }
 
     func loadReferentials() async {
         let cats = try? await service.listCategories()
         let locs = try? await service.listLocations()
+        let subs = try? await service.listSubcategories()
         categories = cats ?? []
         locations = locs ?? []
+        subcategories = subs ?? []
         if cats == nil && locs == nil {
             errorMessage = "Impossible de charger catégories/localisations."
         }
@@ -78,16 +89,29 @@ final class MaterialFormViewModel: ObservableObject {
         defer { isSaving = false }
         do {
             let id = editingItemId ?? UUID().uuidString
+            guard let categoryId else {
+                errorMessage = "Choisis une catégorie."
+                return false
+            }
+            // En création, le code est généré automatiquement (PRÉFIXE-NNNN).
+            // En édition, on conserve le code existant.
+            let code: String
+            if isEditing {
+                code = inventoryCode
+            } else {
+                code = try await service.nextInventoryCode(categoryId: categoryId)
+            }
             var imagePath = existingImagePath
             if let data = pickedImageData {
                 imagePath = try await storage.upload(data, path: "items/\(id).jpg")
             }
             let item = Item(
                 id: id,
-                inventoryCode: inventoryCode,
+                inventoryCode: code,
                 name: name,
                 description: itemDescription.isEmpty ? nil : itemDescription,
                 categoryId: categoryId,
+                subcategoryId: subcategoryId,
                 locationId: locationId,
                 trackingType: trackingType,
                 quantity: quantity,
