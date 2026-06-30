@@ -32,6 +32,14 @@ public struct QRCodeService {
         return rows.first
     }
 
+    /// Ensemble des item ids ayant une étiquette QR associée (qr_tags.assigned_item_id).
+    public func assignedItemIds() async throws -> Set<String> {
+        struct Row: Decodable { let assigned_item_id: String? }
+        let rows: [Row] = try await client.from("qr_tags")
+            .select("assigned_item_id").execute().value
+        return Set(rows.compactMap { $0.assigned_item_id })
+    }
+
     /// Associe une étiquette vierge à un matériel.
     public func assign(tagCode: String, toItem itemId: String) async throws {
         let payload = AssignPayload(
