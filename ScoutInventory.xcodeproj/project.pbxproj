@@ -44,6 +44,7 @@
 		5F3D6094D2E0944E7B621B5A /* MealRecipesPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FB027B27B0AE334FDE1B3FD /* MealRecipesPickerView.swift */; };
 		618415096EA531C01ADC3DD5 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2F017D39CE8F2731BBD9DD20 /* Foundation.framework */; };
 		6412FBEDEAF2AB9CFEE5FD84 /* CheckoutDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5EF686D4EBB420B773F9905 /* CheckoutDetailView.swift */; };
+		665499FDD9BECE494D6327CE /* CategoryManagerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4A25DDFB29AFBD840DE26A6 /* CategoryManagerView.swift */; };
 		6C23930B8361C9ABC9AFFCB2 /* ProgramHomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7826459B8EE3FDBBC96F9A3 /* ProgramHomeView.swift */; };
 		704A139EC48574B42A28BCFA /* FoodStockViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DA498E72B6D06BB42691440 /* FoodStockViewModel.swift */; };
 		7300FDD6DE89BCA7895097C7 /* InventoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7167E856A1B22ED581B6EFD0 /* InventoryView.swift */; };
@@ -140,6 +141,7 @@
 		AE060C11EE517662E93F1B32 /* ActivityLibraryView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ActivityLibraryView.swift; path = Views/Program/ActivityLibraryView.swift; sourceTree = "<group>"; };
 		AEA50D2E07582EE8DF6A8CE6 /* ExpenseFormView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpenseFormView.swift; path = Views/Intendance/Budget/ExpenseFormView.swift; sourceTree = "<group>"; };
 		B4602EA9FEEEEF1E389BE179 /* CampInfoView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CampInfoView.swift; path = Views/Program/CampInfoView.swift; sourceTree = "<group>"; };
+		B4A25DDFB29AFBD840DE26A6 /* CategoryManagerView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CategoryManagerView.swift; sourceTree = "<group>"; };
 		B9644354CCDBB30A8984A64D /* FoodTraceFormView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FoodTraceFormView.swift; path = Views/Intendance/Trace/FoodTraceFormView.swift; sourceTree = "<group>"; };
 		C7826459B8EE3FDBBC96F9A3 /* ProgramHomeView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ProgramHomeView.swift; path = Views/Program/ProgramHomeView.swift; sourceTree = "<group>"; };
 		C85429C150FCFDED0BFC2640 /* FoodStockFormView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FoodStockFormView.swift; path = Views/Intendance/Stock/FoodStockFormView.swift; sourceTree = "<group>"; };
@@ -239,6 +241,7 @@
 				0FC0294F2FF3C1D1006F2EBF /* MaterialFilterView.swift */,
 				0FC029502FF3C1D1006F2EBF /* MaterialFormView.swift */,
 				0FC029512FF3C1D1006F2EBF /* MaterialListView.swift */,
+				B4A25DDFB29AFBD840DE26A6 /* CategoryManagerView.swift */,
 			);
 			path = Material;
 			sourceTree = "<group>";
@@ -556,6 +559,7 @@
 				0B6336A1B38CE1B326488E1D /* InventoryViewModel.swift in Sources */,
 				7300FDD6DE89BCA7895097C7 /* InventoryView.swift in Sources */,
 				98816067A46610FD21C32E3D /* CategoryManagerViewModel.swift in Sources */,
+				665499FDD9BECE494D6327CE /* CategoryManagerView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
