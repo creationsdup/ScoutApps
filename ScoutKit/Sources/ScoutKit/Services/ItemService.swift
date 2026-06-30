@@ -18,6 +18,8 @@ public struct ItemService {
         let quantity_available: Int
     }
 
+    private struct LastCheckedPayload: Encodable { let last_checked_at: String }
+
     // MARK: - Items
 
     /// Liste filtrée. Exclut l'archivé par défaut.
@@ -78,6 +80,17 @@ public struct ItemService {
         updated.quantity = newTotal
         updated.quantityAvailable = newAvailable
         return updated
+    }
+
+    /// Marque une liste d'objets comme inventoriés (last_checked_at = maintenant).
+    /// No-op si la liste est vide. Écrit une colonne existante additive.
+    public func markChecked(itemIds: [String]) async throws {
+        guard !itemIds.isEmpty else { return }
+        let now = ISO8601DateFormatter().string(from: Date())
+        try await client.from("inventory_items")
+            .update(LastCheckedPayload(last_checked_at: now))
+            .`in`("id", values: itemIds)
+            .execute()
     }
 
     // MARK: - Referentials
