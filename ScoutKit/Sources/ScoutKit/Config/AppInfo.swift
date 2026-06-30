@@ -1,6 +1,6 @@
 import Foundation
 
 /// Métadonnées applicatives ScoutManager.
-enum AppInfo {
-    static let name = "ScoutManager"
+public enum AppInfo {
+    public static let name = "ScoutManager"
 }

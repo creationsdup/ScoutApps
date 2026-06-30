@@ -1,9 +1,14 @@
 import SwiftUI
 
 /// Badge de statut. Couleur issue exclusivement de StatusColorMapper.
-struct SGDFBadge: View {
-    let status: ItemStatus
-    var body: some View {
+public struct SGDFBadge: View {
+    public let status: ItemStatus
+
+    public init(status: ItemStatus) {
+        self.status = status
+    }
+
+    public var body: some View {
         Text(status.label)
             .font(.system(.caption, design: .rounded).weight(.semibold))
             .padding(.horizontal, SGDFTheme.Spacing.sm)

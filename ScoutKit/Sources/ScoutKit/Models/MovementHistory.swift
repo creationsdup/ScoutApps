@@ -1,9 +1,9 @@
 import Foundation
 
 /// Action de mouvement (item_movements.action).
-enum MovementAction: String, Codable, CaseIterable {
+public enum MovementAction: String, Codable, CaseIterable {
     case checkout, `return`, cleaning, repair, transfer
-    var label: String {
+    public var label: String {
         switch self {
         case .checkout: return "Sortir"
         case .return: return "Retour"
@@ -13,7 +13,7 @@ enum MovementAction: String, Codable, CaseIterable {
         }
     }
     /// Statut résultant — source unique action → statut.
-    var nextStatus: ItemStatus {
+    public var nextStatus: ItemStatus {
         switch self {
         case .checkout: return .sorti
         case .return: return .disponible
@@ -25,13 +25,29 @@ enum MovementAction: String, Codable, CaseIterable {
 }
 
 /// Mouvement de matériel — mappé sur la table `item_movements`.
-struct MovementHistory: Codable, Identifiable, Hashable {
-    let id: String
-    var itemId: String
-    var action: MovementAction
-    var userId: String?
-    var eventId: String?
-    var createdAt: String?
+public struct MovementHistory: Codable, Identifiable, Hashable {
+    public let id: String
+    public var itemId: String
+    public var action: MovementAction
+    public var userId: String?
+    public var eventId: String?
+    public var createdAt: String?
+
+    public init(
+        id: String,
+        itemId: String,
+        action: MovementAction,
+        userId: String? = nil,
+        eventId: String? = nil,
+        createdAt: String? = nil
+    ) {
+        self.id = id
+        self.itemId = itemId
+        self.action = action
+        self.userId = userId
+        self.eventId = eventId
+        self.createdAt = createdAt
+    }
 
     enum CodingKeys: String, CodingKey {
         case id

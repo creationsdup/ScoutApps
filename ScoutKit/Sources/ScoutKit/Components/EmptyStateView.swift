@@ -1,10 +1,17 @@
 import SwiftUI
 
-struct EmptyStateView: View {
-    let systemImage: String
-    let title: String
-    let message: String
-    var body: some View {
+public struct EmptyStateView: View {
+    public let systemImage: String
+    public let title: String
+    public let message: String
+
+    public init(systemImage: String, title: String, message: String) {
+        self.systemImage = systemImage
+        self.title = title
+        self.message = message
+    }
+
+    public var body: some View {
         VStack(spacing: SGDFTheme.Spacing.md) {
             Image(systemName: systemImage)
                 .font(.system(size: 48))

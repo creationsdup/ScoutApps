@@ -3,7 +3,9 @@ import Supabase
 
 /// Enregistre un mouvement de matériel. Pour un rejeu sûr (idempotence), on met à jour
 /// le statut (idempotent) AVANT d'insérer le mouvement (journal append-only).
-struct MovementService {
+public struct MovementService {
+    public init() {}
+
     private var client: SupabaseClient { SupabaseService.shared.client }
 
     private struct StatusPayload: Encodable { let status: String }
@@ -14,7 +16,7 @@ struct MovementService {
         let event_id: String?
     }
 
-    func record(itemId: String, action: MovementAction, eventId: String? = nil) async throws {
+    public func record(itemId: String, action: MovementAction, eventId: String? = nil) async throws {
         guard let userId = SupabaseService.shared.currentUserID?.uuidString else {
             throw NSError(domain: "ScoutManager", code: 401,
                           userInfo: [NSLocalizedDescriptionKey: "Utilisateur non authentifié."])

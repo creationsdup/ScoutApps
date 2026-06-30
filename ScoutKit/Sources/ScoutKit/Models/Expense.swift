@@ -1,9 +1,9 @@
 import Foundation
 
 /// Catégorie de dépense (expenses.category).
-enum ExpenseCategory: String, Codable, CaseIterable, Hashable {
+public enum ExpenseCategory: String, Codable, CaseIterable, Hashable {
     case alimentaire, materiel, transport, autre
-    var label: String {
+    public var label: String {
         switch self {
         case .alimentaire: return "Alimentaire"
         case .materiel:    return "Matériel"
@@ -14,13 +14,29 @@ enum ExpenseCategory: String, Codable, CaseIterable, Hashable {
 }
 
 /// Dépense d'un camp (table `expenses`). Prévu vs réel.
-struct Expense: Codable, Identifiable, Hashable {
-    let id: String
-    var campId: String
-    var label: String
-    var category: ExpenseCategory?
-    var amountPlanned: Double?
-    var amountReal: Double?
+public struct Expense: Codable, Identifiable, Hashable {
+    public let id: String
+    public var campId: String
+    public var label: String
+    public var category: ExpenseCategory?
+    public var amountPlanned: Double?
+    public var amountReal: Double?
+
+    public init(
+        id: String,
+        campId: String,
+        label: String,
+        category: ExpenseCategory? = nil,
+        amountPlanned: Double? = nil,
+        amountReal: Double? = nil
+    ) {
+        self.id = id
+        self.campId = campId
+        self.label = label
+        self.category = category
+        self.amountPlanned = amountPlanned
+        self.amountReal = amountReal
+    }
 
     enum CodingKeys: String, CodingKey {
         case id

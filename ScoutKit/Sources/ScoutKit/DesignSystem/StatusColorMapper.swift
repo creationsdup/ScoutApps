@@ -2,8 +2,8 @@ import SwiftUI
 
 /// Mapping statut → couleur SGDF. Source unique pour badges/cartes/indicateurs.
 /// Ne jamais colorer un statut à la main dans une vue.
-enum StatusColorMapper {
-    static func color(for status: ItemStatus) -> Color {
+public enum StatusColorMapper {
+    public static func color(for status: ItemStatus) -> Color {
         switch status {
         case .disponible:   return SGDFColors.lightGreen
         case .reserve:      return SGDFColors.violet

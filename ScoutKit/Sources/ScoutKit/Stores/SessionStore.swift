@@ -3,24 +3,26 @@ import SwiftUI
 
 /// État de session global : authentification, rôle, erreurs.
 @MainActor
-final class SessionStore: ObservableObject {
-    @Published var isAuthenticated = false
-    @Published var role: UserRole?
-    @Published var errorMessage: String?
+public final class SessionStore: ObservableObject {
+    @Published public var isAuthenticated = false
+    @Published public var role: UserRole?
+    @Published public var errorMessage: String?
 
     private let service = SupabaseService.shared
 
-    var canWrite: Bool { role?.canWrite ?? false }
+    public var canWrite: Bool { role?.canWrite ?? false }
+
+    public init() {}
 
     /// Restaure une session persistée au lancement.
-    func restore() async {
+    public func restore() async {
         if await service.currentSession() != nil {
             isAuthenticated = true
             role = try? await service.currentUserRole()
         }
     }
 
-    func login(email: String, password: String) async {
+    public func login(email: String, password: String) async {
         errorMessage = nil
         do {
             try await service.signIn(email: email, password: password)
@@ -36,7 +38,7 @@ final class SessionStore: ObservableObject {
         role = try? await service.currentUserRole()
     }
 
-    func logout() async {
+    public func logout() async {
         try? await service.signOut()
         isAuthenticated = false
         role = nil

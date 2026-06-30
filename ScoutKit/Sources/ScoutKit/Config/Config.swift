@@ -7,18 +7,18 @@ import Foundation
 /// Elle est néanmoins gardée hors du dépôt git : on la renseigne dans
 /// `Secrets.xcconfig` (cf. `Secrets.example.xcconfig`), injectée dans l'Info.plist
 /// à la compilation et lue ici à l'exécution.
-enum Config {
+public enum Config {
     /// URL du projet Supabase.
-    static let supabaseURL = URL(string: "https://vxzlluzkxygjofwgbjzu.supabase.co")!
+    public static let supabaseURL = URL(string: "https://vxzlluzkxygjofwgbjzu.supabase.co")!
 
     /// Clé publique `anon`, injectée depuis `Secrets.xcconfig` via l'Info.plist.
-    static let supabaseAnonKey: String = {
+    public static let supabaseAnonKey: String = {
         let value = Bundle.main.object(forInfoDictionaryKey: "SupabaseAnonKey") as? String
         return value?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
     }()
 
     /// Indique si la clé a été renseignée (sinon l'app affiche un message clair).
-    static var isConfigured: Bool {
+    public static var isConfigured: Bool {
         !supabaseAnonKey.isEmpty && supabaseAnonKey != "PASTE_YOUR_ANON_KEY_HERE"
     }
 }

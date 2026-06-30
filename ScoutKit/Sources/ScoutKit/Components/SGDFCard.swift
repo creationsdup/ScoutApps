@@ -1,9 +1,14 @@
 import SwiftUI
 
 /// Carte arrondie : surface blanche, bordure très claire, coins arrondis.
-struct SGDFCard<Content: View>: View {
+public struct SGDFCard<Content: View>: View {
     @ViewBuilder var content: () -> Content
-    var body: some View {
+
+    public init(@ViewBuilder content: @escaping () -> Content) {
+        self.content = content
+    }
+
+    public var body: some View {
         VStack(alignment: .leading, spacing: SGDFTheme.Spacing.sm, content: content)
             .padding(SGDFTheme.Spacing.md)
             .background(SGDFColors.surface)

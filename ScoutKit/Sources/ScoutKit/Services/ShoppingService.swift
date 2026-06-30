@@ -2,25 +2,27 @@ import Foundation
 import Supabase
 
 /// Liste de courses d'un camp (table `shopping_items`) + génération depuis les menus.
-struct ShoppingService {
+public struct ShoppingService {
+    public init() {}
+
     private var client: SupabaseClient { SupabaseService.shared.client }
 
-    func list(campId: String) async throws -> [ShoppingItem] {
+    public func list(campId: String) async throws -> [ShoppingItem] {
         try await client.from("shopping_items")
             .select().eq("camp_id", value: campId)
             .order("checked").order("name").execute().value
     }
 
     @discardableResult
-    func add(_ item: ShoppingItem) async throws -> ShoppingItem {
+    public func add(_ item: ShoppingItem) async throws -> ShoppingItem {
         try await client.from("shopping_items").insert(item).select().single().execute().value
     }
 
-    func update(_ item: ShoppingItem) async throws {
+    public func update(_ item: ShoppingItem) async throws {
         try await client.from("shopping_items").update(item).eq("id", value: item.id).execute()
     }
 
-    func delete(id: String) async throws {
+    public func delete(id: String) async throws {
         try await client.from("shopping_items").delete().eq("id", value: id).execute()
     }
 
@@ -33,7 +35,7 @@ struct ShoppingService {
     /// transaction côté serveur — atomique (plus de perte de lignes si l'insert
     /// échoue après le delete). L'effectif est lu depuis `camps.participants_count`.
     /// La RLS s'applique (`security invoker`) : un viewer reçoit une erreur.
-    func regenerateAuto(campId: String) async throws {
+    public func regenerateAuto(campId: String) async throws {
         try await client
             .rpc("regenerate_shopping_auto", params: ["p_camp_id": campId])
             .execute()

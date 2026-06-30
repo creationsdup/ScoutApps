@@ -1,21 +1,39 @@
 import Foundation
 
 /// Origine d'une ligne de courses.
-enum ShoppingSource: String, Codable, Hashable {
+public enum ShoppingSource: String, Codable, Hashable {
     case auto       // généré depuis les menus
     case manual     // ajouté à la main
-    var label: String { self == .auto ? "Menus" : "Manuel" }
+    public var label: String { self == .auto ? "Menus" : "Manuel" }
 }
 
 /// Ligne de la liste de courses d'un camp (table `shopping_items`).
-struct ShoppingItem: Codable, Identifiable, Hashable {
-    let id: String
-    var campId: String
-    var name: String
-    var quantity: Double?
-    var unit: String?
-    var checked: Bool
-    var source: ShoppingSource
+public struct ShoppingItem: Codable, Identifiable, Hashable {
+    public let id: String
+    public var campId: String
+    public var name: String
+    public var quantity: Double?
+    public var unit: String?
+    public var checked: Bool
+    public var source: ShoppingSource
+
+    public init(
+        id: String,
+        campId: String,
+        name: String,
+        quantity: Double? = nil,
+        unit: String? = nil,
+        checked: Bool,
+        source: ShoppingSource
+    ) {
+        self.id = id
+        self.campId = campId
+        self.name = name
+        self.quantity = quantity
+        self.unit = unit
+        self.checked = checked
+        self.source = source
+    }
 
     enum CodingKeys: String, CodingKey {
         case id

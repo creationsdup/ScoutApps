@@ -2,7 +2,9 @@ import Foundation
 import Supabase
 
 /// Accès au matériel (table inventory_items) + référentiels categories/locations.
-struct ItemService {
+public struct ItemService {
+    public init() {}
+
     private var client: SupabaseClient { SupabaseService.shared.client }
 
     // MARK: - Archive update payload
@@ -14,7 +16,7 @@ struct ItemService {
     // MARK: - Items
 
     /// Liste filtrée. Exclut l'archivé par défaut.
-    func list(search: String? = nil,
+    public func list(search: String? = nil,
               status: ItemStatus? = nil,
               categoryId: String? = nil,
               locationId: String? = nil,
@@ -28,24 +30,24 @@ struct ItemService {
         return try await query.order("inventory_code").execute().value
     }
 
-    func get(id: String) async throws -> Item? {
+    public func get(id: String) async throws -> Item? {
         let rows: [Item] = try await client.from("inventory_items")
             .select().eq("id", value: id).limit(1).execute().value
         return rows.first
     }
 
     @discardableResult
-    func create(_ item: Item) async throws -> Item {
+    public func create(_ item: Item) async throws -> Item {
         try await client.from("inventory_items")
             .insert(item).select().single().execute().value
     }
 
-    func update(_ item: Item) async throws {
+    public func update(_ item: Item) async throws {
         try await client.from("inventory_items")
             .update(item).eq("id", value: item.id).execute()
     }
 
-    func archive(id: String) async throws {
+    public func archive(id: String) async throws {
         let payload = ArchivePayload(status: ItemStatus.archive.rawValue)
         try await client.from("inventory_items")
             .update(payload).eq("id", value: id).execute()
@@ -53,11 +55,11 @@ struct ItemService {
 
     // MARK: - Referentials
 
-    func listCategories() async throws -> [ItemCategory] {
+    public func listCategories() async throws -> [ItemCategory] {
         try await client.from("categories").select().order("name").execute().value
     }
 
-    func listLocations() async throws -> [ItemLocation] {
+    public func listLocations() async throws -> [ItemLocation] {
         try await client.from("locations").select().order("name").execute().value
     }
 }

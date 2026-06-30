@@ -1,13 +1,15 @@
 import SwiftUI
 
 /// Écran de connexion ScoutManager (Supabase Auth via le SDK).
-struct LoginView: View {
+public struct LoginView: View {
     @EnvironmentObject private var session: SessionStore
     @State private var email = ""
     @State private var password = ""
     @State private var isLoggingIn = false
 
-    var body: some View {
+    public init() {}
+
+    public var body: some View {
         NavigationStack {
             VStack(spacing: SGDFTheme.Spacing.lg) {
                 Spacer()

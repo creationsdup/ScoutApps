@@ -4,24 +4,24 @@ import SwiftUI
 /// État global du camp sélectionné, partagé par Intendance et Programme.
 /// L'id sélectionné est persisté (UserDefaults) pour survivre au relancement.
 @MainActor
-final class CampStore: ObservableObject {
-    @Published var camps: [Camp] = []
-    @Published var selectedCampID: String? {
+public final class CampStore: ObservableObject {
+    @Published public var camps: [Camp] = []
+    @Published public var selectedCampID: String? {
         didSet { UserDefaults.standard.set(selectedCampID, forKey: Self.key) }
     }
-    @Published var isLoading = false
-    @Published var errorMessage: String?
+    @Published public var isLoading = false
+    @Published public var errorMessage: String?
 
     private static let key = "selectedCampID"
     private let service = CampService()
 
-    init() {
+    public init() {
         selectedCampID = UserDefaults.standard.string(forKey: Self.key)
     }
 
-    var selectedCamp: Camp? { camps.first { $0.id == selectedCampID } }
+    public var selectedCamp: Camp? { camps.first { $0.id == selectedCampID } }
 
-    func load() async {
+    public func load() async {
         isLoading = true
         errorMessage = nil
         do {
@@ -35,18 +35,18 @@ final class CampStore: ObservableObject {
     }
 
     /// Crée un camp et le sélectionne. Erreur propagée à l'appelant (à afficher).
-    func create(_ camp: Camp) async throws {
+    public func create(_ camp: Camp) async throws {
         let created = try await service.create(camp)
         camps.insert(created, at: 0)
         selectedCampID = created.id
     }
 
-    func update(_ camp: Camp) async throws {
+    public func update(_ camp: Camp) async throws {
         try await service.update(camp)
         if let i = camps.firstIndex(where: { $0.id == camp.id }) { camps[i] = camp }
     }
 
-    func delete(_ camp: Camp) async throws {
+    public func delete(_ camp: Camp) async throws {
         try await service.delete(id: camp.id)
         camps.removeAll { $0.id == camp.id }
         if selectedCampID == camp.id { selectedCampID = camps.first?.id }

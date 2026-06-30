@@ -2,12 +2,14 @@ import Foundation
 import Supabase
 
 /// Accès aux créneaux de planning (program_slots) et au lien matériel (program_slot_materials).
-struct ProgramService {
+public struct ProgramService {
+    public init() {}
+
     private var client: SupabaseClient { SupabaseService.shared.client }
 
     // MARK: - Slots
 
-    func list(campId: String) async throws -> [ProgramSlot] {
+    public func list(campId: String) async throws -> [ProgramSlot] {
         try await client.from("program_slots")
             .select()
             .eq("camp_id", value: campId)
@@ -17,24 +19,24 @@ struct ProgramService {
     }
 
     @discardableResult
-    func create(_ slot: ProgramSlot) async throws -> ProgramSlot {
+    public func create(_ slot: ProgramSlot) async throws -> ProgramSlot {
         try await client.from("program_slots")
             .insert(slot).select().single().execute().value
     }
 
-    func update(_ slot: ProgramSlot) async throws {
+    public func update(_ slot: ProgramSlot) async throws {
         try await client.from("program_slots")
             .update(slot).eq("id", value: slot.id).execute()
     }
 
-    func delete(id: String) async throws {
+    public func delete(id: String) async throws {
         try await client.from("program_slots").delete().eq("id", value: id).execute()
     }
 
     // MARK: - Material link (program_slot_materials)
 
     /// Identifiants des items liés à un créneau.
-    func itemIds(slotId: String) async throws -> [String] {
+    public func itemIds(slotId: String) async throws -> [String] {
         struct Row: Decodable { let inventory_item_id: String }
         let rows: [Row] = try await client.from("program_slot_materials")
             .select("inventory_item_id")
@@ -44,7 +46,7 @@ struct ProgramService {
     }
 
     /// Remplace tous les items liés à un créneau par l'ensemble fourni.
-    func setItems(slotId: String, itemIds: [String]) async throws {
+    public func setItems(slotId: String, itemIds: [String]) async throws {
         struct Link: Encodable {
             let slot_id: String
             let inventory_item_id: String

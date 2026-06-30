@@ -1,20 +1,20 @@
 import SwiftUI
 
-enum SGDFButtonStyleKind { case primary, quickAction, secondary }
+public enum SGDFButtonStyleKind { case primary, quickAction, secondary }
 
 /// Bouton SGDF. primary = bleu, quickAction = orange (actions rapides), secondary = contour.
-struct SGDFButton: View {
+public struct SGDFButton: View {
     let title: String
     var kind: SGDFButtonStyleKind = .primary
     var systemImage: String? = nil
     let action: () -> Void
 
-    init(_ title: String, kind: SGDFButtonStyleKind = .primary,
+    public init(_ title: String, kind: SGDFButtonStyleKind = .primary,
          systemImage: String? = nil, action: @escaping () -> Void) {
         self.title = title; self.kind = kind; self.systemImage = systemImage; self.action = action
     }
 
-    var body: some View {
+    public var body: some View {
         Button(action: action) {
             HStack(spacing: SGDFTheme.Spacing.sm) {
                 if let systemImage { Image(systemName: systemImage) }

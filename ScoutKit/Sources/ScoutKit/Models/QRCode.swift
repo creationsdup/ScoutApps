@@ -1,16 +1,28 @@
 import Foundation
 
 /// Statut d'une étiquette QR (qr_tags.status).
-enum QRCodeStatus: String, Codable {
+public enum QRCodeStatus: String, Codable {
     case unassigned, assigned, disabled
 }
 
 /// Étiquette QR — mappée sur la table `qr_tags` existante.
-struct QRCode: Codable, Identifiable, Hashable {
-    let id: String
-    var tagCode: String
-    var status: QRCodeStatus
-    var assignedItemId: String?
+public struct QRCode: Codable, Identifiable, Hashable {
+    public let id: String
+    public var tagCode: String
+    public var status: QRCodeStatus
+    public var assignedItemId: String?
+
+    public init(
+        id: String,
+        tagCode: String,
+        status: QRCodeStatus,
+        assignedItemId: String? = nil
+    ) {
+        self.id = id
+        self.tagCode = tagCode
+        self.status = status
+        self.assignedItemId = assignedItemId
+    }
 
     enum CodingKeys: String, CodingKey {
         case id
@@ -21,8 +33,8 @@ struct QRCode: Codable, Identifiable, Hashable {
 }
 
 /// Validation du format d'étiquette (TAG-000001) — miroir de l'ancien parseTagCode.
-enum TagCode {
-    static func parse(_ raw: String) -> String? {
+public enum TagCode {
+    public static func parse(_ raw: String) -> String? {
         let trimmed = raw.trimmingCharacters(in: .whitespacesAndNewlines).uppercased()
         guard trimmed.range(of: "^TAG-\\d{6}$", options: .regularExpression) != nil else { return nil }
         return trimmed

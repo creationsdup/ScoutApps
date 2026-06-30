@@ -4,7 +4,9 @@ import CoreImage.CIFilterBuiltins
 import UIKit
 
 /// Lookup / association d'étiquettes (table qr_tags) + génération d'images QR.
-struct QRCodeService {
+public struct QRCodeService {
+    public init() {}
+
     private var client: SupabaseClient { SupabaseService.shared.client }
 
     // MARK: - Assign update payload
@@ -17,21 +19,21 @@ struct QRCodeService {
     // MARK: - Tag lookup / assignment
 
     /// Recherche une étiquette par code (TAG-000001).
-    func tag(byCode code: String) async throws -> QRCode? {
+    public func tag(byCode code: String) async throws -> QRCode? {
         let rows: [QRCode] = try await client.from("qr_tags")
             .select().eq("tag_code", value: code).limit(1).execute().value
         return rows.first
     }
 
     /// Étiquette associée à un matériel (qr_tags.assigned_item_id), si elle existe.
-    func tag(forItemId id: String) async throws -> QRCode? {
+    public func tag(forItemId id: String) async throws -> QRCode? {
         let rows: [QRCode] = try await client.from("qr_tags")
             .select().eq("assigned_item_id", value: id).limit(1).execute().value
         return rows.first
     }
 
     /// Associe une étiquette vierge à un matériel.
-    func assign(tagCode: String, toItem itemId: String) async throws {
+    public func assign(tagCode: String, toItem itemId: String) async throws {
         let payload = AssignPayload(
             assigned_item_id: itemId,
             status: QRCodeStatus.assigned.rawValue
@@ -43,7 +45,7 @@ struct QRCodeService {
     // MARK: - QR image generation
 
     /// Génère une image QR (CoreImage) pour un code donné.
-    func generateImage(for code: String, scale: CGFloat = 10) -> UIImage? {
+    public func generateImage(for code: String, scale: CGFloat = 10) -> UIImage? {
         let filter = CIFilter.qrCodeGenerator()
         filter.message = Data(code.utf8)
         filter.correctionLevel = "M"
