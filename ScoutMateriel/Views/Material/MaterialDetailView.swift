@@ -16,6 +16,9 @@ struct MaterialDetailView: View {
     @State private var runningAction = false
     @State private var campLabel: String?
     @State private var openCheckoutLabel: String?
+    @State private var liveTotal: Int?
+    @State private var liveAvailable: Int?
+    @State private var adjustNote = ""
 
     private func showQRCode() {
         Task {
@@ -41,6 +44,33 @@ struct MaterialDetailView: View {
                 await listViewModel.load()
             } catch {
                 actionError = "Action impossible. Réessaie."
+            }
+            runningAction = false
+        }
+    }
+
+    private var currentTotal: Int { liveTotal ?? item.quantity }
+    private var currentAvailable: Int { liveAvailable ?? (item.quantityAvailable ?? item.quantity) }
+    private var currentOut: Int { max(0, currentTotal - currentAvailable) }
+    private var currentLowStock: Bool {
+        guard item.trackingType == .global, let threshold = item.minimumThreshold else { return false }
+        return currentAvailable < threshold
+    }
+
+    private func adjustStock(by delta: Int) {
+        guard !runningAction else { return }
+        runningAction = true
+        Task {
+            do {
+                let note = adjustNote.trimmingCharacters(in: .whitespaces)
+                let updated = try await ItemService().adjustStock(
+                    itemId: item.id, delta: delta, note: note.isEmpty ? nil : note)
+                liveTotal = updated.quantity
+                liveAvailable = updated.quantityAvailable
+                adjustNote = ""
+                await listViewModel.load()
+            } catch {
+                actionError = "Ajustement impossible. Réessaie."
             }
             runningAction = false
         }
@@ -129,6 +159,21 @@ struct MaterialDetailView: View {
                     if let loc = listViewModel.locationName(item.locationId) {
                         DetailRow(label: "Localisation", value: loc)
                     }
+                }
+
+                if item.trackingType == .global {
+                    StockCard(
+                        total: currentTotal,
+                        available: currentAvailable,
+                        out: currentOut,
+                        threshold: item.minimumThreshold,
+                        unit: item.unit,
+                        lowStock: currentLowStock,
+                        canWrite: session.canWrite,
+                        running: runningAction,
+                        note: $adjustNote,
+                        adjust: adjustStock
+                    )
                 }
 
                 FieldActionsSection(
@@ -220,7 +265,7 @@ private struct FieldActionsSection: View {
                 .foregroundStyle(SGDFColors.textPrimary)
 
             if session.canWrite {
-                ForEach(MovementAction.allCases, id: \.self) { action in
+                ForEach(MovementAction.allCases.filter { $0 != .adjustment }, id: \.self) { action in
                     SGDFButton(action.label, kind: buttonKind(action),
                                systemImage: icon(action)) {
                         perform(action)
@@ -251,4 +296,61 @@ private struct DetailRow: View {
         }
         .font(SGDFTheme.FontStyle.body())
     }
+}
+
+/// Carte de stock pour un matériel en suivi global.
+private struct StockCard: View {
+    let total: Int
+    let available: Int
+    let out: Int
+    let threshold: Int?
+    let unit: ItemUnit?
+    let lowStock: Bool
+    let canWrite: Bool
+    let running: Bool
+    @Binding var note: String
+    let adjust: (Int) -> Void
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: SGDFTheme.Spacing.sm) {
+            Text("Stock")
+                .font(SGDFTheme.FontStyle.sectionTitle())
+                .foregroundStyle(SGDFColors.textPrimary)
+            SGDFCard {
+                DetailRow(label: "Total", value: "\(total)\(unitSuffix)")
+                DetailRow(label: "Disponible", value: "\(available)\(unitSuffix)")
+                DetailRow(label: "Sortie", value: "\(out)\(unitSuffix)")
+                if let threshold {
+                    DetailRow(label: "Seuil minimum", value: "\(threshold)\(unitSuffix)")
+                }
+                if lowStock {
+                    Label("Stock faible", systemImage: "exclamationmark.triangle.fill")
+                        .font(SGDFTheme.FontStyle.caption())
+                        .foregroundStyle(SGDFColors.orange)
+                }
+            }
+            if canWrite {
+                HStack(spacing: SGDFTheme.Spacing.md) {
+                    Button { adjust(-1) } label: {
+                        Image(systemName: "minus.circle.fill").font(.title2)
+                    }
+                    .disabled(running || total == 0)
+                    Text("\(total)")
+                        .font(SGDFTheme.FontStyle.screenTitle())
+                        .foregroundStyle(SGDFColors.textPrimary)
+                        .frame(minWidth: 44)
+                    Button { adjust(1) } label: {
+                        Image(systemName: "plus.circle.fill").font(.title2)
+                    }
+                    .disabled(running)
+                }
+                .tint(SGDFColors.primaryBlue)
+                .frame(maxWidth: .infinity)
+                TextField("Note (optionnel)", text: $note)
+                    .font(SGDFTheme.FontStyle.caption())
+            }
+        }
+    }
+
+    private var unitSuffix: String { unit.map { " \($0.label.lowercased())" } ?? "" }
 }
