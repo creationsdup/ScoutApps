@@ -475,7 +475,9 @@ begin
   end loop;
 end $$;
 
-create or replace function public.create_checkout(p_label text, p_notes text, p_items jsonb)
+-- Valeurs par défaut sur p_notes/p_items : permet à PostgREST de résoudre la RPC
+-- même quand le client omet `p_notes` (optionnel nil omis par l'encodeur Swift).
+create or replace function public.create_checkout(p_label text, p_notes text default null, p_items jsonb default '[]'::jsonb)
 returns uuid language plpgsql security invoker as $$
 declare
   v_checkout_id uuid; v_item jsonb; v_item_id uuid; v_qty integer; v_avail integer;
