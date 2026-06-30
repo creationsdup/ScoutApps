@@ -61,6 +61,11 @@ struct MaterialListView: View {
                             DisclosureGroup {
                                 ForEach(sub.items) { item in
                                     NavigationLink(value: item) { MaterialRow(item: item) }
+                                        .listRowInsets(EdgeInsets(
+                                            top: SGDFTheme.Spacing.xs,
+                                            leading: SGDFTheme.Spacing.sm,
+                                            bottom: SGDFTheme.Spacing.xs,
+                                            trailing: SGDFTheme.Spacing.md))
                                 }
                             } label: {
                                 Text(sub.name)
