@@ -1,12 +1,6 @@
 import Foundation
 import ScoutKit
 
-/// Périmètre d'une session d'inventaire : un seul axe (localisation OU catégorie).
-enum InventoryScope: Hashable {
-    case location(ItemLocation)
-    case category(ItemCategory)
-}
-
 @MainActor
 final class InventoryViewModel: ObservableObject {
     enum Phase { case scope, scanning, summary }
@@ -39,7 +33,7 @@ final class InventoryViewModel: ObservableObject {
         let locs = try? await itemService.listLocations()
         categories = cats ?? []
         locations = locs ?? []
-        if cats == nil && locs == nil {
+        if cats == nil || locs == nil {
             errorMessage = "Impossible de charger catégories/localisations."
         }
     }
