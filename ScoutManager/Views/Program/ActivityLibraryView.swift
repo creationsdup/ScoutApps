@@ -4,8 +4,15 @@ import SwiftUI
 struct ActivityLibraryView: View {
     @EnvironmentObject private var session: SessionStore
     @StateObject private var viewModel = ActivityLibraryViewModel()
-    @State private var activityToEdit: Activity?
-    @State private var showingForm = false
+    @State private var formTarget: ActivityFormTarget?
+
+    /// Cible du formulaire : nouvelle activité ou édition d'une existante.
+    private enum ActivityFormTarget: Identifiable {
+        case new
+        case edit(Activity)
+        var id: String { if case .edit(let a) = self { return a.id } else { return "new" } }
+        var activity: Activity? { if case .edit(let a) = self { return a } else { return nil } }
+    }
 
     var body: some View {
         Group {
@@ -21,8 +28,7 @@ struct ActivityLibraryView: View {
             if session.canWrite {
                 ToolbarItem(placement: .primaryAction) {
                     Button {
-                        activityToEdit = nil
-                        showingForm = true
+                        formTarget = .new
                     } label: {
                         Image(systemName: "plus")
                             .foregroundStyle(SGDFColors.orange)
@@ -33,9 +39,8 @@ struct ActivityLibraryView: View {
                 filterMenu
             }
         }
-        .sheet(isPresented: $showingForm) {
-            let toEdit = activityToEdit
-            ActivityFormView(activity: toEdit, onSaved: { activity, isNew in
+        .sheet(item: $formTarget) { target in
+            ActivityFormView(activity: target.activity, onSaved: { activity, isNew in
                 if isNew {
                     viewModel.activities.insert(activity, at: 0)
                 } else if let i = viewModel.activities.firstIndex(where: { $0.id == activity.id }) {
@@ -57,8 +62,7 @@ struct ActivityLibraryView: View {
             )
             if session.canWrite {
                 SGDFButton("Nouvelle activité", kind: .quickAction, systemImage: "plus") {
-                    activityToEdit = nil
-                    showingForm = true
+                    formTarget = .new
                 }
                 .padding(.horizontal, SGDFTheme.Spacing.xl)
             }
@@ -79,8 +83,7 @@ struct ActivityLibraryView: View {
                     .contentShape(Rectangle())
                     .onTapGesture {
                         if session.canWrite {
-                            activityToEdit = activity
-                            showingForm = true
+                            formTarget = .edit(activity)
                         }
                     }
             }

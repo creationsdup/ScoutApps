@@ -4,8 +4,15 @@ struct FoodTraceListView: View {
     @EnvironmentObject private var campStore: CampStore
     @EnvironmentObject private var session: SessionStore
     @StateObject private var viewModel = FoodTraceViewModel()
-    @State private var showingForm = false
-    @State private var editingEntry: FoodTraceEntry? = nil
+    @State private var formTarget: TraceFormTarget?
+
+    /// Cible du formulaire : nouvelle entrée ou édition d'une existante.
+    private enum TraceFormTarget: Identifiable {
+        case new
+        case edit(FoodTraceEntry)
+        var id: String { if case .edit(let e) = self { return e.id } else { return "new" } }
+        var entry: FoodTraceEntry? { if case .edit(let e) = self { return e } else { return nil } }
+    }
 
     private static let displayDF: DateFormatter = {
         let f = DateFormatter()
@@ -32,8 +39,7 @@ struct FoodTraceListView: View {
             if session.canWrite, campStore.selectedCamp != nil {
                 ToolbarItem(placement: .primaryAction) {
                     Button {
-                        editingEntry = nil
-                        showingForm = true
+                        formTarget = .new
                     } label: {
                         Image(systemName: "plus")
                             .foregroundStyle(SGDFColors.primaryBlue)
@@ -55,9 +61,9 @@ struct FoodTraceListView: View {
                 }
             }
         }
-        .sheet(isPresented: $showingForm) {
+        .sheet(item: $formTarget) { target in
             if let camp = campStore.selectedCamp {
-                FoodTraceFormView(viewModel: viewModel, campId: camp.id, entry: editingEntry)
+                FoodTraceFormView(viewModel: viewModel, campId: camp.id, entry: target.entry)
             }
         }
     }
@@ -95,8 +101,7 @@ struct FoodTraceListView: View {
                             .contentShape(Rectangle())
                             .onTapGesture {
                                 guard session.canWrite else { return }
-                                editingEntry = entry
-                                showingForm = true
+                                formTarget = .edit(entry)
                             }
                         }
                         .onDelete { offsets in

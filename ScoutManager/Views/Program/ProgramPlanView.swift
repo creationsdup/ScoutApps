@@ -6,9 +6,28 @@ struct ProgramPlanView: View {
     @EnvironmentObject private var session: SessionStore
     @StateObject private var viewModel = ProgramPlanViewModel()
 
-    @State private var slotToEdit: ProgramSlot?
-    @State private var newSlotDate: String = ""
-    @State private var showingForm = false
+    @State private var formTarget: SlotFormTarget?
+
+    /// Cible du formulaire : nouveau créneau (avec sa date) ou édition d'un existant.
+    private enum SlotFormTarget: Identifiable {
+        case new(date: String)
+        case edit(slot: ProgramSlot, date: String)
+        var id: String {
+            switch self {
+            case .new(let d): return "new-\(d)"
+            case .edit(let s, _): return s.id
+            }
+        }
+        var date: String {
+            switch self {
+            case .new(let d): return d
+            case .edit(_, let d): return d
+            }
+        }
+        var slot: ProgramSlot? {
+            if case .edit(let s, _) = self { return s } else { return nil }
+        }
+    }
 
     var body: some View {
         Group {
@@ -31,15 +50,15 @@ struct ProgramPlanView: View {
                 )
             }
         }
-        .sheet(isPresented: $showingForm) {
+        .sheet(item: $formTarget) { target in
             if let camp = campStore.selectedCamp {
                 ProgramSlotFormView(
                     viewModel: viewModel,
                     campId: camp.id,
                     campStartDate: camp.startDate,
                     campEndDate: camp.endDate,
-                    initialDate: newSlotDate,
-                    existingSlot: slotToEdit
+                    initialDate: target.date,
+                    existingSlot: target.slot
                 )
             }
         }
@@ -102,9 +121,7 @@ struct ProgramPlanView: View {
                     .contentShape(Rectangle())
                     .onTapGesture {
                         if session.canWrite {
-                            slotToEdit = slot
-                            newSlotDate = day
-                            showingForm = true
+                            formTarget = .edit(slot: slot, date: day)
                         }
                     }
             }
@@ -121,9 +138,7 @@ struct ProgramPlanView: View {
 
     private func addSlotButton(day: String) -> some View {
         Button {
-            slotToEdit = nil
-            newSlotDate = day
-            showingForm = true
+            formTarget = .new(date: day)
         } label: {
             Label("Ajouter un créneau", systemImage: "plus")
                 .font(SGDFTheme.FontStyle.caption())

@@ -5,9 +5,14 @@ struct MealPlanView: View {
     @EnvironmentObject private var session: SessionStore
     @StateObject private var viewModel = MealPlanViewModel()
 
-    @State private var selectedDate: String?
-    @State private var selectedSlot: MealSlot?
-    @State private var showingEditor = false
+    @State private var editingCell: MealCell?
+
+    /// Cellule (jour × créneau) en cours d'édition. Identifiable pour `.sheet(item:)`.
+    private struct MealCell: Identifiable {
+        let date: String
+        let slot: MealSlot
+        var id: String { "\(date)|\(slot.rawValue)" }
+    }
 
     // Formatter pour afficher les jours en FR (ex. « Lun 12 juil. »)
     private static let displayDF: DateFormatter = {
@@ -48,16 +53,14 @@ struct MealPlanView: View {
             guard let id = newID else { return }
             Task { await viewModel.load(campId: id) }
         }
-        .sheet(isPresented: $showingEditor) {
-            if let camp = campStore.selectedCamp,
-               let date = selectedDate,
-               let slot = selectedSlot {
+        .sheet(item: $editingCell) { cell in
+            if let camp = campStore.selectedCamp {
                 MealEditorView(
                     viewModel: viewModel,
                     campId: camp.id,
-                    date: date,
-                    slot: slot,
-                    existingMeal: viewModel.meal(date: date, slot: slot)
+                    date: cell.date,
+                    slot: cell.slot,
+                    existingMeal: viewModel.meal(date: cell.date, slot: cell.slot)
                 )
             }
         }
@@ -96,9 +99,7 @@ struct MealPlanView: View {
         let meal = viewModel.meal(date: day, slot: slot)
         return Button {
             guard session.canWrite else { return }
-            selectedDate = day
-            selectedSlot = slot
-            showingEditor = true
+            editingCell = MealCell(date: day, slot: slot)
         } label: {
             HStack {
                 Text(slot.label)
