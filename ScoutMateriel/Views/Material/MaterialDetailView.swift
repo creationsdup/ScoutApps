@@ -150,8 +150,10 @@ struct MaterialDetailView: View {
                 SGDFCard {
                     DetailRow(label: "État", value: item.condition.label)
                     DetailRow(label: "Suivi", value: item.trackingType.label)
-                    DetailRow(label: "Quantité",
-                              value: "\(item.quantityAvailable ?? item.quantity) / \(item.quantity)")
+                    if item.trackingType != .global {
+                        DetailRow(label: "Quantité",
+                                  value: "\(item.quantityAvailable ?? item.quantity) / \(item.quantity)")
+                    }
                     if let branch = item.branch { DetailRow(label: "Branche", value: branch.label) }
                     if let cat = listViewModel.categoryName(item.categoryId) {
                         DetailRow(label: "Catégorie", value: cat)

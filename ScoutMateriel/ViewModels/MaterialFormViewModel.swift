@@ -91,7 +91,7 @@ final class MaterialFormViewModel: ObservableObject {
                 locationId: locationId,
                 trackingType: trackingType,
                 quantity: quantity,
-                quantityAvailable: isEditing ? (existingQuantityAvailable ?? quantity) : quantity,
+                quantityAvailable: isEditing ? min(existingQuantityAvailable ?? quantity, quantity) : quantity,
                 status: status,
                 condition: condition,
                 branch: branch,
