@@ -3,6 +3,7 @@ import SwiftUI
 struct MealEditorView: View {
     @ObservedObject var viewModel: MealPlanViewModel
     @Environment(\.dismiss) private var dismiss
+    @EnvironmentObject private var session: SessionStore
 
     let campId: String
     let date: String
@@ -13,6 +14,13 @@ struct MealEditorView: View {
     @State private var notes: String
     @State private var isSaving = false
     @State private var errorMessage: String?
+
+    // Recipe state
+    @State private var selectedRecipeIds: Set<String> = []
+    @State private var allRecipes: [Recipe] = []
+    @State private var recipesLoaded = false
+
+    private let recipeService = RecipeService()
 
     // Formatter pour afficher la date en FR (ex. « Lun 12 juil. »)
     private static let displayDF: DateFormatter = {
@@ -46,6 +54,13 @@ struct MealEditorView: View {
         return date
     }
 
+    private var selectedRecipeNames: String {
+        let names = allRecipes
+            .filter { selectedRecipeIds.contains($0.id) }
+            .map(\.name)
+        return names.isEmpty ? "Aucune" : names.joined(separator: ", ")
+    }
+
     var body: some View {
         NavigationStack {
             Form {
@@ -68,6 +83,25 @@ struct MealEditorView: View {
                     TextField("Notes", text: $notes, axis: .vertical)
                         .lineLimit(3...6)
                         .foregroundStyle(SGDFColors.textPrimary)
+                }
+
+                // Section Recettes
+                Section("Recettes") {
+                    NavigationLink(destination: MealRecipesPickerView(
+                        allRecipes: allRecipes,
+                        selectedIds: $selectedRecipeIds
+                    )) {
+                        HStack {
+                            Text("Recettes (\(selectedRecipeIds.count))")
+                                .foregroundStyle(SGDFColors.textPrimary)
+                            Spacer()
+                            Text(selectedRecipeNames)
+                                .font(SGDFTheme.FontStyle.caption())
+                                .foregroundStyle(SGDFColors.textSecondary)
+                                .lineLimit(1)
+                                .truncationMode(.tail)
+                        }
+                    }
                 }
 
                 if let error = errorMessage {
@@ -94,13 +128,34 @@ struct MealEditorView: View {
                 }
             }
         }
+        .task { await loadRecipes() }
+    }
+
+    private func loadRecipes() async {
+        guard !recipesLoaded else { return }
+        do {
+            async let recipesTask = recipeService.list()
+            if let mealId = existingMeal?.id {
+                async let idsTask = recipeService.recipeIds(mealId: mealId)
+                let (recipes, ids) = try await (recipesTask, idsTask)
+                allRecipes = recipes
+                selectedRecipeIds = Set(ids)
+            } else {
+                allRecipes = try await recipesTask
+            }
+            recipesLoaded = true
+        } catch {
+            // Non-fatal: recipe picker still shows empty
+            allRecipes = []
+        }
     }
 
     private func save() async {
         isSaving = true
         errorMessage = nil
         do {
-            try await viewModel.save(
+            // 1. Upsert le repas — récupère l'id sauvé
+            let saved = try await viewModel.save(
                 campId: campId,
                 date: date,
                 slot: slot,
@@ -108,9 +163,14 @@ struct MealEditorView: View {
                 title: title,
                 notes: notes
             )
+            // 2. Lie les recettes APRÈS l'upsert (id requis)
+            try await recipeService.setRecipes(
+                mealId: saved.id,
+                recipeIds: Array(selectedRecipeIds)
+            )
             dismiss()
         } catch {
-            errorMessage = "Impossible d'enregistrer le repas : \(error.localizedDescription)"
+            errorMessage = "Impossible d'enregistrer : \(error.localizedDescription)"
         }
         isSaving = false
     }

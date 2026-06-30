@@ -41,9 +41,10 @@ final class MealPlanViewModel: ObservableObject {
         isLoading = false
     }
 
-    /// Crée/met à jour le repas d'une case. Erreur propagée à l'appelant.
+    /// Crée/met à jour le repas d'une case. Retourne le repas sauvé. Erreur propagée à l'appelant.
+    @discardableResult
     func save(campId: String, date: String, slot: MealSlot,
-              existingId: String?, title: String, notes: String) async throws {
+              existingId: String?, title: String, notes: String) async throws -> Meal {
         let meal = Meal(id: existingId ?? UUID().uuidString,
                         campId: campId, date: date, slot: slot,
                         title: title.isEmpty ? nil : title,
@@ -54,5 +55,6 @@ final class MealPlanViewModel: ObservableObject {
         } else {
             meals.append(saved)
         }
+        return saved
     }
 }
