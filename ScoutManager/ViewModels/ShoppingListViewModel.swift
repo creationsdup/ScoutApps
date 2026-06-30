@@ -19,7 +19,7 @@ final class ShoppingListViewModel: ObservableObject {
     func generate(camp: Camp) async {
         isGenerating = true; errorMessage = nil
         do {
-            try await service.regenerateAuto(campId: camp.id, participants: max(1, camp.participantsCount ?? 1))
+            try await service.regenerateAuto(campId: camp.id)
             await load(campId: camp.id)
         } catch {
             errorMessage = "Génération impossible : \(error.localizedDescription)"
