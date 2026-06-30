@@ -7,6 +7,7 @@ public struct Item: Codable, Identifiable, Hashable {
     public var name: String
     public var description: String?
     public var categoryId: String?
+    public var subcategoryId: String?
     public var locationId: String?
     public var trackingType: TrackingType
     public var quantity: Int            // quantité totale
@@ -27,6 +28,7 @@ public struct Item: Codable, Identifiable, Hashable {
         name: String,
         description: String? = nil,
         categoryId: String? = nil,
+        subcategoryId: String? = nil,
         locationId: String? = nil,
         trackingType: TrackingType,
         quantity: Int,
@@ -46,6 +48,7 @@ public struct Item: Codable, Identifiable, Hashable {
         self.name = name
         self.description = description
         self.categoryId = categoryId
+        self.subcategoryId = subcategoryId
         self.locationId = locationId
         self.trackingType = trackingType
         self.quantity = quantity
@@ -75,6 +78,7 @@ public struct Item: Codable, Identifiable, Hashable {
         case inventoryCode = "inventory_code"
         case name, description
         case categoryId = "category_id"
+        case subcategoryId = "subcategory_id"
         case locationId = "location_id"
         case trackingType = "tracking_type"
         case quantity
