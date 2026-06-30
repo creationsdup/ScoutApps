@@ -5,9 +5,8 @@ struct IntendanceHomeView: View {
     @EnvironmentObject private var session: SessionStore
     @State private var showingCreateCamp = false
 
-    // Sous-modules placeholder (tasks Q→S — Menus, Recettes et Courses sont navigables)
+    // Sous-modules placeholder (tasks R→S — Budget, Menus, Recettes et Courses sont navigables)
     private let placeholderModules: [(title: String, icon: String)] = [
-        ("Budget", "eurosign.circle"),
         ("Stock", "shippingbox"),
         ("Registre", "doc.text")
     ]
@@ -97,7 +96,13 @@ struct IntendanceHomeView: View {
                         }
                         .buttonStyle(.plain)
 
-                        // Cartes placeholders (tasks Q→S)
+                        // Carte Budget — navigable
+                        NavigationLink(destination: BudgetView()) {
+                            subModuleCard(title: "Budget", icon: "eurosign.circle", isActive: true)
+                        }
+                        .buttonStyle(.plain)
+
+                        // Cartes placeholders (tasks R→S)
                         ForEach(placeholderModules, id: \.title) { module in
                             subModuleCard(title: module.title, icon: module.icon, isActive: false)
                         }

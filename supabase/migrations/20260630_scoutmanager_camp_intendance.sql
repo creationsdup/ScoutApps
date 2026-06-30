@@ -149,3 +149,30 @@ drop policy if exists shopping_items_write_roles on public.shopping_items;
 create policy shopping_items_write_roles on public.shopping_items for all to authenticated
   using      (exists (select 1 from public.profiles p where p.id = auth.uid() and p.role in ('admin','manager','member')))
   with check (exists (select 1 from public.profiles p where p.id = auth.uid() and p.role in ('admin','manager','member')));
+
+-- ============================================================================
+-- Task Q : Budget — table expenses (ADDITIF)
+-- ============================================================================
+create table if not exists public.expenses (
+  id             uuid primary key default gen_random_uuid(),
+  camp_id        uuid not null references public.camps(id) on delete cascade,
+  label          text not null,
+  category       text,
+  amount_planned numeric,
+  amount_real    numeric,
+  created_at     timestamptz not null default now()
+);
+
+alter table public.expenses drop constraint if exists expenses_category_chk;
+alter table public.expenses
+  add constraint expenses_category_chk
+  check (category is null or category in ('alimentaire','materiel','transport','autre')) not valid;
+
+alter table public.expenses enable row level security;
+
+drop policy if exists expenses_select_auth on public.expenses;
+create policy expenses_select_auth on public.expenses for select to authenticated using (true);
+drop policy if exists expenses_write_roles on public.expenses;
+create policy expenses_write_roles on public.expenses for all to authenticated
+  using      (exists (select 1 from public.profiles p where p.id = auth.uid() and p.role in ('admin','manager','member')))
+  with check (exists (select 1 from public.profiles p where p.id = auth.uid() and p.role in ('admin','manager','member')));

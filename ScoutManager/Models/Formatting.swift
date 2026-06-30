@@ -5,4 +5,13 @@ extension Double {
     var qtyDisplay: String {
         truncatingRemainder(dividingBy: 1) == 0 ? String(Int(self)) : String(self)
     }
+
+    /// Montant en euros, format FR (ex. "12,50 €").
+    var euroDisplay: String {
+        let f = NumberFormatter()
+        f.numberStyle = .currency
+        f.currencyCode = "EUR"
+        f.locale = Locale(identifier: "fr_FR")
+        return f.string(from: NSNumber(value: self)) ?? "\(self) €"
+    }
 }
