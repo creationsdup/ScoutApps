@@ -22,13 +22,13 @@ struct DashboardView: View {
                     }
 
                     LazyVGrid(columns: columns, spacing: SGDFTheme.Spacing.md) {
-                        StatCard(value: viewModel.stats.total, title: "Total",
+                        StatCard(value: viewModel.snapshot.total, title: "Total",
                                  systemImage: "shippingbox.fill", accent: SGDFColors.primaryBlue)
-                        StatCard(value: viewModel.stats.available, title: "Disponibles",
+                        StatCard(value: viewModel.snapshot.available, title: "Disponibles",
                                  systemImage: "checkmark.circle.fill", accent: StatusColorMapper.color(for: .disponible))
-                        StatCard(value: viewModel.stats.checkedOut, title: "Sortis",
+                        StatCard(value: viewModel.snapshot.checkedOut, title: "Sortis",
                                  systemImage: "arrow.up.right.circle.fill", accent: StatusColorMapper.color(for: .sorti))
-                        StatCard(value: viewModel.stats.toRepair, title: "À réparer",
+                        StatCard(value: viewModel.snapshot.toRepair, title: "À réparer",
                                  systemImage: "wrench.adjustable.fill", accent: StatusColorMapper.color(for: .aReparer))
                     }
 
