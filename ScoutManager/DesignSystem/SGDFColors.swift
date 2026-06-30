@@ -23,4 +23,7 @@ enum SGDFColors {
 
     /// Texte/icône sur un fond coloré fort (bouton primaire, badge). Blanc charté.
     static let onColor       = Color(hex: "#FFFFFF")
+
+    /// Transparence totale (usage : listRowBackground, overlays vides).
+    static let clear         = Color.clear
 }

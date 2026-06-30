@@ -7,23 +7,16 @@ final class MealPlanViewModel: ObservableObject {
     @Published var errorMessage: String?
 
     private let service = MealService()
-    private static let df: DateFormatter = {
-        let f = DateFormatter()
-        f.locale = Locale(identifier: "en_US_POSIX")
-        f.dateFormat = "yyyy-MM-dd"
-        return f
-    }()
-
     /// Jours du camp ["yyyy-MM-dd", …] de startDate à endDate inclus. Vide si dates manquantes.
     func days(of camp: Camp) -> [String] {
         guard let s = camp.startDate, let e = camp.endDate,
-              let start = Self.df.date(from: s), let end = Self.df.date(from: e),
+              let start = SGDFDate.day(from: s), let end = SGDFDate.day(from: e),
               start <= end else { return [] }
         var result: [String] = []
         var d = start
         let cal = Calendar(identifier: .gregorian)
         while d <= end {
-            result.append(Self.df.string(from: d))
+            result.append(SGDFDate.string(from: d))
             guard let next = cal.date(byAdding: .day, value: 1, to: d) else { break }
             d = next
         }

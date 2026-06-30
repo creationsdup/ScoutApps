@@ -25,13 +25,6 @@ struct FoodTraceFormView: View {
     @State private var errorMessage: String? = nil
     @State private var showScanner = false
 
-    private static let dateFormatter: DateFormatter = {
-        let f = DateFormatter()
-        f.locale = Locale(identifier: "en_US_POSIX")
-        f.dateFormat = "yyyy-MM-dd"
-        return f
-    }()
-
     private var isEditing: Bool { entry != nil }
     private var parsedQuantity: Double? {
         let s = quantityStr.replacingOccurrences(of: ",", with: ".")
@@ -151,10 +144,10 @@ struct FoodTraceFormView: View {
                 : String(qty)
         }
         mealId = existing.mealId
-        if let s = existing.receivedDate, let d = Self.dateFormatter.date(from: s) {
+        if let s = existing.receivedDate, let d = SGDFDate.day(from: s) {
             receivedDate = d; hasReceivedDate = true
         }
-        if let s = existing.expiryDate, let d = Self.dateFormatter.date(from: s) {
+        if let s = existing.expiryDate, let d = SGDFDate.day(from: s) {
             expiryDate = d; hasExpiryDate = true
         }
     }
@@ -180,8 +173,8 @@ struct FoodTraceFormView: View {
             lotNumber: trimLot.isEmpty ? nil : trimLot,
             barcode: trimBarcode.isEmpty ? nil : trimBarcode,
             quantity: parsedQuantity,
-            receivedDate: hasReceivedDate ? Self.dateFormatter.string(from: receivedDate) : nil,
-            expiryDate: hasExpiryDate ? Self.dateFormatter.string(from: expiryDate) : nil,
+            receivedDate: hasReceivedDate ? SGDFDate.string(from: receivedDate) : nil,
+            expiryDate: hasExpiryDate ? SGDFDate.string(from: expiryDate) : nil,
             mealId: mealId,
             photoPath: entry?.photoPath  // conservé si pas de nouvelle photo
         )

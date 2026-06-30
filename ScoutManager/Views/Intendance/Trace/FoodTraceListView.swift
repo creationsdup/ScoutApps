@@ -7,13 +7,6 @@ struct FoodTraceListView: View {
     @State private var showingForm = false
     @State private var editingEntry: FoodTraceEntry? = nil
 
-    private static let parseDF: DateFormatter = {
-        let f = DateFormatter()
-        f.locale = Locale(identifier: "en_US_POSIX")
-        f.dateFormat = "yyyy-MM-dd"
-        return f
-    }()
-
     private static let displayDF: DateFormatter = {
         let f = DateFormatter()
         f.locale = Locale(identifier: "fr_FR")
@@ -123,7 +116,7 @@ struct FoodTraceListView: View {
     }
 
     private func formattedDate(_ dateStr: String?) -> String? {
-        guard let s = dateStr, let date = Self.parseDF.date(from: s) else { return nil }
+        guard let s = dateStr, let date = SGDFDate.day(from: s) else { return nil }
         return Self.displayDF.string(from: date)
     }
 }

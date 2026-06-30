@@ -10,12 +10,6 @@ struct MealPlanView: View {
     @State private var showingEditor = false
 
     // Formatter pour afficher les jours en FR (ex. « Lun 12 juil. »)
-    private static let parseDF: DateFormatter = {
-        let f = DateFormatter()
-        f.locale = Locale(identifier: "en_US_POSIX")
-        f.dateFormat = "yyyy-MM-dd"
-        return f
-    }()
     private static let displayDF: DateFormatter = {
         let f = DateFormatter()
         f.locale = Locale(identifier: "fr_FR")
@@ -134,7 +128,7 @@ struct MealPlanView: View {
     }
 
     private func dayLabel(_ day: String) -> String {
-        if let d = Self.parseDF.date(from: day) {
+        if let d = SGDFDate.day(from: day) {
             return Self.displayDF.string(from: d).capitalized
         }
         return day

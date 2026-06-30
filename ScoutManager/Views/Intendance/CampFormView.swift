@@ -18,13 +18,6 @@ struct CampFormView: View {
     @State private var errorMessage: String? = nil
     @State private var isSaving = false
 
-    private static let dateFormatter: DateFormatter = {
-        let f = DateFormatter()
-        f.locale = Locale(identifier: "en_US_POSIX")
-        f.dateFormat = "yyyy-MM-dd"
-        return f
-    }()
-
     private var isEditing: Bool { existingCamp != nil }
     private var canSave: Bool { !name.trimmingCharacters(in: .whitespaces).isEmpty }
 
@@ -89,10 +82,10 @@ struct CampFormView: View {
         branch = camp.branch
         participantsCount = camp.participantsCount ?? 0
         encadrantsCount = camp.encadrantsCount ?? 0
-        if let s = camp.startDate, let d = Self.dateFormatter.date(from: s) {
+        if let s = camp.startDate, let d = SGDFDate.day(from: s) {
             startDate = d; hasStartDate = true
         }
-        if let e = camp.endDate, let d = Self.dateFormatter.date(from: e) {
+        if let e = camp.endDate, let d = SGDFDate.day(from: e) {
             endDate = d; hasEndDate = true
         }
     }
@@ -105,8 +98,8 @@ struct CampFormView: View {
             eventId: existingCamp?.eventId,
             name: name.trimmingCharacters(in: .whitespaces),
             location: location.isEmpty ? nil : location,
-            startDate: hasStartDate ? Self.dateFormatter.string(from: startDate) : nil,
-            endDate: hasEndDate ? Self.dateFormatter.string(from: endDate) : nil,
+            startDate: hasStartDate ? SGDFDate.string(from: startDate) : nil,
+            endDate: hasEndDate ? SGDFDate.string(from: endDate) : nil,
             branch: branch,
             participantsCount: participantsCount > 0 ? participantsCount : nil,
             encadrantsCount: encadrantsCount > 0 ? encadrantsCount : nil,

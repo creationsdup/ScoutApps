@@ -66,13 +66,13 @@ struct BudgetView: View {
             Section {
                 summaryCard
                     .listRowInsets(EdgeInsets())
-                    .listRowBackground(Color.clear)
+                    .listRowBackground(SGDFColors.clear)
 
                 if let err = viewModel.errorMessage {
                     Text(err)
                         .font(SGDFTheme.FontStyle.caption())
                         .foregroundStyle(SGDFColors.red)
-                        .listRowBackground(Color.clear)
+                        .listRowBackground(SGDFColors.clear)
                 }
             }
 
@@ -80,7 +80,7 @@ struct BudgetView: View {
             if viewModel.isLoading {
                 Section {
                     LoadingView()
-                        .listRowBackground(Color.clear)
+                        .listRowBackground(SGDFColors.clear)
                 }
             } else if viewModel.expenses.isEmpty {
                 Section {
@@ -89,7 +89,7 @@ struct BudgetView: View {
                         title: "Aucune dépense",
                         message: "Aucune dépense. Ajoute ta première ligne."
                     )
-                    .listRowBackground(Color.clear)
+                    .listRowBackground(SGDFColors.clear)
                 }
             } else {
                 Section {

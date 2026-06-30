@@ -15,8 +15,8 @@ final class RecipeDetailViewModel: ObservableObject {
         isLoading = false
     }
 
-    /// Récupère une recette par son id (via la liste complète).
+    /// Récupère une recette par son id.
     func get(id: String) async -> Recipe? {
-        try? await service.list().first(where: { $0.id == id })
+        try? await service.get(id: id)
     }
 }

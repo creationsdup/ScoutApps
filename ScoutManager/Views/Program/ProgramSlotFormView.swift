@@ -33,12 +33,6 @@ struct ProgramSlotFormView: View {
     private let programService = ProgramService()
     private let itemService = ItemService()
 
-    private static let dateDF: DateFormatter = {
-        let f = DateFormatter()
-        f.locale = Locale(identifier: "en_US_POSIX")
-        f.dateFormat = "yyyy-MM-dd"
-        return f
-    }()
     private static let timeDF: DateFormatter = {
         let f = DateFormatter()
         f.locale = Locale(identifier: "en_US_POSIX")
@@ -65,8 +59,8 @@ struct ProgramSlotFormView: View {
     }
 
     private var campDateRange: ClosedRange<Date> {
-        let start = campStartDate.flatMap { Self.dateDF.date(from: $0) } ?? Date.distantPast
-        let end   = campEndDate.flatMap   { Self.dateDF.date(from: $0) } ?? Date.distantFuture
+        let start = campStartDate.flatMap { SGDFDate.day(from: $0) } ?? Date.distantPast
+        let end   = campEndDate.flatMap   { SGDFDate.day(from: $0) } ?? Date.distantFuture
         return start...end
     }
 
@@ -221,15 +215,15 @@ struct ProgramSlotFormView: View {
 
     private func populateFromExisting() {
         guard let slot = existingSlot else {
-            if let d = Self.dateDF.date(from: initialDate) {
+            if let d = SGDFDate.day(from: initialDate) {
                 slotDate = d
-            } else if let d = Self.dateDF.date(from: campStartDate ?? "") {
+            } else if let d = SGDFDate.day(from: campStartDate ?? "") {
                 slotDate = d
             }
             return
         }
         title = slot.title
-        if let d = Self.dateDF.date(from: slot.date) { slotDate = d }
+        if let d = SGDFDate.day(from: slot.date) { slotDate = d }
         location = slot.location ?? ""
         notes = slot.notes ?? ""
         selectedActivityId = slot.activityId
@@ -247,7 +241,7 @@ struct ProgramSlotFormView: View {
         isSaving = true
         defer { isSaving = false }
         errorMessage = nil
-        let dateStr  = Self.dateDF.string(from: slotDate)
+        let dateStr  = SGDFDate.string(from: slotDate)
         let startStr = hasStartTime ? Self.timeDF.string(from: startTime) : nil
         let endStr   = hasEndTime   ? Self.timeDF.string(from: endTime)   : nil
         do {

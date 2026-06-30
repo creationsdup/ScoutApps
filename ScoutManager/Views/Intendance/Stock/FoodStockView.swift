@@ -15,14 +15,6 @@ struct FoodStockView: View {
         return f
     }()
 
-    // Parseur interne "yyyy-MM-dd"
-    private static let parseDF: DateFormatter = {
-        let f = DateFormatter()
-        f.locale = Locale(identifier: "en_US_POSIX")
-        f.dateFormat = "yyyy-MM-dd"
-        return f
-    }()
-
     var body: some View {
         Group {
             if campStore.selectedCamp == nil {
@@ -166,14 +158,14 @@ struct FoodStockView: View {
             EmptyView()
         case .ok:
             if let dateStr = item.expiryDate,
-               let date = Self.parseDF.date(from: dateStr) {
+               let date = SGDFDate.day(from: dateStr) {
                 Text("Péremption : \(Self.displayDF.string(from: date))")
                     .font(SGDFTheme.FontStyle.caption())
                     .foregroundStyle(SGDFColors.textSecondary)
             }
         case .soon:
             if let dateStr = item.expiryDate,
-               let date = Self.parseDF.date(from: dateStr) {
+               let date = SGDFDate.day(from: dateStr) {
                 HStack(spacing: 4) {
                     Image(systemName: "exclamationmark.triangle.fill")
                         .font(.caption)
@@ -185,7 +177,7 @@ struct FoodStockView: View {
             }
         case .expired:
             if let dateStr = item.expiryDate,
-               let date = Self.parseDF.date(from: dateStr) {
+               let date = SGDFDate.day(from: dateStr) {
                 HStack(spacing: 4) {
                     Image(systemName: "xmark.circle.fill")
                         .font(.caption)

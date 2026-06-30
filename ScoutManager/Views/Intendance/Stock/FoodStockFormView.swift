@@ -16,13 +16,6 @@ struct FoodStockFormView: View {
     @State private var isSaving = false
     @State private var errorMessage: String? = nil
 
-    private static let dateFormatter: DateFormatter = {
-        let f = DateFormatter()
-        f.locale = Locale(identifier: "en_US_POSIX")
-        f.dateFormat = "yyyy-MM-dd"
-        return f
-    }()
-
     private var isEditing: Bool { item != nil }
     private var parsedQuantity: Double? {
         Double(quantityStr.replacingOccurrences(of: ",", with: "."))
@@ -87,7 +80,7 @@ struct FoodStockFormView: View {
         unit = existing.unit ?? ""
         location = existing.location ?? ""
         if let dateStr = existing.expiryDate,
-           let date = Self.dateFormatter.date(from: dateStr) {
+           let date = SGDFDate.day(from: dateStr) {
             expiryDate = date
             hasExpiry = true
         }
@@ -105,7 +98,7 @@ struct FoodStockFormView: View {
             name: trimmedName,
             quantity: parsedQuantity,
             unit: trimmedUnit.isEmpty ? nil : trimmedUnit,
-            expiryDate: hasExpiry ? Self.dateFormatter.string(from: expiryDate) : nil,
+            expiryDate: hasExpiry ? SGDFDate.string(from: expiryDate) : nil,
             location: trimmedLocation.isEmpty ? nil : trimmedLocation
         )
         Task {
