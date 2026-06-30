@@ -7,17 +7,132 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0496CC5309587734A000F3B0 /* ScoutKit in Frameworks */ = {isa = PBXBuildFile; productRef = A3041B188F7BA2B0E7DCB524 /* ScoutKit */; };
+		0FC029592FF3C1D1006F2EBF /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FC0294C2FF3C1D1006F2EBF /* DashboardView.swift */; };
+		0FC0295A2FF3C1D1006F2EBF /* ScoutMaterielApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FC029452FF3C1D1006F2EBF /* ScoutMaterielApp.swift */; };
+		0FC0295B2FF3C1D1006F2EBF /* MaterialFilterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FC0294F2FF3C1D1006F2EBF /* MaterialFilterView.swift */; };
+		0FC0295C2FF3C1D1006F2EBF /* QRCodeGeneratorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FC029542FF3C1D1006F2EBF /* QRCodeGeneratorView.swift */; };
+		0FC0295D2FF3C1D1006F2EBF /* MaterialDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FC0294E2FF3C1D1006F2EBF /* MaterialDetailView.swift */; };
+		0FC0295E2FF3C1D1006F2EBF /* MaterialFormViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FC029482FF3C1D1006F2EBF /* MaterialFormViewModel.swift */; };
+		0FC0295F2FF3C1D1006F2EBF /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FC029442FF3C1D1006F2EBF /* RootView.swift */; };
+		0FC029602FF3C1D1006F2EBF /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FC029432FF3C1D1006F2EBF /* MainTabView.swift */; };
+		0FC029612FF3C1D1006F2EBF /* MaterialListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FC029492FF3C1D1006F2EBF /* MaterialListViewModel.swift */; };
+		0FC029622FF3C1D1006F2EBF /* QRScannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FC029552FF3C1D1006F2EBF /* QRScannerView.swift */; };
+		0FC029632FF3C1D1006F2EBF /* AssignQRCodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FC029532FF3C1D1006F2EBF /* AssignQRCodeView.swift */; };
+		0FC029642FF3C1D1006F2EBF /* DashboardViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FC029472FF3C1D1006F2EBF /* DashboardViewModel.swift */; };
+		0FC029652FF3C1D1006F2EBF /* MaterialFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FC029502FF3C1D1006F2EBF /* MaterialFormView.swift */; };
+		0FC029662FF3C1D1006F2EBF /* AppRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FC029422FF3C1D1006F2EBF /* AppRouter.swift */; };
+		0FC029672FF3C1D1006F2EBF /* MaterialListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FC029512FF3C1D1006F2EBF /* MaterialListView.swift */; };
+		0FC029682FF3C1D1006F2EBF /* ScannerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FC0294A2FF3C1D1006F2EBF /* ScannerViewModel.swift */; };
+		11341C420683DCBFD44239D8 /* FoodTraceFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9644354CCDBB30A8984A64D /* FoodTraceFormView.swift */; };
+		154F991EFDEA5EDD8439E7CC /* ScoutKit in Frameworks */ = {isa = PBXBuildFile; productRef = 5D0D6AD33F197D37F0A24D3F /* ScoutKit */; };
+		1C09BEF1073AA30BAE538CFE /* ScoutCampApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC2BEB86C3D8CAE9C508CF11 /* ScoutCampApp.swift */; };
+		283237E6FB52E8A3984076E0 /* ProgramSlotFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A98D2CE92FF702A99173F09 /* ProgramSlotFormView.swift */; };
+		34AAFAD3C77E726557DADD6A /* FoodStockView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 022B12230DB8EB01426AEA06 /* FoodStockView.swift */; };
+		36F3A11EBCB115D85C96202C /* RecipeDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23B66E6CC300E2019172BEF3 /* RecipeDetailView.swift */; };
+		3E8CDE5BB551E2641072504B /* FoodTraceListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5346FA8BD884EE0C2A76DA0 /* FoodTraceListView.swift */; };
+		3FCD4A50358C69D7A155801F /* ActivityLibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE060C11EE517662E93F1B32 /* ActivityLibraryView.swift */; };
+		4978CFE3EC5D61FD2BA16DCD /* ProgramPlanViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76182AB246FB2B969E9BCE88 /* ProgramPlanViewModel.swift */; };
+		4DBCB81D14EA86B47D9C0B54 /* RecipeFormViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37262887FE9A4D606A474F18 /* RecipeFormViewModel.swift */; };
+		5D0A757CE345B1F2CA0512E2 /* MealPlanViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1659EB22B973501CE4146816 /* MealPlanViewModel.swift */; };
+		5F240E77F5B0FF9BAABCC493 /* BarcodeScannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CE3F84EBECEAFF702032FE8 /* BarcodeScannerView.swift */; };
+		5F3D6094D2E0944E7B621B5A /* MealRecipesPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FB027B27B0AE334FDE1B3FD /* MealRecipesPickerView.swift */; };
+		618415096EA531C01ADC3DD5 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2F017D39CE8F2731BBD9DD20 /* Foundation.framework */; };
+		6C23930B8361C9ABC9AFFCB2 /* ProgramHomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7826459B8EE3FDBBC96F9A3 /* ProgramHomeView.swift */; };
+		704A139EC48574B42A28BCFA /* FoodStockViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DA498E72B6D06BB42691440 /* FoodStockViewModel.swift */; };
+		759AD0C4A395A2D3433C9584 /* ShoppingAddView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E452048604D84C6E754D31C2 /* ShoppingAddView.swift */; };
+		7F808AF3193B95CED737B178 /* BudgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D330D7AB993A5F6E12ADD8BB /* BudgetView.swift */; };
+		807F6758E6AD146013A5F235 /* CampListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 615CBFC29BF864183505D10D /* CampListView.swift */; };
+		81087FD02E5BC53772624874 /* RecipeListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AF99ADB908B32BAEFA60C9B /* RecipeListViewModel.swift */; };
+		82AD5CA39C41F4C75D2F9F84 /* FoodTraceViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83E093516DCB38DB77ECCCDC /* FoodTraceViewModel.swift */; };
+		9DCA6DBCEE50B5B3A30FEAA4 /* ActivityLibraryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 152C58FDB1AFAF0B35B446F9 /* ActivityLibraryViewModel.swift */; };
 		AA00000000000000000000F3 /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = AA00000000000000000000F2 /* Supabase */; };
+		AA9FB5447DDEC1F5260C32F4 /* RecipeFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 572118F5B4B0577BD6E94A37 /* RecipeFormView.swift */; };
+		B2C3E65C169BC381EAD7BF98 /* BudgetViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7FFD5B9B35B34C0ADA2F2CC /* BudgetViewModel.swift */; };
+		B6D5171895E6A1425D199897 /* ProgramPlanView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8670B8CAF51D6301CD71D345 /* ProgramPlanView.swift */; };
+		B705718041A13B86103291A5 /* ActivityFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 478D42FD05CF2EAEB28017CB /* ActivityFormView.swift */; };
+		BB0E1FA6E0F976C2F6A934F6 /* RecipeDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E687195FBEE3855BD023A68 /* RecipeDetailViewModel.swift */; };
+		BDBC8F1A7D144E74129A9F10 /* IntendanceHomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E19459A1E740328A2CC31C8 /* IntendanceHomeView.swift */; };
+		C07BD926102CAE347C993D89 /* ShoppingListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53B3B231B3BC96B8F27910AF /* ShoppingListView.swift */; };
+		CBDC673087795FD7313FDD68 /* MealEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96C14C0C60E19E83EE8D2849 /* MealEditorView.swift */; };
+		CF8D61D336441BFEB82BEC46 /* FoodStockFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C85429C150FCFDED0BFC2640 /* FoodStockFormView.swift */; };
+		CFBE695752D882C4E371F5D9 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCB70BBD8FB169AA23997DE5 /* RootView.swift */; };
+		D29397BADCEE7D6994A2C62C /* CampInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4602EA9FEEEEF1E389BE179 /* CampInfoView.swift */; };
+		D48B9C566475DB8AA87B96DC /* CampPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDCCFCFECAAEE3E97FC113A /* CampPickerView.swift */; };
+		E5EF0A0BCF417A94DBB86278 /* ExpenseFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA50D2E07582EE8DF6A8CE6 /* ExpenseFormView.swift */; };
+		E80CAB28BAC2818A976567AF /* RecipeListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40CA926E567734E1A3F0084C /* RecipeListView.swift */; };
+		E959A77956E7C9E13C87D42D /* SlotMaterialPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DAFD731C7EE270EE9360C0D /* SlotMaterialPickerView.swift */; };
+		EBDDA0DA458040719797EF0C /* MealPlanView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DA71A4032043DFE27105E7C /* MealPlanView.swift */; };
+		EF3508738E39CD25EF9CE8E5 /* CampTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A68DE06FDBCACA193DE13E0 /* CampTabView.swift */; };
+		F92B2EBA2E9253848461B24B /* CampFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76BDC2A781592543C6C7CD8C /* CampFormView.swift */; };
+		FDA6F777BA2CA8473C962AF9 /* ShoppingListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D30325E0106B67930FDA951 /* ShoppingListViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		022B12230DB8EB01426AEA06 /* FoodStockView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FoodStockView.swift; path = Views/Intendance/Stock/FoodStockView.swift; sourceTree = "<group>"; };
+		0CE3F84EBECEAFF702032FE8 /* BarcodeScannerView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = BarcodeScannerView.swift; path = Views/Scan/BarcodeScannerView.swift; sourceTree = "<group>"; };
+		0FB027B27B0AE334FDE1B3FD /* MealRecipesPickerView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MealRecipesPickerView.swift; path = Views/Intendance/Recipes/MealRecipesPickerView.swift; sourceTree = "<group>"; };
+		0FC029422FF3C1D1006F2EBF /* AppRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRouter.swift; sourceTree = "<group>"; };
+		0FC029432FF3C1D1006F2EBF /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
+		0FC029442FF3C1D1006F2EBF /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
+		0FC029452FF3C1D1006F2EBF /* ScoutMaterielApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoutMaterielApp.swift; sourceTree = "<group>"; };
+		0FC029472FF3C1D1006F2EBF /* DashboardViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardViewModel.swift; sourceTree = "<group>"; };
+		0FC029482FF3C1D1006F2EBF /* MaterialFormViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaterialFormViewModel.swift; sourceTree = "<group>"; };
+		0FC029492FF3C1D1006F2EBF /* MaterialListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaterialListViewModel.swift; sourceTree = "<group>"; };
+		0FC0294A2FF3C1D1006F2EBF /* ScannerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScannerViewModel.swift; sourceTree = "<group>"; };
+		0FC0294C2FF3C1D1006F2EBF /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardView.swift; sourceTree = "<group>"; };
+		0FC0294E2FF3C1D1006F2EBF /* MaterialDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaterialDetailView.swift; sourceTree = "<group>"; };
+		0FC0294F2FF3C1D1006F2EBF /* MaterialFilterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaterialFilterView.swift; sourceTree = "<group>"; };
+		0FC029502FF3C1D1006F2EBF /* MaterialFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaterialFormView.swift; sourceTree = "<group>"; };
+		0FC029512FF3C1D1006F2EBF /* MaterialListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaterialListView.swift; sourceTree = "<group>"; };
+		0FC029532FF3C1D1006F2EBF /* AssignQRCodeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssignQRCodeView.swift; sourceTree = "<group>"; };
+		0FC029542FF3C1D1006F2EBF /* QRCodeGeneratorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeGeneratorView.swift; sourceTree = "<group>"; };
+		0FC029552FF3C1D1006F2EBF /* QRScannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRScannerView.swift; sourceTree = "<group>"; };
+		152C58FDB1AFAF0B35B446F9 /* ActivityLibraryViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ActivityLibraryViewModel.swift; path = ViewModels/ActivityLibraryViewModel.swift; sourceTree = "<group>"; };
+		1659EB22B973501CE4146816 /* MealPlanViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MealPlanViewModel.swift; path = ViewModels/MealPlanViewModel.swift; sourceTree = "<group>"; };
+		23B66E6CC300E2019172BEF3 /* RecipeDetailView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = RecipeDetailView.swift; path = Views/Intendance/Recipes/RecipeDetailView.swift; sourceTree = "<group>"; };
+		2F017D39CE8F2731BBD9DD20 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		37262887FE9A4D606A474F18 /* RecipeFormViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = RecipeFormViewModel.swift; path = ViewModels/RecipeFormViewModel.swift; sourceTree = "<group>"; };
+		3E687195FBEE3855BD023A68 /* RecipeDetailViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = RecipeDetailViewModel.swift; path = ViewModels/RecipeDetailViewModel.swift; sourceTree = "<group>"; };
+		40CA926E567734E1A3F0084C /* RecipeListView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = RecipeListView.swift; path = Views/Intendance/Recipes/RecipeListView.swift; sourceTree = "<group>"; };
+		43E80FF8AF805EC0B3976A49 /* ScoutCamp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ScoutCamp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		478D42FD05CF2EAEB28017CB /* ActivityFormView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ActivityFormView.swift; path = Views/Program/ActivityFormView.swift; sourceTree = "<group>"; };
+		4A68DE06FDBCACA193DE13E0 /* CampTabView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CampTabView.swift; path = App/CampTabView.swift; sourceTree = "<group>"; };
+		53B3B231B3BC96B8F27910AF /* ShoppingListView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ShoppingListView.swift; path = Views/Intendance/Shopping/ShoppingListView.swift; sourceTree = "<group>"; };
+		572118F5B4B0577BD6E94A37 /* RecipeFormView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = RecipeFormView.swift; path = Views/Intendance/Recipes/RecipeFormView.swift; sourceTree = "<group>"; };
+		5D30325E0106B67930FDA951 /* ShoppingListViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ShoppingListViewModel.swift; path = ViewModels/ShoppingListViewModel.swift; sourceTree = "<group>"; };
+		615CBFC29BF864183505D10D /* CampListView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CampListView.swift; path = Views/Intendance/CampListView.swift; sourceTree = "<group>"; };
+		76182AB246FB2B969E9BCE88 /* ProgramPlanViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ProgramPlanViewModel.swift; path = ViewModels/ProgramPlanViewModel.swift; sourceTree = "<group>"; };
+		76BDC2A781592543C6C7CD8C /* CampFormView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CampFormView.swift; path = Views/Intendance/CampFormView.swift; sourceTree = "<group>"; };
+		7AF99ADB908B32BAEFA60C9B /* RecipeListViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = RecipeListViewModel.swift; path = ViewModels/RecipeListViewModel.swift; sourceTree = "<group>"; };
+		7DA498E72B6D06BB42691440 /* FoodStockViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FoodStockViewModel.swift; path = ViewModels/FoodStockViewModel.swift; sourceTree = "<group>"; };
+		7DA71A4032043DFE27105E7C /* MealPlanView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MealPlanView.swift; path = Views/Intendance/Meals/MealPlanView.swift; sourceTree = "<group>"; };
+		83E093516DCB38DB77ECCCDC /* FoodTraceViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FoodTraceViewModel.swift; path = ViewModels/FoodTraceViewModel.swift; sourceTree = "<group>"; };
+		8670B8CAF51D6301CD71D345 /* ProgramPlanView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ProgramPlanView.swift; path = Views/Program/ProgramPlanView.swift; sourceTree = "<group>"; };
+		8DAFD731C7EE270EE9360C0D /* SlotMaterialPickerView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SlotMaterialPickerView.swift; path = Views/Program/SlotMaterialPickerView.swift; sourceTree = "<group>"; };
+		8E19459A1E740328A2CC31C8 /* IntendanceHomeView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = IntendanceHomeView.swift; path = Views/Intendance/IntendanceHomeView.swift; sourceTree = "<group>"; };
+		96C14C0C60E19E83EE8D2849 /* MealEditorView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MealEditorView.swift; path = Views/Intendance/Meals/MealEditorView.swift; sourceTree = "<group>"; };
+		9A98D2CE92FF702A99173F09 /* ProgramSlotFormView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ProgramSlotFormView.swift; path = Views/Program/ProgramSlotFormView.swift; sourceTree = "<group>"; };
 		AA00000000000000000000A2 /* ScoutInventory.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ScoutInventory.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA00000000000000000000C1 /* Secrets.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Secrets.xcconfig; sourceTree = "<group>"; };
 		AA00000000000000000000C2 /* Secrets.example.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Secrets.example.xcconfig; sourceTree = "<group>"; };
+		AE060C11EE517662E93F1B32 /* ActivityLibraryView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ActivityLibraryView.swift; path = Views/Program/ActivityLibraryView.swift; sourceTree = "<group>"; };
+		AEA50D2E07582EE8DF6A8CE6 /* ExpenseFormView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpenseFormView.swift; path = Views/Intendance/Budget/ExpenseFormView.swift; sourceTree = "<group>"; };
+		B4602EA9FEEEEF1E389BE179 /* CampInfoView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CampInfoView.swift; path = Views/Program/CampInfoView.swift; sourceTree = "<group>"; };
+		B9644354CCDBB30A8984A64D /* FoodTraceFormView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FoodTraceFormView.swift; path = Views/Intendance/Trace/FoodTraceFormView.swift; sourceTree = "<group>"; };
+		C7826459B8EE3FDBBC96F9A3 /* ProgramHomeView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ProgramHomeView.swift; path = Views/Program/ProgramHomeView.swift; sourceTree = "<group>"; };
+		C85429C150FCFDED0BFC2640 /* FoodStockFormView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FoodStockFormView.swift; path = Views/Intendance/Stock/FoodStockFormView.swift; sourceTree = "<group>"; };
+		CEDCCFCFECAAEE3E97FC113A /* CampPickerView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CampPickerView.swift; path = Views/Intendance/CampPickerView.swift; sourceTree = "<group>"; };
+		D330D7AB993A5F6E12ADD8BB /* BudgetView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = BudgetView.swift; path = Views/Intendance/Budget/BudgetView.swift; sourceTree = "<group>"; };
+		E452048604D84C6E754D31C2 /* ShoppingAddView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ShoppingAddView.swift; path = Views/Intendance/Shopping/ShoppingAddView.swift; sourceTree = "<group>"; };
+		E7FFD5B9B35B34C0ADA2F2CC /* BudgetViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = BudgetViewModel.swift; path = ViewModels/BudgetViewModel.swift; sourceTree = "<group>"; };
+		EC2BEB86C3D8CAE9C508CF11 /* ScoutCampApp.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ScoutCampApp.swift; path = App/ScoutCampApp.swift; sourceTree = "<group>"; };
+		F5346FA8BD884EE0C2A76DA0 /* FoodTraceListView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FoodTraceListView.swift; path = Views/Intendance/Trace/FoodTraceListView.swift; sourceTree = "<group>"; };
+		FCB70BBD8FB169AA23997DE5 /* RootView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = RootView.swift; path = App/RootView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		AA00000000000000000000D1 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+		AA00000000000000000000D1 /* Exceptions for "ScoutInventory" folder in "ScoutInventory" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
@@ -27,8 +142,18 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		AA00000000000000000000A1 /* ScoutInventory */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (AA00000000000000000000D1 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = ScoutInventory; sourceTree = "<group>"; };
-		AA00000000000000000000E1 /* ScoutManager */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = ScoutManager; sourceTree = "<group>"; };
+		AA00000000000000000000A1 /* ScoutInventory */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				AA00000000000000000000D1 /* Exceptions for "ScoutInventory" folder in "ScoutInventory" target */,
+			);
+			explicitFileTypes = {
+			};
+			explicitFolders = (
+			);
+			path = ScoutInventory;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -37,20 +162,158 @@
 			buildActionMask = 2147483647;
 			files = (
 				AA00000000000000000000F3 /* Supabase in Frameworks */,
+				0496CC5309587734A000F3B0 /* ScoutKit in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		ED90461F0AB7612415FAE53D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				618415096EA531C01ADC3DD5 /* Foundation.framework in Frameworks */,
+				154F991EFDEA5EDD8439E7CC /* ScoutKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0FC029462FF3C1D1006F2EBF /* App */ = {
+			isa = PBXGroup;
+			children = (
+				0FC029422FF3C1D1006F2EBF /* AppRouter.swift */,
+				0FC029432FF3C1D1006F2EBF /* MainTabView.swift */,
+				0FC029442FF3C1D1006F2EBF /* RootView.swift */,
+				0FC029452FF3C1D1006F2EBF /* ScoutMaterielApp.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		0FC0294B2FF3C1D1006F2EBF /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				0FC029472FF3C1D1006F2EBF /* DashboardViewModel.swift */,
+				0FC029482FF3C1D1006F2EBF /* MaterialFormViewModel.swift */,
+				0FC029492FF3C1D1006F2EBF /* MaterialListViewModel.swift */,
+				0FC0294A2FF3C1D1006F2EBF /* ScannerViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		0FC0294D2FF3C1D1006F2EBF /* Dashboard */ = {
+			isa = PBXGroup;
+			children = (
+				0FC0294C2FF3C1D1006F2EBF /* DashboardView.swift */,
+			);
+			path = Dashboard;
+			sourceTree = "<group>";
+		};
+		0FC029522FF3C1D1006F2EBF /* Material */ = {
+			isa = PBXGroup;
+			children = (
+				0FC0294E2FF3C1D1006F2EBF /* MaterialDetailView.swift */,
+				0FC0294F2FF3C1D1006F2EBF /* MaterialFilterView.swift */,
+				0FC029502FF3C1D1006F2EBF /* MaterialFormView.swift */,
+				0FC029512FF3C1D1006F2EBF /* MaterialListView.swift */,
+			);
+			path = Material;
+			sourceTree = "<group>";
+		};
+		0FC029562FF3C1D1006F2EBF /* Scan */ = {
+			isa = PBXGroup;
+			children = (
+				0FC029532FF3C1D1006F2EBF /* AssignQRCodeView.swift */,
+				0FC029542FF3C1D1006F2EBF /* QRCodeGeneratorView.swift */,
+				0FC029552FF3C1D1006F2EBF /* QRScannerView.swift */,
+			);
+			path = Scan;
+			sourceTree = "<group>";
+		};
+		0FC029572FF3C1D1006F2EBF /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				0FC0294D2FF3C1D1006F2EBF /* Dashboard */,
+				0FC029522FF3C1D1006F2EBF /* Material */,
+				0FC029562FF3C1D1006F2EBF /* Scan */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		0FC029582FF3C1D1006F2EBF /* ScoutMateriel */ = {
+			isa = PBXGroup;
+			children = (
+				0FC029462FF3C1D1006F2EBF /* App */,
+				0FC0294B2FF3C1D1006F2EBF /* ViewModels */,
+				0FC029572FF3C1D1006F2EBF /* Views */,
+			);
+			path = ScoutMateriel;
+			sourceTree = "<group>";
+		};
+		43DC71E31DA25AB61BC8996E /* ScoutCamp */ = {
+			isa = PBXGroup;
+			children = (
+				4A68DE06FDBCACA193DE13E0 /* CampTabView.swift */,
+				FCB70BBD8FB169AA23997DE5 /* RootView.swift */,
+				EC2BEB86C3D8CAE9C508CF11 /* ScoutCampApp.swift */,
+				152C58FDB1AFAF0B35B446F9 /* ActivityLibraryViewModel.swift */,
+				E7FFD5B9B35B34C0ADA2F2CC /* BudgetViewModel.swift */,
+				7DA498E72B6D06BB42691440 /* FoodStockViewModel.swift */,
+				83E093516DCB38DB77ECCCDC /* FoodTraceViewModel.swift */,
+				1659EB22B973501CE4146816 /* MealPlanViewModel.swift */,
+				76182AB246FB2B969E9BCE88 /* ProgramPlanViewModel.swift */,
+				3E687195FBEE3855BD023A68 /* RecipeDetailViewModel.swift */,
+				37262887FE9A4D606A474F18 /* RecipeFormViewModel.swift */,
+				7AF99ADB908B32BAEFA60C9B /* RecipeListViewModel.swift */,
+				5D30325E0106B67930FDA951 /* ShoppingListViewModel.swift */,
+				D330D7AB993A5F6E12ADD8BB /* BudgetView.swift */,
+				AEA50D2E07582EE8DF6A8CE6 /* ExpenseFormView.swift */,
+				76BDC2A781592543C6C7CD8C /* CampFormView.swift */,
+				615CBFC29BF864183505D10D /* CampListView.swift */,
+				CEDCCFCFECAAEE3E97FC113A /* CampPickerView.swift */,
+				8E19459A1E740328A2CC31C8 /* IntendanceHomeView.swift */,
+				96C14C0C60E19E83EE8D2849 /* MealEditorView.swift */,
+				7DA71A4032043DFE27105E7C /* MealPlanView.swift */,
+				0FB027B27B0AE334FDE1B3FD /* MealRecipesPickerView.swift */,
+				23B66E6CC300E2019172BEF3 /* RecipeDetailView.swift */,
+				572118F5B4B0577BD6E94A37 /* RecipeFormView.swift */,
+				40CA926E567734E1A3F0084C /* RecipeListView.swift */,
+				E452048604D84C6E754D31C2 /* ShoppingAddView.swift */,
+				53B3B231B3BC96B8F27910AF /* ShoppingListView.swift */,
+				C85429C150FCFDED0BFC2640 /* FoodStockFormView.swift */,
+				022B12230DB8EB01426AEA06 /* FoodStockView.swift */,
+				B9644354CCDBB30A8984A64D /* FoodTraceFormView.swift */,
+				F5346FA8BD884EE0C2A76DA0 /* FoodTraceListView.swift */,
+				478D42FD05CF2EAEB28017CB /* ActivityFormView.swift */,
+				AE060C11EE517662E93F1B32 /* ActivityLibraryView.swift */,
+				B4602EA9FEEEEF1E389BE179 /* CampInfoView.swift */,
+				C7826459B8EE3FDBBC96F9A3 /* ProgramHomeView.swift */,
+				8670B8CAF51D6301CD71D345 /* ProgramPlanView.swift */,
+				9A98D2CE92FF702A99173F09 /* ProgramSlotFormView.swift */,
+				8DAFD731C7EE270EE9360C0D /* SlotMaterialPickerView.swift */,
+				0CE3F84EBECEAFF702032FE8 /* BarcodeScannerView.swift */,
+			);
+			name = ScoutCamp;
+			path = ScoutCamp;
+			sourceTree = "<group>";
+		};
+		89494D78B010A2715CFFA673 /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				2F017D39CE8F2731BBD9DD20 /* Foundation.framework */,
+			);
+			name = iOS;
+			sourceTree = "<group>";
+		};
 		AA00000000000000000000A4 = {
 			isa = PBXGroup;
 			children = (
-				AA00000000000000000000E1 /* ScoutManager */,
 				AA00000000000000000000A1 /* ScoutInventory */,
 				AA00000000000000000000C1 /* Secrets.xcconfig */,
 				AA00000000000000000000C2 /* Secrets.example.xcconfig */,
 				AA00000000000000000000A5 /* Products */,
+				0FC029582FF3C1D1006F2EBF /* ScoutMateriel */,
+				C158A8E43C988BB008326C90 /* Frameworks */,
+				43DC71E31DA25AB61BC8996E /* ScoutCamp */,
 			);
 			sourceTree = "<group>";
 		};
@@ -58,13 +321,42 @@
 			isa = PBXGroup;
 			children = (
 				AA00000000000000000000A2 /* ScoutInventory.app */,
+				43E80FF8AF805EC0B3976A49 /* ScoutCamp.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		C158A8E43C988BB008326C90 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				89494D78B010A2715CFFA673 /* iOS */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		5AC7B9603E3049E517966A07 /* ScoutCamp */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4E9A46D1BA19EB93B6A18834 /* Build configuration list for PBXNativeTarget "ScoutCamp" */;
+			buildPhases = (
+				6C07276384988153372CC059 /* Sources */,
+				ED90461F0AB7612415FAE53D /* Frameworks */,
+				A6E488F4134E123E9A74C927 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ScoutCamp;
+			packageProductDependencies = (
+				5D0D6AD33F197D37F0A24D3F /* ScoutKit */,
+			);
+			productName = ScoutCamp;
+			productReference = 43E80FF8AF805EC0B3976A49 /* ScoutCamp.app */;
+			productType = "com.apple.product-type.application";
+		};
 		AA00000000000000000000A6 /* ScoutInventory */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = AA00000000000000000000B6 /* Build configuration list for PBXNativeTarget "ScoutInventory" */;
@@ -79,11 +371,11 @@
 			);
 			fileSystemSynchronizedGroups = (
 				AA00000000000000000000A1 /* ScoutInventory */,
-				AA00000000000000000000E1 /* ScoutManager */,
 			);
 			name = ScoutInventory;
 			packageProductDependencies = (
 				AA00000000000000000000F2 /* Supabase */,
+				A3041B188F7BA2B0E7DCB524 /* ScoutKit */,
 			);
 			productName = ScoutInventory;
 			productReference = AA00000000000000000000A2 /* ScoutInventory.app */;
@@ -116,17 +408,26 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				AA00000000000000000000F1 /* XCRemoteSwiftPackageReference "supabase-swift" */,
+				0FC0293F2FF3C12A006F2EBF /* XCLocalSwiftPackageReference "ScoutKit" */,
 			);
 			productRefGroup = AA00000000000000000000A5 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
 				AA00000000000000000000A6 /* ScoutInventory */,
+				5AC7B9603E3049E517966A07 /* ScoutCamp */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		A6E488F4134E123E9A74C927 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		AA00000000000000000000A8 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -137,16 +438,113 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		6C07276384988153372CC059 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EF3508738E39CD25EF9CE8E5 /* CampTabView.swift in Sources */,
+				CFBE695752D882C4E371F5D9 /* RootView.swift in Sources */,
+				1C09BEF1073AA30BAE538CFE /* ScoutCampApp.swift in Sources */,
+				9DCA6DBCEE50B5B3A30FEAA4 /* ActivityLibraryViewModel.swift in Sources */,
+				B2C3E65C169BC381EAD7BF98 /* BudgetViewModel.swift in Sources */,
+				704A139EC48574B42A28BCFA /* FoodStockViewModel.swift in Sources */,
+				82AD5CA39C41F4C75D2F9F84 /* FoodTraceViewModel.swift in Sources */,
+				5D0A757CE345B1F2CA0512E2 /* MealPlanViewModel.swift in Sources */,
+				4978CFE3EC5D61FD2BA16DCD /* ProgramPlanViewModel.swift in Sources */,
+				BB0E1FA6E0F976C2F6A934F6 /* RecipeDetailViewModel.swift in Sources */,
+				4DBCB81D14EA86B47D9C0B54 /* RecipeFormViewModel.swift in Sources */,
+				81087FD02E5BC53772624874 /* RecipeListViewModel.swift in Sources */,
+				FDA6F777BA2CA8473C962AF9 /* ShoppingListViewModel.swift in Sources */,
+				7F808AF3193B95CED737B178 /* BudgetView.swift in Sources */,
+				E5EF0A0BCF417A94DBB86278 /* ExpenseFormView.swift in Sources */,
+				F92B2EBA2E9253848461B24B /* CampFormView.swift in Sources */,
+				807F6758E6AD146013A5F235 /* CampListView.swift in Sources */,
+				D48B9C566475DB8AA87B96DC /* CampPickerView.swift in Sources */,
+				BDBC8F1A7D144E74129A9F10 /* IntendanceHomeView.swift in Sources */,
+				CBDC673087795FD7313FDD68 /* MealEditorView.swift in Sources */,
+				EBDDA0DA458040719797EF0C /* MealPlanView.swift in Sources */,
+				5F3D6094D2E0944E7B621B5A /* MealRecipesPickerView.swift in Sources */,
+				36F3A11EBCB115D85C96202C /* RecipeDetailView.swift in Sources */,
+				AA9FB5447DDEC1F5260C32F4 /* RecipeFormView.swift in Sources */,
+				E80CAB28BAC2818A976567AF /* RecipeListView.swift in Sources */,
+				759AD0C4A395A2D3433C9584 /* ShoppingAddView.swift in Sources */,
+				C07BD926102CAE347C993D89 /* ShoppingListView.swift in Sources */,
+				CF8D61D336441BFEB82BEC46 /* FoodStockFormView.swift in Sources */,
+				34AAFAD3C77E726557DADD6A /* FoodStockView.swift in Sources */,
+				11341C420683DCBFD44239D8 /* FoodTraceFormView.swift in Sources */,
+				3E8CDE5BB551E2641072504B /* FoodTraceListView.swift in Sources */,
+				B705718041A13B86103291A5 /* ActivityFormView.swift in Sources */,
+				3FCD4A50358C69D7A155801F /* ActivityLibraryView.swift in Sources */,
+				D29397BADCEE7D6994A2C62C /* CampInfoView.swift in Sources */,
+				6C23930B8361C9ABC9AFFCB2 /* ProgramHomeView.swift in Sources */,
+				B6D5171895E6A1425D199897 /* ProgramPlanView.swift in Sources */,
+				283237E6FB52E8A3984076E0 /* ProgramSlotFormView.swift in Sources */,
+				E959A77956E7C9E13C87D42D /* SlotMaterialPickerView.swift in Sources */,
+				5F240E77F5B0FF9BAABCC493 /* BarcodeScannerView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		AA00000000000000000000A9 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0FC029592FF3C1D1006F2EBF /* DashboardView.swift in Sources */,
+				0FC0295A2FF3C1D1006F2EBF /* ScoutMaterielApp.swift in Sources */,
+				0FC0295B2FF3C1D1006F2EBF /* MaterialFilterView.swift in Sources */,
+				0FC0295C2FF3C1D1006F2EBF /* QRCodeGeneratorView.swift in Sources */,
+				0FC0295D2FF3C1D1006F2EBF /* MaterialDetailView.swift in Sources */,
+				0FC0295E2FF3C1D1006F2EBF /* MaterialFormViewModel.swift in Sources */,
+				0FC0295F2FF3C1D1006F2EBF /* RootView.swift in Sources */,
+				0FC029602FF3C1D1006F2EBF /* MainTabView.swift in Sources */,
+				0FC029612FF3C1D1006F2EBF /* MaterialListViewModel.swift in Sources */,
+				0FC029622FF3C1D1006F2EBF /* QRScannerView.swift in Sources */,
+				0FC029632FF3C1D1006F2EBF /* AssignQRCodeView.swift in Sources */,
+				0FC029642FF3C1D1006F2EBF /* DashboardViewModel.swift in Sources */,
+				0FC029652FF3C1D1006F2EBF /* MaterialFormView.swift in Sources */,
+				0FC029662FF3C1D1006F2EBF /* AppRouter.swift in Sources */,
+				0FC029672FF3C1D1006F2EBF /* MaterialListView.swift in Sources */,
+				0FC029682FF3C1D1006F2EBF /* ScannerViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
+		4E8F31A061E601C80A061716 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = AA00000000000000000000C1 /* Secrets.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 89MZRCK4N3;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ScoutCamp/App/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = ScoutCamp;
+				INFOPLIST_KEY_NSCameraUsageDescription = "Scanner les codes-barres des denrées.";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.scout.camp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
 		AA00000000000000000000B1 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -278,6 +676,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ScoutInventory/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = ScoutMateriel;
 				INFOPLIST_KEY_NSCameraUsageDescription = "Scanner les QR codes du matériel scout.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -310,6 +709,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ScoutInventory/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = ScoutMateriel;
 				INFOPLIST_KEY_NSCameraUsageDescription = "Scanner les QR codes du matériel scout.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -330,9 +730,54 @@
 			};
 			name = Release;
 		};
+		F7F85FB430BCEA697859ECDE /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = AA00000000000000000000C1 /* Secrets.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 89MZRCK4N3;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ScoutCamp/App/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = ScoutCamp;
+				INFOPLIST_KEY_NSCameraUsageDescription = "Scanner les codes-barres des denrées.";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.scout.camp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		4E9A46D1BA19EB93B6A18834 /* Build configuration list for PBXNativeTarget "ScoutCamp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F7F85FB430BCEA697859ECDE /* Release */,
+				4E8F31A061E601C80A061716 /* Debug */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		AA00000000000000000000B5 /* Build configuration list for PBXProject "ScoutInventory" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -353,6 +798,13 @@
 		};
 /* End XCConfigurationList section */
 
+/* Begin XCLocalSwiftPackageReference section */
+		0FC0293F2FF3C12A006F2EBF /* XCLocalSwiftPackageReference "ScoutKit" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ScoutKit;
+		};
+/* End XCLocalSwiftPackageReference section */
+
 /* Begin XCRemoteSwiftPackageReference section */
 		AA00000000000000000000F1 /* XCRemoteSwiftPackageReference "supabase-swift" */ = {
 			isa = XCRemoteSwiftPackageReference;
@@ -365,6 +817,16 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		5D0D6AD33F197D37F0A24D3F /* ScoutKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0FC0293F2FF3C12A006F2EBF /* XCLocalSwiftPackageReference "ScoutKit" */;
+			productName = ScoutKit;
+		};
+		A3041B188F7BA2B0E7DCB524 /* ScoutKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0FC0293F2FF3C12A006F2EBF /* XCLocalSwiftPackageReference "ScoutKit" */;
+			productName = ScoutKit;
+		};
 		AA00000000000000000000F2 /* Supabase */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = AA00000000000000000000F1 /* XCRemoteSwiftPackageReference "supabase-swift" */;

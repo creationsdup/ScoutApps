@@ -2,43 +2,57 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-**ScoutManager** — native SwiftUI iOS app to manage a scout group's gear, QR tracking,
-events, intendance and camp program (SGDF). It evolved in place from an earlier
-`ScoutInventory` prototype: the Xcode project file is still `ScoutInventory.xcodeproj`
-(scheme `ScoutInventory`, target product `ScoutInventory.app`), but the **app module is
-`ScoutManager`** (`PRODUCT_MODULE_NAME`), the bundle id is `com.scout.manager`, and all
-source lives under `ScoutManager/`. The `ScoutInventory/` folder is retired/empty.
+**ScoutManager** (SGDF scout-group management) was split into **two native SwiftUI iOS apps
+sharing one local Swift package**, all in the single `ScoutInventory.xcodeproj`:
+- **ScoutMatériel** — the original app (target `ScoutInventory`, scheme `ScoutInventory`,
+  product `ScoutInventory.app`, bundle id `com.scout.manager`). Tabs: Dashboard, Matériel,
+  Scan. Source under `ScoutMateriel/`.
+- **ScoutCamp** — the camp app (target/scheme `ScoutCamp`, bundle id `com.scout.camp`).
+  Tabs: Intendance, Programme. Source under `ScoutCamp/`.
+- **ScoutKit** — local Swift package (`ScoutKit/`, `import ScoutKit`) holding ALL shared code:
+  Models, Services (incl. the single `SupabaseService.shared`), Stores (`SessionStore`,
+  `CampStore`), DesignSystem, Components, Config, `LoginView`. Its public API is `public`.
+  Depends on **supabase-swift** (SPM).
 
-The **Supabase backend is shared with CampManager** (a separate web/mobile project). This
-is the single most important constraint — see "Shared backend" below.
+The **Supabase backend is shared with CampManager** (a separate web project; ScoutCamp is the
+mobile-first replacement of its camp features for this group). This is the single most
+important constraint — see "Shared backend" below.
 
 ---
 
 ## Build / run
 
-Single Xcode project, single scheme `ScoutInventory`. Dependency: **supabase-swift** (SPM).
+One Xcode project, **two app schemes** (`ScoutInventory` = ScoutMatériel, `ScoutCamp`) +
+the local **ScoutKit** package. Dependency: **supabase-swift** (SPM, via ScoutKit).
 
 ```bash
-# Build (use a simulator that exists on the machine — list with: xcrun simctl list devices)
+# Build each app (use a simulator that exists — list with: xcrun simctl list devices)
 xcodebuild -project ScoutInventory.xcodeproj -scheme ScoutInventory \
-  -destination 'generic/platform=iOS Simulator' build
+  -destination 'generic/platform=iOS Simulator' build      # ScoutMatériel
+xcodebuild -project ScoutInventory.xcodeproj -scheme ScoutCamp \
+  -destination 'generic/platform=iOS Simulator' build      # ScoutCamp
 
 # Resolve SPM packages
 xcodebuild -resolvePackageDependencies -project ScoutInventory.xcodeproj -scheme ScoutInventory
 ```
 
 - **First-time setup — Supabase anon key is required and not in git:**
-  `cp Secrets.example.xcconfig Secrets.xcconfig` then paste the anon key. Without it the
+  `cp Secrets.example.xcconfig Secrets.xcconfig` then paste the anon key. Without it an
   app builds but shows "clé Supabase manquante". Chain: `Secrets.xcconfig`
-  (`SUPABASE_ANON_KEY`, gitignored) → base config of Debug/Release → `ScoutManager/App/Info.plist`
-  carries `SupabaseAnonKey = $(SUPABASE_ANON_KEY)` (a real `Info.plist` via `INFOPLIST_FILE`;
-  custom `INFOPLIST_KEY_*` are NOT injected) → `Config.swift` reads it at runtime.
-- **No XCTest target exists** — don't claim tests pass; verify by `xcodebuild build` and by
-  running the app. (Adding tests requires creating the target in Xcode.)
-- **Synchronized folder groups:** `ScoutManager/` is a `PBXFileSystemSynchronizedRootGroup`.
-  New `.swift` files under it are auto-compiled — **do NOT edit `project.pbxproj`** to add
-  files. SourceKit/Xcode may show stale "Cannot find X in scope" diagnostics for newly
-  added files; only `xcodebuild` is authoritative.
+  (`SUPABASE_ANON_KEY`, gitignored) → base config of Debug/Release of **both targets** →
+  each app's Info.plist (`ScoutInventory/Info.plist` for ScoutMatériel, `ScoutCamp/App/Info.plist`
+  for ScoutCamp) carries `SupabaseAnonKey = $(SUPABASE_ANON_KEY)` → `Config.swift` (in ScoutKit)
+  reads `Bundle.main` at runtime.
+- **No XCTest target exists** — don't claim tests pass; verify by `xcodebuild build` (both
+  schemes) and by running the apps.
+- **Project edits:** both apps use **classic groups** (not synchronized folders), so a NEW
+  `.swift` file must be added to its target in Xcode (or via the `xcodeproj` Ruby gem) — it is
+  NOT auto-compiled. The shared package `ScoutKit/Sources/ScoutKit/` IS folder-based (any file
+  added there is part of the module). SourceKit shows stale "Cannot find X / No such module
+  'ScoutKit'/'Supabase'" diagnostics constantly; only `xcodebuild` is authoritative.
+- **Shared code must be `public`:** a symbol used by an app from ScoutKit must be `public`
+  (incl. a `public init` to construct shared structs). A missing one shows
+  "inaccessible due to 'internal' protection level" at build.
 - **Camera scan does not work in the Simulator** — use manual code entry (`TAG-000001`).
 - Git is **local only** (no remote). UI copy is in **French** — match it.
 
