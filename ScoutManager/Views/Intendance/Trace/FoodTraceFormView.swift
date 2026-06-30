@@ -23,6 +23,7 @@ struct FoodTraceFormView: View {
     @State private var pickedImageData: Data? = nil
     @State private var isSaving = false
     @State private var errorMessage: String? = nil
+    @State private var showScanner = false
 
     private static let dateFormatter: DateFormatter = {
         let f = DateFormatter()
@@ -52,10 +53,13 @@ struct FoodTraceFormView: View {
                 Section("Traçabilité") {
                     SGDFTextField("N° de lot", text: $lotNumber)
                     HStack {
-                        SGDFTextField("Code-barres", text: $barcode)
+                        TextField("Code-barres", text: $barcode)
                             .keyboardType(.numbersAndPunctuation)
-                        // Task T : bouton scan viendra ici
+                            .autocorrectionDisabled()
+                        Button { showScanner = true } label: { Image(systemName: "barcode.viewfinder") }
+                            .foregroundStyle(SGDFColors.primaryBlue)
                     }
+                    .sheet(isPresented: $showScanner) { BarcodeScannerView { code in barcode = code } }
                 }
 
                 // MARK: Section Quantité & Dates
